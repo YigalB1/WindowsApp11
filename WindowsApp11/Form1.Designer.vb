@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Form1
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class Form1
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.TxtBoxHeader = New System.Windows.Forms.TextBox()
         Me.TxtBoxWorkDir = New System.Windows.Forms.TextBox()
@@ -40,14 +40,26 @@ Partial Class Form1
         Me.TxtBoxPracticeFile = New System.Windows.Forms.TextBox()
         Me.RdPracticeFile = New System.Windows.Forms.Button()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.TxtNumOfDogs = New System.Windows.Forms.TextBox()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.ButCLose = New System.Windows.Forms.Button()
+        Me.BoxDogsList = New System.Windows.Forms.ListBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.TxtPracticesNum = New System.Windows.Forms.TextBox()
+        Me.BoxPracticeList = New System.Windows.Forms.ListBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.TxtPracticeTypes = New System.Windows.Forms.TextBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.DGV_Dogs_list = New System.Windows.Forms.DataGridView()
+        Me.DGV_Practices_list = New System.Windows.Forms.DataGridView()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DGV_Dogs_list, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DGV_Practices_list, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TxtBoxHeader
@@ -197,25 +209,6 @@ Partial Class Form1
         Me.ProgressBar1.Size = New System.Drawing.Size(351, 23)
         Me.ProgressBar1.TabIndex = 15
         '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.WindowsApp11.My.Resources.Resources._20140331_085909
-        Me.PictureBox1.Location = New System.Drawing.Point(786, 8)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(352, 230)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 16
-        Me.PictureBox1.TabStop = False
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(565, 196)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(39, 13)
-        Me.Label4.TabIndex = 17
-        Me.Label4.Text = "Label4"
-        '
         'Label5
         '
         Me.Label5.AutoSize = True
@@ -233,14 +226,127 @@ Partial Class Form1
         Me.TxtNumOfDogs.Size = New System.Drawing.Size(68, 20)
         Me.TxtNumOfDogs.TabIndex = 19
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.WindowsApp11.My.Resources.Resources._20140331_085909
+        Me.PictureBox1.Location = New System.Drawing.Point(786, 8)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(352, 230)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox1.TabIndex = 16
+        Me.PictureBox1.TabStop = False
+        '
+        'ButCLose
+        '
+        Me.ButCLose.Location = New System.Drawing.Point(986, 313)
+        Me.ButCLose.Name = "ButCLose"
+        Me.ButCLose.Size = New System.Drawing.Size(170, 63)
+        Me.ButCLose.TabIndex = 20
+        Me.ButCLose.Text = "Close"
+        Me.ButCLose.UseVisualStyleBackColor = True
+        '
+        'BoxDogsList
+        '
+        Me.BoxDogsList.FormattingEnabled = True
+        Me.BoxDogsList.Location = New System.Drawing.Point(568, 228)
+        Me.BoxDogsList.Name = "BoxDogsList"
+        Me.BoxDogsList.Size = New System.Drawing.Size(162, 56)
+        Me.BoxDogsList.TabIndex = 21
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(531, 188)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(99, 13)
+        Me.Label4.TabIndex = 22
+        Me.Label4.Text = "Number of pracices"
+        '
+        'TxtPracticesNum
+        '
+        Me.TxtPracticesNum.Location = New System.Drawing.Point(633, 182)
+        Me.TxtPracticesNum.Name = "TxtPracticesNum"
+        Me.TxtPracticesNum.Size = New System.Drawing.Size(68, 20)
+        Me.TxtPracticesNum.TabIndex = 23
+        '
+        'BoxPracticeList
+        '
+        Me.BoxPracticeList.FormattingEnabled = True
+        Me.BoxPracticeList.Location = New System.Drawing.Point(568, 313)
+        Me.BoxPracticeList.Name = "BoxPracticeList"
+        Me.BoxPracticeList.Size = New System.Drawing.Size(348, 56)
+        Me.BoxPracticeList.TabIndex = 24
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(531, 159)
+        Me.Label6.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(89, 13)
+        Me.Label6.TabIndex = 26
+        Me.Label6.Text = "Type of practices"
+        '
+        'TxtPracticeTypes
+        '
+        Me.TxtPracticeTypes.Location = New System.Drawing.Point(633, 156)
+        Me.TxtPracticeTypes.Name = "TxtPracticeTypes"
+        Me.TxtPracticeTypes.Size = New System.Drawing.Size(68, 20)
+        Me.TxtPracticeTypes.TabIndex = 27
+        '
+        'Label7
+        '
+        Me.Label7.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.Label7.Location = New System.Drawing.Point(570, 212)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(60, 13)
+        Me.Label7.TabIndex = 28
+        Me.Label7.Text = "Dogs list"
+        '
+        'Label8
+        '
+        Me.Label8.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.Label8.Location = New System.Drawing.Point(565, 297)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(60, 13)
+        Me.Label8.TabIndex = 29
+        Me.Label8.Text = "Practices list"
+        '
+        'DGV_Dogs_list
+        '
+        Me.DGV_Dogs_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DGV_Dogs_list.Location = New System.Drawing.Point(20, 280)
+        Me.DGV_Dogs_list.Name = "DGV_Dogs_list"
+        Me.DGV_Dogs_list.Size = New System.Drawing.Size(238, 188)
+        Me.DGV_Dogs_list.TabIndex = 30
+        '
+        'DGV_Practices_list
+        '
+        Me.DGV_Practices_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DGV_Practices_list.Location = New System.Drawing.Point(283, 280)
+        Me.DGV_Practices_list.Name = "DGV_Practices_list"
+        Me.DGV_Practices_list.Size = New System.Drawing.Size(265, 188)
+        Me.DGV_Practices_list.TabIndex = 31
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1168, 500)
+        Me.Controls.Add(Me.DGV_Practices_list)
+        Me.Controls.Add(Me.DGV_Dogs_list)
+        Me.Controls.Add(Me.Label8)
+        Me.Controls.Add(Me.Label7)
+        Me.Controls.Add(Me.TxtPracticeTypes)
+        Me.Controls.Add(Me.Label6)
+        Me.Controls.Add(Me.BoxPracticeList)
+        Me.Controls.Add(Me.TxtPracticesNum)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.BoxDogsList)
+        Me.Controls.Add(Me.ButCLose)
         Me.Controls.Add(Me.TxtNumOfDogs)
         Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.ProgressBar1)
         Me.Controls.Add(Me.RdPracticeFile)
@@ -265,6 +371,8 @@ Partial Class Form1
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DGV_Dogs_list, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DGV_Practices_list, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -289,7 +397,17 @@ Partial Class Form1
     Friend WithEvents RdPracticeFile As Button
     Friend WithEvents ProgressBar1 As ProgressBar
     Friend WithEvents PictureBox1 As PictureBox
-    Friend WithEvents Label4 As Label
     Friend WithEvents Label5 As Label
     Friend WithEvents TxtNumOfDogs As TextBox
+    Friend WithEvents ButCLose As Button
+    Friend WithEvents BoxDogsList As ListBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents TxtPracticesNum As TextBox
+    Friend WithEvents BoxPracticeList As ListBox
+    Friend WithEvents Label6 As Label
+    Friend WithEvents TxtPracticeTypes As TextBox
+    Friend WithEvents Label7 As Label
+    Friend WithEvents Label8 As Label
+    Friend WithEvents DGV_Dogs_list As DataGridView
+    Friend WithEvents DGV_Practices_list As DataGridView
 End Class
