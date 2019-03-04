@@ -220,7 +220,7 @@ Public Class Form1
         MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
 
 
-        MyExcel.Range("L2").Activate()
+   //     MyExcel.Range("L2").Activate()
         Dim stmp As String
 
         Dim counter As Integer
