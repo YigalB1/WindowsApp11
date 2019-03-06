@@ -212,7 +212,7 @@ Public Class Form1
         Dim row_cnt As Integer = 2
         Dim col_cnt As Integer = 12
 
-        Dim tdog As New DogClass  ' *** the Class way
+
         Dim DogsList As New DogsListClass   ' *** the Class way
 
 
@@ -223,12 +223,15 @@ Public Class Form1
             'If counter < MAX_NUM_OF_DOGS And MyExcel.ActiveCell.Text <> "END" Then
             If counter < MAX_NUM_OF_DOGS And MyExcel.Cells(row_cnt, col_cnt).text <> "END" Then
 
+                Dim tdog As New DogClass  ' *** the Class way
                 '  tdog.Name = MyExcel.Cells(row_cnt, col_cnt).text      ' *** the class way
                 '  tdog.Dob = MyExcel.Cells(row_cnt, col_cnt + 1).text      ' *** the class way
                 tdog.SetDogName(MyExcel.Cells(row_cnt, col_cnt).text)
                 tdog.SetDogDOB(MyExcel.Cells(row_cnt, col_cnt + 1).value)
+                tdog.SetDogAge()
 
                 DogsList.AddDog(tdog)                                    ' *** the class way
+
 
                 stmp = CStr(MyExcel.ActiveCell.Row) + " " + CStr(MyExcel.ActiveCell.Column)
                 ' MsgBox(stmp)
@@ -245,6 +248,8 @@ Public Class Form1
                 Exit Do
             End If
         Loop
+
+        DogsList.Print_dogs_list() ' create text file with list of dogs
 
 
         ReDim dogs(0 To counter - 1)
@@ -291,20 +296,42 @@ Public Class Form1
         ProgressBar1.Value = 50
 
         ' ***************************************************
+        ' ***************************************************
+        ' ***************************************************
+        ' ***************************************************
+
+        Dim practiceList As New PracticesList   ' class way
+        Dim pname As String
+        Dim pnum As Integer
+
         ' ******  Count Practices types table
         counter = 0
         row_cnt = 2
         col_cnt = 9
         Do
             stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get Practice name
+
+
             If counter < MAX_NUM_OF_PRACTICES_TYPES And stmp <> "END" Then
                 counter = counter + 1
                 row_cnt = row_cnt + 1
                 TxtPracticeTypes.Text = counter
+                pname = MyExcel.Cells(row_cnt, col_cnt).text ' class way get Practice name
+                pnum = MyExcel.Cells(row_cnt, col_cnt + 1).value ' class way get Practice num
+                practiceList.add_practice(pname, pnum)
             Else
                 Exit Do
             End If
         Loop
+
+        practiceList.Print_practices_list() ' the class way
+
+        ' *********************************************************
+        ' *********************************************************
+        ' *********************************************************
+        ' *********************************************************
+
+
 
         ReDim Practice_Types(0 To counter - 1)
         ProgressBar1.Value = 55
@@ -316,6 +343,8 @@ Public Class Form1
         Next i
         ProgressBar1.Value = 60
 
+
+        practiceList.Print_practices_list()   ' class way - pront to file
 
         ' ***************************************************
         ' count practices list
