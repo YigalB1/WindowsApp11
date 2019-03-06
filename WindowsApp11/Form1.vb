@@ -66,11 +66,7 @@ Public Class Form1
     Sub CreatePracicesTypeGrid(ByRef _dgv1 As DataGridView)
         ' *****************  COPIED - TBD
         ' Create an unbound DataGridView by declaring a column count.
-
-
-
     End Sub
-
 
     Sub AddToDogsGrid(ByVal _dgv As DataGridView, ByVal _num As Integer, ByVal _name As String, _DOB As Date, _age As Integer)
         ' Populate the rows.
@@ -135,12 +131,6 @@ Public Class Form1
 
     End Sub
 
-
-
-
-
-
-
     Public Sub ShowEvent(sender As Object, e As EventArgs) Handles Me.Shown
         ' ****** START AUTOMATICALLY WITH FORM
 
@@ -164,15 +154,11 @@ Public Class Form1
 
         ' set color before usage
         RdPracticeFile.BackColor = Color.Yellow
-
-
         CreateDogsGrid(DGV_Dogs_list)
         ' CreatePracicesTypeGrid(DGV_Practices_list)
         CreatePracicesListGrid((DGV_Practices_list))
 
         'AddToDogsGrid(DGV_Dogs_list, 15, "AXY", Today(), 17)
-
-
 
         ProgressBar1.Value = 10
 
@@ -190,8 +176,6 @@ Public Class Form1
         End If
 
     End Sub
-
-
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles SelectPracticeFile.Click
         ' Call ShowDialog.
@@ -219,8 +203,7 @@ Public Class Form1
         Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
         MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
 
-
-   //     MyExcel.Range("L2").Activate()
+        MyExcel.Range("L2").Activate()
         Dim stmp As String
 
         Dim counter As Integer
@@ -229,11 +212,24 @@ Public Class Form1
         Dim row_cnt As Integer = 2
         Dim col_cnt As Integer = 12
 
+        Dim tdog As New DogClass  ' *** the Class way
+        Dim DogsList As New DogsListClass   ' *** the Class way
+
+
+
         MyExcel.Range("L2").Activate()
         counter = 0
         Do
             'If counter < MAX_NUM_OF_DOGS And MyExcel.ActiveCell.Text <> "END" Then
             If counter < MAX_NUM_OF_DOGS And MyExcel.Cells(row_cnt, col_cnt).text <> "END" Then
+
+                '  tdog.Name = MyExcel.Cells(row_cnt, col_cnt).text      ' *** the class way
+                '  tdog.Dob = MyExcel.Cells(row_cnt, col_cnt + 1).text      ' *** the class way
+                tdog.SetDogName(MyExcel.Cells(row_cnt, col_cnt).text)
+                tdog.SetDogDOB(MyExcel.Cells(row_cnt, col_cnt + 1).value)
+
+                DogsList.AddDog(tdog)                                    ' *** the class way
+
                 stmp = CStr(MyExcel.ActiveCell.Row) + " " + CStr(MyExcel.ActiveCell.Column)
                 ' MsgBox(stmp)
 
@@ -414,5 +410,29 @@ Public Class Form1
         BoxDogsList.Items.Add("xxx".PadRight(10, " ") + CStr(17))
     End Sub
 
+    Private Sub TxtBoxWorkDir_TextChanged(sender As Object, e As EventArgs) Handles TxtBoxWorkDir.TextChanged
 
+    End Sub
+
+    Private Sub ReadPracticeFile()
+
+        Dim practice_connection As System.Data.OleDb.OleDbConnection
+        Dim DtSet As System.Data.DataSet
+        Dim my_command As System.Data.OleDb.OleDbDataAdapter
+
+        practice_connection = New System.Data.OleDb.OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;Data source='C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list.xlsx';Extended Properties = Excel 8.0")
+        my_command = New System.Data.OleDb.OleDbDataAdapter("select * from [Sheet1$]", practice_connection)
+        my_command.TableMappings.Add("Table", "TestTable")
+        DtSet = New System.Data.DataSet()
+        my_command.Fill(DtSet)
+
+        DataGridView1.DataSource = DtSet.Tables
+        practice_connection.Close()
+
+
+    End Sub
+
+    Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
+        ReadPracticeFile()
+    End Sub
 End Class
