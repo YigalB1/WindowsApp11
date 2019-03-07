@@ -329,7 +329,9 @@ Public Class Form1
         ' *********************************************************
         ' *********************************************************
         ' *********************************************************
+        ' Reading the sessions list
         ' *********************************************************
+
 
 
 
@@ -344,23 +346,46 @@ Public Class Form1
         ProgressBar1.Value = 60
 
 
-        practiceList.Print_practices_list()   ' class way - pront to file
+        practiceList.Print_practices_list()   ' class way - print to file
+
 
         ' ***************************************************
         ' count practices list
-        counter = 0
-        row_cnt = 2
+
+        Dim sessions As New List_of_Sessions   ' class way
+
+
+
+
+        counter = 1
+        row_cnt = 3
         col_cnt = 1
+        stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get dog's name
         Do
+            Dim s As New Session                   ' class way
+
+
+
+            TxtPracticesNum.Text = counter
+
+            s.dogName = MyExcel.Cells(row_cnt, col_cnt).text
+            s.practiceDate = MyExcel.Cells(row_cnt, col_cnt + 1).value
+            s.practiceType = MyExcel.Cells(row_cnt, col_cnt + 2).text
+            s.startTime = CDate(MyExcel.Cells(row_cnt, col_cnt + 3).text)
+            s.endTime = CDate(MyExcel.Cells(row_cnt, col_cnt + 4).text)
+            s.videoNum = MyExcel.Cells(row_cnt, col_cnt + 5).text
+            's.sessionOnAday TBD
+            sessions.add_session(s)
+
+
+            counter = counter + 1
+            row_cnt = row_cnt + 1
             stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get dog's name
-            If counter < MAX_NUM_OF_PRACTICES And stmp <> "END" Then
-                counter = counter + 1
-                row_cnt = row_cnt + 1
-                TxtPracticesNum.Text = counter
-            Else
-                Exit Do
-            End If
-        Loop
+        Loop Until counter > MAX_NUM_OF_PRACTICES Or stmp = "END"
+
+        sessions.Print_sessions_list()
+
+
 
         ReDim practices_list(0 To counter - 1)
         ProgressBar1.Value = 65

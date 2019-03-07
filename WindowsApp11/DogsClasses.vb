@@ -55,7 +55,7 @@ Public Class DogsListClass
 
         Dim file As System.IO.StreamWriter
 
-        file = My.Computer.FileSystem.OpenTextFileWriter(docPath, True)
+        file = My.Computer.FileSystem.OpenTextFileWriter(docPath, False)
         Dim cnt As Integer = 0
         For Each item In dogs_List
             cnt = cnt + 1
@@ -119,14 +119,44 @@ Public Class PracticesList
 
 End Class ' of class PracticesList
 
-Class pratices_to_invetigate
+Class Session
     Public dogName As String
     Public practiceDate As Date
-    Public practiceType As Integer
+    Public practiceType As String
     Public startTime As Date
     Public endTime As Date
-    Public videoNum As New List(Of Integer)
+    Public videoNum As String
     Public sessionOnAday As Integer
+End Class ' a Session
+
+Class List_of_Sessions
+    Dim sessionsList As New List(Of Session)
+
+    Public Sub add_session(ByVal _p As Session)
+        sessionsList.Add(_p)
+    End Sub ' of add_practice sub
 
 
-End Class ' of pratices_to_invetigate
+    Public Sub Print_sessions_list()
+        Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\sessions_list.txt"
+
+        Dim file As System.IO.StreamWriter
+
+        file = My.Computer.FileSystem.OpenTextFileWriter(docPath, False)
+        Dim cnt As Integer = 0
+        For Each item In sessionsList
+            cnt = cnt + 1
+            file.WriteLine(cnt.ToString() + " " + item.dogName + " " +
+                item.practiceDate.ToString() + " " + item.practiceType + " " +
+                item.startTime.ToString() + " " + item.endTime.ToString() + " " +
+                item.endTime.ToString() + " " + item.videoNum.ToString + " " +
+                item.sessionOnAday.ToString())
+        Next
+        file.Close()
+    End Sub ' Print_dogs_list
+
+
+
+
+
+End Class   ' of List_of_Dog_practices
