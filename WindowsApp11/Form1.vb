@@ -426,7 +426,8 @@ Public Class Form1
             Console.WriteLine(practices_list(i).Pract_Date.Date)
             Console.WriteLine(practices_list(i).Pract_Date.Hour)
             Console.WriteLine(practices_list(i).Pract_Date.ToString("HH:mm"))
-            Console.WriteLine("start" & practices_list(i).Pract_Start.ToString("HH:mm"))
+            Console.WriteLine("start" & practices_list(i).Pract_Start)
+
             Console.WriteLine("end  " & practices_list(i).Pract_End)
             Console.BackgroundColor = ConsoleColor.White
 

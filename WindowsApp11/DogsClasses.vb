@@ -108,7 +108,7 @@ Public Class PracticesList
 
         Dim file As System.IO.StreamWriter
 
-        file = My.Computer.FileSystem.OpenTextFileWriter(docPath, True)
+        file = My.Computer.FileSystem.OpenTextFileWriter(docPath, False)
         Dim cnt As Integer = 0
         For Each item In practicesList
             cnt = cnt + 1
@@ -147,9 +147,9 @@ Class List_of_Sessions
         For Each item In sessionsList
             cnt = cnt + 1
             file.WriteLine(cnt.ToString() + " " + item.dogName + " " +
-                item.practiceDate.ToString() + " " + item.practiceType + " " +
-                item.startTime.ToString() + " " + item.endTime.ToString() + " " +
-                item.endTime.ToString() + " " + item.videoNum.ToString + " " +
+                item.practiceDate.ToString("dd-MMM-yy") + " " + item.practiceType + " " +
+                item.startTime.ToString("HH:mm") + " " + item.endTime.ToString("HH:mm") +
+                " " + " " + item.videoNum.ToString() + " " +
                 item.sessionOnAday.ToString())
         Next
         file.Close()
