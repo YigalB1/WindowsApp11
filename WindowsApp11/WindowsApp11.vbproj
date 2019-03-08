@@ -125,6 +125,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="readFiles.vb" />
+    <Compile Include="ReadSessionFiles.vb" />
+    <Compile Include="SessionsCLass1.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">

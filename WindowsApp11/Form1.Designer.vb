@@ -56,6 +56,7 @@ Partial Class Form1
         Me.DGV_Practices_list = New System.Windows.Forms.DataGridView()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.RdSessionFiles = New System.Windows.Forms.Button()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -352,11 +353,21 @@ Partial Class Form1
         Me.Button1.Text = "Button1"
         Me.Button1.UseVisualStyleBackColor = True
         '
+        'RdSessionFiles
+        '
+        Me.RdSessionFiles.Location = New System.Drawing.Point(546, 316)
+        Me.RdSessionFiles.Name = "RdSessionFiles"
+        Me.RdSessionFiles.Size = New System.Drawing.Size(189, 37)
+        Me.RdSessionFiles.TabIndex = 34
+        Me.RdSessionFiles.Text = "Read Session files"
+        Me.RdSessionFiles.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1784, 856)
+        Me.Controls.Add(Me.RdSessionFiles)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.DGV_Practices_list)
@@ -437,4 +448,5 @@ Partial Class Form1
     Friend WithEvents DGV_Practices_list As DataGridView
     Friend WithEvents DataGridView1 As DataGridView
     Friend WithEvents Button1 As Button
+    Friend WithEvents RdSessionFiles As Button
 End Class

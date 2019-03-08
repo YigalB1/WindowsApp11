@@ -1,9 +1,17 @@
 ﻿'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
 'On the Project menu, click Add Reference.
 'On the COM tab, locate Microsoft Excel Object Library, And then click Select. 
+'Imports System.Data.OleDb
+'Imports Console = System.Console
+Imports System.Data.OleDb
 
 
 Public Class Form1
+
+
+    Public in_PathName As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\SessionsFiles\\"
+
+
 
     Private Structure DogRecord
         Dim Name As String
@@ -490,4 +498,123 @@ Public Class Form1
     Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
         ReadPracticeFile()
     End Sub
+
+    Private Sub RdSessionFiles_Click(sender As Object, e As EventArgs) Handles RdSessionFiles.Click
+        Read_Session_files()
+    End Sub
+
+    Private Sub TxtBoxHeader_TextChanged(sender As Object, e As EventArgs) Handles TxtBoxHeader.TextChanged
+
+    End Sub
+
+
+    ' **** new code below - reading session files
+
+    Public Sub Read_Session_files()
+
+        Dim dog_session As New DogSession
+
+        Dim file_count As Integer = 0
+        Dim fileName As String
+        fileName = Dir(in_PathName & "*29.csv")
+        Do While fileName <> ""
+            file_count = file_count + 1
+
+
+            ' The CLASS way
+
+            dog_session.Open_Session_file(in_PathName + fileName)
+
+            dog_session.Init_session()
+
+
+
+            dog_session.Close_Excel()
+
+
+            'petDay = Mid(stmp, 4, 2)
+            'petMonth = Left(stmp, 2)
+            'petYear = Right(stmp, 4)
+
+
+            fileName = Dir()
+            Console.WriteLine(" finished file number " + file_count.ToString())
+            Console.WriteLine("Pet name & ID: {0} {1} ", dog_session.pet_name, dog_session.pet_ID)
+        Loop
+        Console.WriteLine("file count: " + file_count.ToString())
+
+
+        'MyExcel.Workbooks.Close(Me.TxtBoxPracticeFile.Text)
+        ProgressBar1.Value = 75
+        RdSessionFiles.BackColor = Color.Green
+
+    End Sub ' of Read_Session_files
+
+
+
+    ' Control k c - to comment all ines, Control k u - to uncomment
+    Public Sub ReadFromExcel()
+        'Dim dt As DataTable = New DataTable("table")
+        'Dim csBuilder As OleDbConnectionStringBuilder = New OleDbConnectionStringBuilder
+        'csBuilder.Provider = "Microsoft.ACE.OLEDB.12.0"
+        'csBuilder.DataSource = "..\..\Table.xlsx"
+        'csBuilder.Add("Extended Properties", "Excel 12.0 Xml;HDR=YES")
+        'Dim connection As OleDbConnection = New OleDbConnection(csBuilder.ConnectionString)
+        'connection.Open
+        'Dim query As String = "SELECT * FROM Sample"
+        'Dim adapter As OleDbDataAdapter = New OleDbDataAdapter(query, connection)
+        'adapter.FillSchema(dt, SchemaType.Source)
+        'adapter.Fill(dt)
+        'For Each row As DataRow In dt.Rows
+        '    For Each item In row.ItemArray
+        '        Console.WriteLine(item)
+        '    Next
+        'Next
+
+    End Sub
+
+    Sub try1_read_to_memory()
+
+
+
+        'Dim file_Name = "place holder"
+        'Dim ds As DataSet = New DataSet
+        'Dim cn As New OleDbConnection
+
+        'Dim cmd As OleDbDataAdapter = Nothing
+        'Dim SheetName As String = ""
+        'cn = New OleDbConnection(("Provider=Microsoft.ACE.OLEDB.12.0;" + ("Data Source=" _
+        '                + (File_Name + ";Extended Properties=""Excel 12.0;HDR=NO;IMEX=1"""")"))), cmd = newOleDbDataAdapter(SELECT * FROM [+SheetName+$A1:E8],cnUnknown)
+        'cmd.Fill(ds, "ExcelFile")
+        'cmd = New OleDbDataAdapter(("SELECT [F1], [F2], [F3], [F4], [F5], [F7], [F8], [F15], [F17] FROM [" _
+        '                + (SheetName + ("$A10:Q1000" + "]"))), cn)
+        'cmd.Fill(ds, "ExcelFile")
+
+    End Sub
+
+    Sub try2()
+        '' Imports spire.xls
+
+        'Dim book As workbook = New workbook
+        'book.loadfromfile("d:\123.xlsx")
+        'Dim sheet As worksheet = book.worksheets("sheet1")
+        'Dim newbook As workbook = New workbook
+        'newbook.version = book.version
+        'newbook.worksheets.clear
+        'newbook.worksheets.addcopy(sheet, worksheetcopytype.copyall)
+        'newbook.savetostream(memorystream, fileformat.version2013)
+    End Sub
+
+    Sub Print_to_log_file(_str As String)
+        Dim LogFile = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\logDog.txt"
+
+        Dim file As System.IO.StreamWriter
+
+        file = My.Computer.FileSystem.OpenTextFileWriter(LogFile, True)
+        file.WriteLine(DateTime.Now.ToString() + _str)
+        file.Close()
+
+    End Sub ' Print_to_log_file
+
 End Class
+
