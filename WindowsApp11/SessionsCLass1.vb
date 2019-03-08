@@ -8,7 +8,7 @@ End Class
 Public Class DogSession
 
     Public pract_Excel As New Microsoft.Office.Interop.Excel.Application
-    Public start_day, end_day As Date
+    Public start_day, end_day As String
     Public pet_name, pet_ID As String
     Public lines_read As New List(Of String)
 
@@ -70,7 +70,7 @@ Public Class DogSession
 
     Public Sub Close_Excel()
         pract_Excel.Workbooks.Close()
-        pract_Excel = Nothing
+        '  pract_Excel = Nothing
     End Sub
 
 End Class ' of class DogSession
