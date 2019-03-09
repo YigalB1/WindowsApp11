@@ -11,6 +11,9 @@ Public Class Form1
 
     Public in_PathName As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\SessionsFiles\\"
 
+    Dim DogsList As New DogsListClass
+    Dim practiceList As New PracticesList
+    Dim sessions As New List_of_Sessions
 
 
     '  Private Structure DogRecord
@@ -207,52 +210,67 @@ Public Class Form1
     Private Sub RdPracticeFile_Click(sender As Object, e As EventArgs) Handles RdPracticeFile.Click
 
         RdPracticeFile.BackColor = Color.GreenYellow
-        ' Open excel file
-        Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
-        MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
-
-        MyExcel.Range("L2").Activate()
-        Dim stmp As String
-
-        Dim counter As Integer
-
-        ' ******  Count Number of dogs 
-        Dim row_cnt As Integer = 2
-        Dim col_cnt As Integer = 12
-
-
-        Dim DogsList As New DogsListClass   ' *** the Class way
-
 
         ' Reading dogs from practice file
         ' *******************************
-        '    MyExcel.Range("L2").Activate()
-        counter = 0
-        Do
-
-            If counter < MAX_NUM_OF_DOGS And MyExcel.Cells(row_cnt, col_cnt).text <> "END" Then
-
-                Dim tdog As New DogClass  ' *** the Class way
-                tdog.SetDogName(MyExcel.Cells(row_cnt, col_cnt).text)
-                tdog.SetDogDOB(MyExcel.Cells(row_cnt, col_cnt + 1).value)
-                tdog.SetDogAge()
-
-                DogsList.AddDog(tdog)                                    ' *** the class way
+        ' Static DogsList As New DogsListClass   ' *** the Classway, now global
 
 
-                stmp = CStr(MyExcel.ActiveCell.Row) + " " + CStr(MyExcel.ActiveCell.Column)
-                counter = counter + 1
-                row_cnt = row_cnt + 1
-                '           MyExcel.ActiveCell.Offset(1, 0).Activate() ' move to col 2
+        'Dim stmp As String
 
-                TxtNumOfDogs.Text = counter
+        Dim counter As Integer = 0
 
-            Else
-                Exit Do
-            End If
-        Loop
+        ' ******  Count Number of dogs 
+        '      Dim row_cnt As Integer = 2
+        '      Dim col_cnt As Integer = 12
 
+
+        Read_Dog_List()
         DogsList.Print_dogs_list() ' create text file with list of dogs
+
+        Read_Pracice_Types_List()
+        practiceList.Print_practices_list() ' the class way
+
+        Read_sessions_list()
+        sessions.Print_sessions_list()
+
+
+
+
+
+        'counter = 1000 ' for debug, to skip the internal code (moved to sub)
+
+        Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
+        MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+
+
+
+        ' counter = 0
+        'Do
+
+        '    If counter < MAX_NUM_OF_DOGS And MyExcel.Cells(row_cnt, col_cnt).text <> "END" Then
+
+        '        Dim tdog As New DogClass  ' *** the Class way
+        '        tdog.SetDogName(MyExcel.Cells(row_cnt, col_cnt).text)
+        '        tdog.SetDogDOB(MyExcel.Cells(row_cnt, col_cnt + 1).value)
+        '        tdog.SetDogAge()
+
+        '        DogsList.AddDog(tdog)                                    ' *** the class way
+
+
+        '        stmp = CStr(MyExcel.ActiveCell.Row) + " " + CStr(MyExcel.ActiveCell.Column)
+        '        counter = counter + 1
+        '        row_cnt = row_cnt + 1
+        '        '           MyExcel.ActiveCell.Offset(1, 0).Activate() ' move to col 2
+
+        '        TxtNumOfDogs.Text = counter
+
+        '    Else
+        '        Exit Do
+        '    End If
+        'Loop
+
+        'DogsList.Print_dogs_list() ' create text file with list of dogs
 
 
         '       ReDim dogs(0 To counter - 1)
@@ -303,32 +321,35 @@ Public Class Form1
         ' ***************************************************
         ' ***************************************************
 
-        Dim practiceList As New PracticesList   ' class way
+        ' Dim practiceList As New PracticesList   ' class way
         Dim pname As String
         Dim pnum As Integer
 
         ' ******  Count Practices types table
-        counter = 0
-        row_cnt = 2
-        col_cnt = 9
-        Do
-            stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get Practice name
+        '        Read_Pracice_Types_List()
+        '        practiceList.Print_practices_list() ' the class way
+
+        'counter = 1000 ' tmp to check the sub, was 0
+        'Dim row_cnt = 2
+        'Dim col_cnt = 9
+        'Do
+        '    stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get Practice name
 
 
-            If counter < MAX_NUM_OF_PRACTICES_TYPES And stmp <> "END" Then
-                counter = counter + 1
+        '    If counter < MAX_NUM_OF_PRACTICES_TYPES And stmp <> "END" Then
+        '        counter = counter + 1
 
-                TxtPracticeTypes.Text = counter
-                pname = MyExcel.Cells(row_cnt, col_cnt).text ' class way get Practice name
-                pnum = MyExcel.Cells(row_cnt, col_cnt + 1).value ' class way get Practice num
-                practiceList.add_practice(pname, pnum)      ' add another practice pair (name and number)
-                row_cnt = row_cnt + 1
-            Else
-                Exit Do
-            End If
-        Loop
+        '        TxtPracticeTypes.Text = counter
+        '        pname = MyExcel.Cells(row_cnt, col_cnt).text ' class way get Practice name
+        '        pnum = MyExcel.Cells(row_cnt, col_cnt + 1).value ' class way get Practice num
+        '        practiceList.add_practice(pname, pnum)      ' add another practice pair (name and number)
+        '        row_cnt = row_cnt + 1
+        '    Else
+        '        Exit Do
+        '    End If
+        'Loop
 
-        practiceList.Print_practices_list() ' the class way
+        'practiceList.Print_practices_list() ' the class way
 
         ' *********************************************************
         ' *********************************************************
@@ -350,22 +371,23 @@ Public Class Form1
         ProgressBar1.Value = 60
 
 
-        practiceList.Print_practices_list()   ' class way - print to file
+        'practiceList.Print_practices_list()   ' class way - print to file
 
 
         ' ***************************************************
-        ' count practices list
+        ' cRead practices list
 
-        Dim sessions As New List_of_Sessions   ' class way
+        '   Dim sessions As New List_of_Sessions   ' now global
 
 
 
 
         counter = 1
-        row_cnt = 3
-        col_cnt = 1
-        stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get dog's name
+        Dim row_cnt = 3
+        Dim col_cnt = 1
+        Dim stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get dog's name
         Do
+            Exit Do
             Dim s As New Session                   ' class way
 
 
@@ -387,7 +409,7 @@ Public Class Form1
             stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get dog's name
         Loop Until counter > MAX_NUM_OF_PRACTICES Or stmp = "END"
 
-        sessions.Print_sessions_list()
+        '    sessions.Print_sessions_list()
 
 
 
@@ -458,7 +480,130 @@ Public Class Form1
         ProgressBar1.Value = 60
         RdPracticeFile.BackColor = Color.Green
 
-    End Sub
+    End Sub ' of RdPracticeFile_Click (invoked from button)
+
+    Private Sub Read_Dog_List()
+        ' Reading dogs from practice file
+        ' *******************************
+        ' Dim DogsList As New DogsListClass   ' *** the Class way
+        Dim counter As Integer = 0
+        Dim row_cnt As Integer = 2
+        Dim col_cnt As Integer = 12
+        Dim stmp As String
+
+        Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
+        MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+
+
+
+        counter = 0
+        Do
+
+            If counter < MAX_NUM_OF_DOGS And MyExcel.Cells(row_cnt, col_cnt).text <> "END" Then
+
+                Static tdog As New DogClass  ' *** the Class way
+                tdog.SetDogName(MyExcel.Cells(row_cnt, col_cnt).text)
+                tdog.SetDogDOB(MyExcel.Cells(row_cnt, col_cnt + 1).value)
+                tdog.SetDogAge()
+
+                DogsList.AddDog(tdog)                                    ' *** the class way
+
+
+                stmp = CStr(MyExcel.ActiveCell.Row) + " " + CStr(MyExcel.ActiveCell.Column)
+                counter = counter + 1
+                row_cnt = row_cnt + 1
+                '           MyExcel.ActiveCell.Offset(1, 0).Activate() ' move to col 2
+
+                TxtNumOfDogs.Text = counter
+
+            Else
+                Exit Do
+            End If
+        Loop
+
+        'DogsList.Print_dogs_list() ' create text file with list of dogs
+
+        MyExcel.Workbooks.Close()
+        MyExcel = Nothing
+
+    End Sub ' of Read_Dog_List 
+
+    Private Sub Read_Pracice_Types_List()
+
+
+        Dim pname As String
+        Dim pnum As Integer
+
+        ' ******  Count Practices types table
+        Dim counter = 0
+        Dim row_cnt = 2
+        Dim col_cnt = 9
+        Dim stmp As String
+
+        Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
+        MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+
+        Do
+            stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get Practice name
+
+
+            If counter < MAX_NUM_OF_PRACTICES_TYPES And stmp <> "END" Then
+                counter = counter + 1
+
+                TxtPracticeTypes.Text = counter
+                pname = MyExcel.Cells(row_cnt, col_cnt).text ' class way get Practice name
+                pnum = MyExcel.Cells(row_cnt, col_cnt + 1).value ' class way get Practice num
+                practiceList.add_practice(pname, pnum)      ' add another practice pair (name and number)
+                row_cnt = row_cnt + 1
+            Else
+                Exit Do
+            End If
+        Loop
+
+        MyExcel.Workbooks.Close()
+        MyExcel = Nothing
+
+
+    End Sub ' of Read_Pracice_Types_List
+
+    Private Sub Read_sessions_list()
+
+
+        Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
+        MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+
+
+        Dim counter = 1
+        Dim row_cnt = 3
+        Dim col_cnt = 1
+        Dim stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get dog's name
+        Do
+            Static s As New Session                   ' class way
+
+
+
+            TxtPracticesNum.Text = counter
+
+            s.dogName = MyExcel.Cells(row_cnt, col_cnt).text
+            s.practiceDate = MyExcel.Cells(row_cnt, col_cnt + 1).value
+            s.practiceType = MyExcel.Cells(row_cnt, col_cnt + 2).text
+            s.startTime = CDate(MyExcel.Cells(row_cnt, col_cnt + 3).text)
+            s.endTime = CDate(MyExcel.Cells(row_cnt, col_cnt + 4).text)
+            s.videoNum = MyExcel.Cells(row_cnt, col_cnt + 5).text
+            's.sessionOnAday TBD
+            sessions.add_session(s)
+
+
+            counter = counter + 1
+            row_cnt = row_cnt + 1
+            stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get dog's name
+        Loop Until counter > MAX_NUM_OF_PRACTICES Or stmp = "END"
+
+        MyExcel.Workbooks.Close()
+        MyExcel = Nothing
+
+
+    End Sub ' of Read_sessions_list
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles ButCLose.Click
         Me.Close()
@@ -475,6 +620,7 @@ Public Class Form1
 
     Private Sub ReadPracticeFile()
 
+        ' Reads directly from file to dataset
         Dim practice_connection As System.Data.OleDb.OleDbConnection
         Dim DtSet As System.Data.DataSet
         Dim my_command As System.Data.OleDb.OleDbDataAdapter
@@ -492,8 +638,88 @@ Public Class Form1
     End Sub
 
     Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
-        ReadPracticeFile()
+        '       ReadPracticeFile()
+        '  trytableread()
+        'lulu()
+        try3()
     End Sub
+
+
+
+
+    Private Sub trytableread()
+        Try
+            Dim MyConnection As System.Data.OleDb.OleDbConnection
+            Dim DtSet As System.Data.DataSet
+            Dim MyCommand As System.Data.OleDb.OleDbDataAdapter
+            'Fill the [Excel file fullpath] with specific value
+            MyConnection = New System.Data.OleDb.OleDbConnection _
+            ("provider=Microsoft.Jet.OLEDB.4.0;Data source='C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list.xlsx';Extended Properties = Excel 8.0")
+            MyCommand = New System.Data.OleDb.OleDbDataAdapter _
+                ("select * from [Sheet1$]", MyConnection)
+            MyCommand.TableMappings.Add("Table", "TestTable")
+            DtSet = New System.Data.DataSet
+            MyCommand.Fill(DtSet)
+            '        DataGridView1.DataSource = DtSet.Tables(0)
+            MyConnection.Close()
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+    End Sub
+
+
+
+    Private Sub lulu()
+        Dim File_name As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list.xlsx"
+
+        Dim ds As DataSet = New DataSet()
+        Dim cn As OleDbConnection = Nothing
+        Dim cmd As OleDbDataAdapter = Nothing
+        Dim SheetName As String = "Sheet1"
+
+        Try
+            cn = New OleDbConnection("provider=Microsoft.ACE.OLEDB.12;" & "Data Source=" & File_name & ";Extended Properties=""Excel 12.0;HDR=NO;IMEX=1""")
+            cmd = New OleDbDataAdapter("SELECT * FROM [" & SheetName & "$A1:E8]", cn)
+            cmd.Fill(ds, "ExcelFile")
+            cmd = New OleDbDataAdapter("SELECT [F1], [F2], [F3], [F4], [F5], [F7], [F8], [F15], [F17] FROM [" & SheetName & "$A10:Q1000" & "]", cn)
+            cmd.Fill(ds, "ExcelFile")
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+
+    End Sub
+
+
+
+
+    Private Sub try3()
+
+        'Dim File_name As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list.xlsx"
+        'Dim mytable As DataTable
+
+        'Dim cn As System.Data.OleDb.OleDbConnection
+
+        'Dim cmd As System.Data.OleDb.OleDbDataAdapter
+
+        'cn = New System.Data.OleDb.OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;" & "data source=" & File_name & ";Extended Properties=Excel 8.0;")
+
+        '' Select the data from Sheet1 of the workbook.
+
+        'cmd = New System.Data.OleDb.OleDbDataAdapter("select * from [Sheet1$]", cn)
+
+        'cn.Open()
+
+        'cmd.Fill(mytable)
+
+        'cn.Close()
+
+        'DataGridView1.DataSource = DataSet1.DefaultViewManager
+
+        'DataGridView1.Refresh()
+
+    End Sub
+
+
 
     Private Sub RdSessionFiles_Click(sender As Object, e As EventArgs) Handles RdSessionFiles.Click
         Read_Session_files()
@@ -605,6 +831,7 @@ Public Class Form1
         file.Close()
 
     End Sub ' Print_to_log_file
+
 
 End Class
 
