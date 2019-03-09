@@ -13,39 +13,39 @@ Public Class Form1
 
 
 
-    Private Structure DogRecord
-        Dim Name As String
-        Dim DOB As Date
-        Dim Age As Integer
-        Dim Sex As String
-    End Structure
-    Dim dogs() As DogRecord   ' Size to be defined when reading practice file
+    '  Private Structure DogRecord
+    '  Dim Name As String
+    '  Dim DOB As Date
+    '  Dim Age As Integer
+    '  Dim Sex As String
+    '  End Structure
+    ' Dim dogs() As DogRecord   ' Size to be defined when reading practice file
 
-    Private Structure Dogs_struct
-        Dim dogs_cnt As Integer
-        Dim dogs_list() As DogRecord
-    End Structure
-    Dim Dogs_records As Dogs_struct
-
-
-
-    Private Structure Practice_Type
-        Dim Practice_Name As String
-        Dim Practice_Code As Integer
-    End Structure
-    Dim Practice_Types() As Practice_Type   ' Size to be defined when reading practice file
+    'Private Structure Dogs_struct
+    ' Dim dogs_cnt As Integer
+    ' Dim dogs_list() As DogRecord
+    ' End Structure
+    ' Dim Dogs_records As Dogs_struct
 
 
-    Private Structure PracticeRecord
-        Dim Pract_dog As String
-        Dim Pract_Date As Date
-        Dim Pract_Type As String
-        Dim Pract_Start As Date
-        Dim Pract_End As Date
-        Dim Pract_Video As String
-    End Structure
 
-    Dim practices_list() As PracticeRecord   ' Size to be defined when reading practice file
+    '   Private Structure Practice_Type
+    '   Dim Practice_Name As String
+    '   Dim Practice_Code As Integer
+    '   End Structure
+    '   Dim Practice_Types() As Practice_Type   ' Size to be defined when reading practice file
+
+
+    'Private Structure PracticeRecord
+    ' Dim Pract_dog As String
+    ' Dim Pract_Date As Date
+    ' Dim Pract_Type As String
+    ' Dim Pract_Start As Date
+    ' Dim Pract_End As Date
+    ' Dim Pract_Video As String
+    ' End Structure
+
+    'Dim practices_list() As PracticeRecord   ' Size to be defined when reading practice file
 
     Dim MAX_NUM_OF_DOGS As Integer = 50
     Dim MAX_NUM_OF_PRACTICES As Integer = 500
@@ -224,16 +224,15 @@ Public Class Form1
         Dim DogsList As New DogsListClass   ' *** the Class way
 
 
-
-        MyExcel.Range("L2").Activate()
+        ' Reading dogs from practice file
+        ' *******************************
+        '    MyExcel.Range("L2").Activate()
         counter = 0
         Do
-            'If counter < MAX_NUM_OF_DOGS And MyExcel.ActiveCell.Text <> "END" Then
+
             If counter < MAX_NUM_OF_DOGS And MyExcel.Cells(row_cnt, col_cnt).text <> "END" Then
 
                 Dim tdog As New DogClass  ' *** the Class way
-                '  tdog.Name = MyExcel.Cells(row_cnt, col_cnt).text      ' *** the class way
-                '  tdog.Dob = MyExcel.Cells(row_cnt, col_cnt + 1).text      ' *** the class way
                 tdog.SetDogName(MyExcel.Cells(row_cnt, col_cnt).text)
                 tdog.SetDogDOB(MyExcel.Cells(row_cnt, col_cnt + 1).value)
                 tdog.SetDogAge()
@@ -242,13 +241,9 @@ Public Class Form1
 
 
                 stmp = CStr(MyExcel.ActiveCell.Row) + " " + CStr(MyExcel.ActiveCell.Column)
-                ' MsgBox(stmp)
-
-                'MsgBox(MyExcel.ActiveCell.Row + " " + MyExcel.ActiveCell.Column)
-                'MsgBox(MyExcel.ActiveCell.Text)
                 counter = counter + 1
                 row_cnt = row_cnt + 1
-                MyExcel.ActiveCell.Offset(1, 0).Activate() ' move to col 2
+                '           MyExcel.ActiveCell.Offset(1, 0).Activate() ' move to col 2
 
                 TxtNumOfDogs.Text = counter
 
@@ -260,14 +255,14 @@ Public Class Form1
         DogsList.Print_dogs_list() ' create text file with list of dogs
 
 
-        ReDim dogs(0 To counter - 1)
+        '       ReDim dogs(0 To counter - 1)
 
         ' 12 Feb using the new Dogs_struct to replace the dogs array  
         ' at this stage we know how many dogs are there
         ' time to rad them into database
 
-        Dogs_records.dogs_cnt = counter
-        ReDim Dogs_records.dogs_list(0 To counter - 1)
+        '     Dogs_records.dogs_cnt = counter
+        '     ReDim Dogs_records.dogs_list(0 To counter - 1)
 
 
         Dim i As Integer
@@ -276,31 +271,31 @@ Public Class Form1
         Dim curTime As DateTime = DateTime.Now
 
         ' ******  Read dogs and DOB into dogs array
-        MyExcel.Range("L2").Activate()
-        For i = 0 To counter - 1
-            dogs(i).Name = MyExcel.ActiveCell.Text
-            MyExcel.ActiveCell.Offset(0, 1).Activate()
-            stmp = MyExcel.ActiveCell.Text
-            td = MyExcel.ActiveCell.Value
-            ' td = CDate(stmp)
-            dogs(i).DOB = MyExcel.ActiveCell.Value
+        'MyExcel.Range("L2").Activate()
+        'For i = 0 To counter - 1
+        '    dogs(i).Name = MyExcel.ActiveCell.Text
+        '    MyExcel.ActiveCell.Offset(0, 1).Activate()
+        '    stmp = MyExcel.ActiveCell.Text
+        '    td = MyExcel.ActiveCell.Value
+        '    ' td = CDate(stmp)
+        '    dogs(i).DOB = MyExcel.ActiveCell.Value
 
-            ' calculate age and store
-            ageindays = curTime - dogs(i).DOB
+        '    ' calculate age and store
+        '    ageindays = curTime - dogs(i).DOB
 
 
 
-            dogs(i).Age = Int(ageindays.Days / 7)
+        '    dogs(i).Age = Int(ageindays.Days / 7)
 
-            'dogs(i).Age = CInt(DateDiff("ww", Now, dogs(i).DOB))
+        '    'dogs(i).Age = CInt(DateDiff("ww", Now, dogs(i).DOB))
 
-            'add to list on form
-            BoxDogsList.Items.Add(dogs(i).Name.PadRight(8, " ") + "*" + CStr(dogs(i).DOB) + "*" + CStr(dogs(i).Age))
+        '    'add to list on form
+        '    BoxDogsList.Items.Add(dogs(i).Name.PadRight(8, " ") + "*" + CStr(dogs(i).DOB) + "*" + CStr(dogs(i).Age))
 
-            MyExcel.ActiveCell.Offset(1, -1).Activate()
-            AddToDogsGrid(DGV_Dogs_list, i + 1, dogs(i).Name, dogs(i).DOB, dogs(i).Age)
+        '    MyExcel.ActiveCell.Offset(1, -1).Activate()
+        '    AddToDogsGrid(DGV_Dogs_list, i + 1, dogs(i).Name, dogs(i).DOB, dogs(i).Age)
 
-        Next i
+        'Next i
         ProgressBar1.Value = 50
 
         ' ***************************************************
@@ -322,11 +317,12 @@ Public Class Form1
 
             If counter < MAX_NUM_OF_PRACTICES_TYPES And stmp <> "END" Then
                 counter = counter + 1
-                row_cnt = row_cnt + 1
+
                 TxtPracticeTypes.Text = counter
                 pname = MyExcel.Cells(row_cnt, col_cnt).text ' class way get Practice name
                 pnum = MyExcel.Cells(row_cnt, col_cnt + 1).value ' class way get Practice num
-                practiceList.add_practice(pname, pnum)
+                practiceList.add_practice(pname, pnum)      ' add another practice pair (name and number)
+                row_cnt = row_cnt + 1
             Else
                 Exit Do
             End If
@@ -343,14 +339,14 @@ Public Class Form1
 
 
 
-        ReDim Practice_Types(0 To counter - 1)
+        '   ReDim Practice_Types(0 To counter - 1)
         ProgressBar1.Value = 55
 
         ' read practice types into an array
-        For i = 1 To counter
-            Practice_Types(i - 1).Practice_Name = MyExcel.Cells(i + 1, col_cnt).text
-            Practice_Types(i - 1).Practice_Code = MyExcel.Cells(i + 1, col_cnt + 1).value
-        Next i
+        '    For i = 1 To counter
+        '         Practice_Types(i - 1).Practice_Name = MyExcel.Cells(i + 1, col_cnt).text
+        '         Practice_Types(i - 1).Practice_Code = MyExcel.Cells(i + 1, col_cnt + 1).value
+        '   Next i
         ProgressBar1.Value = 60
 
 
@@ -395,48 +391,48 @@ Public Class Form1
 
 
 
-        ReDim practices_list(0 To counter - 1)
+        '    ReDim practices_list(0 To counter - 1)
         ProgressBar1.Value = 65
 
         ' read practice list 
         For i = 0 To counter - 1
 
-            practices_list(i).Pract_dog = MyExcel.Cells(i + 2, col_cnt).text ' get dog's name
-            practices_list(i).Pract_Date = MyExcel.Cells(i + 2, col_cnt + 1).value ' get practice day
-            practices_list(i).Pract_Type = MyExcel.Cells(i + 2, col_cnt + 2).text ' get practice type
-            practices_list(i).Pract_Start = CDate(MyExcel.Cells(i + 2, col_cnt + 3).text) ' get practice start
-            practices_list(i).Pract_End = CDate(MyExcel.Cells(i + 2, col_cnt + 4).text) ' get practice end
+            '       practices_list(i).Pract_dog = MyExcel.Cells(i + 2, col_cnt).text ' get dog's name
+            '       practices_list(i).Pract_Date = MyExcel.Cells(i + 2, col_cnt + 1).value ' get practice day
+            '       practices_list(i).Pract_Type = MyExcel.Cells(i + 2, col_cnt + 2).text ' get practice type
+            '       practices_list(i).Pract_Start = CDate(MyExcel.Cells(i + 2, col_cnt + 3).text) ' get practice start
+            '       practices_list(i).Pract_End = CDate(MyExcel.Cells(i + 2, col_cnt + 4).text) ' get practice end
 
             'add to list on form
-            BoxPracticeList.Items.Add(practices_list(i).Pract_dog.PadRight(8, " ") +
-                CStr(practices_list(i).Pract_Date) + CStr(practices_list(i).Pract_Start) +
-                CStr(practices_list(i).Pract_End).PadRight(10, " "))
+            '            BoxPracticeList.Items.Add(practices_list(i).Pract_dog.PadRight(8, " ") +
+            '            CStr(practices_list(i).Pract_Date) + CStr(practices_list(i).Pract_Start) +
+            '            CStr(practices_list(i).Pract_End).PadRight(10, " "))
             ' AddToPracticesListGrid(DGV_Dogs_list, i + 1, dogs(i).Name, dogs(i).DOB, dogs(i).Age)
 
 
 
 
 
-            AddToPracticesListGrid(DGV_Practices_list,
-                                   i,
-                                        practices_list(i).Pract_dog,
-                                        practices_list(i).Pract_Date.Date.ToString("dd MM yyyy"),
-                                        practices_list(i).Pract_Type,
-                                        practices_list(i).Pract_Start.ToString("HH:mm"),
-                                        practices_list(i).Pract_End.ToString("HH:mm"),
-                                        practices_list(i).Pract_Video)
-            DGV_Practices_list.AutoResizeColumns()
+            '           AddToPracticesListGrid(DGV_Practices_list,
+            '           i,
+            '           practices_list(i).Pract_dog,
+            '          practices_list(i).Pract_Date.Date.ToString("dd MM yyyy"),
+            '         practices_list(i).Pract_Type,
+            '        practices_list(i).Pract_Start.ToString("HH:mm"),
+            '       practices_list(i).Pract_End.ToString("HH:mm"),
+            '      practices_list(i).Pract_Video)
+            '     DGV_Practices_list.AutoResizeColumns()
 
 
             Console.BackgroundColor = ConsoleColor.Blue
             Console.WriteLine(" ......STARTING.................")
             Console.WriteLine(i)
-            Console.WriteLine(practices_list(i).Pract_Date.Date)
-            Console.WriteLine(practices_list(i).Pract_Date.Hour)
-            Console.WriteLine(practices_list(i).Pract_Date.ToString("HH:mm"))
-            Console.WriteLine("start" & practices_list(i).Pract_Start)
+            '       Console.WriteLine(practices_list(i).Pract_Date.Date)
+            '       Console.WriteLine(practices_list(i).Pract_Date.Hour)
+            '       Console.WriteLine(practices_list(i).Pract_Date.ToString("HH:mm"))
+            '       Console.WriteLine("start" & practices_list(i).Pract_Start)
 
-            Console.WriteLine("end  " & practices_list(i).Pract_End)
+            ' Console.WriteLine("end  " & practices_list(i).Pract_End)
             Console.BackgroundColor = ConsoleColor.White
 
 
@@ -522,15 +518,9 @@ Public Class Form1
 
 
             ' The CLASS way
-
             dog_session.Open_Session_file(in_PathName + fileName)
-
             dog_session.Init_session()
-
-
-
             dog_session.Close_Excel()
-
 
             'petDay = Mid(stmp, 4, 2)
             'petMonth = Left(stmp, 2)
