@@ -6,17 +6,40 @@ End Class
 
 
 Public Class DogSession
+    ' the class handles the CSV file being read
 
     Public pract_Excel As New Microsoft.Office.Interop.Excel.Application
-    Public start_day, end_day As String
+    Public start_day, end_day As Date
     Public pet_name, pet_ID As String
     Public lines_read As New List(Of String)
 
     Public Sub Init_session()
         pet_name = pract_Excel.Cells(2, 1).text.Substring(10)
         pet_ID = pract_Excel.Cells(2, 2).text.substring(8)
-        start_day = pract_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
-        end_day = pract_Excel.Cells(1, 2).text.Replace("To:", "").Replace(" ", "")
+
+        Dim s1 As String = pract_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
+
+        '      Try
+        '  d1 = CDate(s1)
+        Dim x1 As String = s1.Substring(0, 2)
+        Dim x2 As String = s1.Substring(3, 2)
+        Dim x3 As String = x2 + "/" + x1 + "/" + s1.Substring(6, 4)
+        Dim d3 As Date = CDate(x3)
+
+        '      Catch ex As Exception
+        '      MessageBox.Show(ex.Message)
+        '      End Try
+
+        start_day = d3
+
+        s1 = pract_Excel.Cells(1, 2).text.Replace("To:", "").Replace(" ", "")
+        x1 = s1.Substring(0, 2)
+        x2 = s1.Substring(3, 2)
+        x3 = x2 + "/" + x1 + "/" + s1.Substring(6, 4)
+        d3 = CDate(x3)
+        end_day = d3
+
+
     End Sub
 
     Public Sub Read_Lines()
@@ -59,14 +82,10 @@ Public Class DogSession
     End Sub
 
 
+
     Public Sub Open_Session_file(_fname As String)
         pract_Excel.Workbooks.Open(_fname)
     End Sub
-
-
-
-
-
 
     Public Sub Close_Excel()
         pract_Excel.Workbooks.Close()
@@ -75,6 +94,7 @@ Public Class DogSession
 
 End Class ' of class DogSession
 
-Public Class SessionsClass
-
-End Class
+'Public Class SessionsClass
+'
+'End Class
+'

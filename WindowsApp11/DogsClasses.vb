@@ -45,6 +45,7 @@ Public Class DogsListClass
         Next
         Return res
     End Function
+
     Public Sub AddDog(_dog As DogClass)
         dogs_List.Add(_dog)
     End Sub
@@ -67,8 +68,6 @@ Public Class DogsListClass
         Next
         file.Close()
     End Sub ' Print_dogs_list
-
-
 
 End Class  ' of DogsListClass
 
@@ -105,8 +104,6 @@ Public Class PracticesList
         get_prtactice_num = num
     End Function
 
-
-
     Public Sub Print_practices_list()
         Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\practices_list.txt"
 
@@ -131,15 +128,101 @@ Class Session
     Public endTime As Date
     Public videoNum As String
     Public sessionOnAday As Integer
+
+    Public Sub SetdogName(ByVal _name As String)
+        dogName = _name
+    End Sub
+
+    Public Sub SetPracticeDate(ByVal _date As Date)
+        practiceDate = _date
+    End Sub
+
+    Public Sub SetpracticeType(ByVal _type As String)
+        practiceType = _type
+    End Sub
+
+    Public Sub SetstartTime(ByVal _start_time As Date)
+        ' because the date comes as string from the practice file 
+        ' TBD - check if string comes as string or as date and act accordingly
+
+
+        'Try
+        '    ' Dim t1 As DateTime = Convert.ToDateTime(_start_time)
+        '    Dim t1 As Date = Convert.ToDateTime(_start_time)
+        '    Console.WriteLine(t1.ToString("HH:mm"))
+        '    startTime = _start_time
+        'Catch ex As Exception
+        '    MessageBox.Show(ex.Message)
+        'End Try
+
+
+        '  Dim t2 As DateTime = Convert.ToDateTime(s.endTime)
+
+
+
+
+
+        startTime = _start_time
+    End Sub
+
+
+    Public Sub SetendTime(ByVal _end_time As Date)
+        endTime = _end_time
+    End Sub
+
+    Public Sub SetvideoNum(ByVal _videoNum As String)
+        videoNum = _videoNum
+    End Sub
+
+    Public Sub SetSessiomOnAday(ByVal _Sessiononaday As Integer)
+        sessionOnAday = _Sessiononaday
+    End Sub
+
 End Class ' a Session
 
 Class List_of_Sessions
-    Dim sessionsList As New List(Of Session)
+    Public sessionsList As New List(Of Session)
 
-    Public Sub add_session(ByVal _p As Session)
+    Public Sub add_session(_p As Session)
         sessionsList.Add(_p)
     End Sub ' of add_practice sub
 
+    Public Function Is_Session_Needed(_name As String, _date As Date) As Integer
+        ' cecks if a session file read is part of the required sessions list 
+        ' from practice file (in sessionsList variable)
+        ' need to extract the date as it is as string mm/dd/yyy
+
+        Dim is_needed As Integer = -1 ' default is false
+        Dim cnt As Integer
+
+        'Dim t1 As Date = CDate(_date)
+        'Dim t2 As String = Format(_date, "dd mm yyyy")
+        'Dim t3 As String = Format(_date, "dd mmm yyyy")
+
+        'If sessionsList(cnt).practiceDate = t3 Then
+        '    Console.WriteLine("Shavim after all")
+        'End If
+
+
+        Try
+            For cnt = 0 To sessionsList.Count() - 1
+                If sessionsList(cnt).dogName = _name Then
+                    If sessionsList(cnt).practiceDate = _date Then
+                        is_needed = cnt
+                        Exit For
+                    End If
+                End If
+            Next cnt
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+
+
+
+
+
+        Return is_needed
+    End Function
 
     Public Sub Print_sessions_list()
         Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\sessions_list.txt"
@@ -160,7 +243,4 @@ Class List_of_Sessions
     End Sub ' Print_dogs_list
 
 
-
-
-
-End Class   ' of List_of_Dog_practices
+End Class   ' List_of_Sessions
