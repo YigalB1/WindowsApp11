@@ -42,13 +42,50 @@ Public Class DogSession
 
     End Sub
 
+    Public Sub IsLine_Pre_Act_Post(x_dat_time As Date)
+
+        Dim x As Integer = 1
+
+    End Sub
+
+
+
+
     Public Sub Read_Lines()
+
         Dim tLine As String
-        Dim tCnt = 4
+        Dim tdate As Date
+        Dim tCnt As Integer = 4
+        Dim LineCnt As Integer = 4
         Dim prev_time_stamp As String = ""
+        Dim lineDate As Date
+        Dim lineTime As Date
+
+        Try
+
+
+            tLine = pract_Excel.Cells(tCnt, 1).Text
+
+
+
+            While (tLine <> "")
+                tdate = pract_Excel.Cells(tCnt, 2).value
+                lineDate = get_date(tdate)
+                lineTime = get_time(tdate)
+                tCnt += 1
+                tLine = pract_Excel.Cells(tCnt, 1).Text
+                '        Console.WriteLine(lineDate.ToString() + "  " + lineTime.ToString())
+            End While
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+
+        Exit Sub
+
 
         Dim prev_line As New Session_Line
-        tLine = pract_Excel.Cells(tCnt, 1).text
+        tLine = pract_Excel.Cells(tCnt, 1).Text
         While (tLine <> "")
             ' lines that are not needed
             If tLine = "Position" Then
@@ -58,7 +95,7 @@ Public Class DogSession
                 Continue While
             End If
             If (pract_Excel.Cells(tCnt, 6) = "" And pract_Excel.Cells(tCnt, 7) = "" And
-                pract_Excel.Cells(tCnt, 8) = "" And pract_Excel.Cells(tCnt, 9) = "") Then
+            pract_Excel.Cells(tCnt, 8) = "" And pract_Excel.Cells(tCnt, 9) = "") Then
                 Continue While
             End If
             ' at this point we keep the line
@@ -81,18 +118,38 @@ Public Class DogSession
 
     End Sub
 
+    Function get_date(_inline As Date) As Date
+        ' TBD current content just for start
+
+        If IsDate(_inline) Then
+            Return _inline.Date()
+        Else
+            Console.WriteLine("Error with date: " + _inline.ToString())
+        End If
+    End Function
+
+    Function get_time(_inline As Date) As Date
+        ' TBD current content just for start
+
+        If IsDate(_inline) Then
+            Return _inline.time()
+        Else
+            Return Date.Now()
+        End If
+    End Function
+
 
 
     Public Sub Open_Session_file(_fname As String)
-        pract_Excel.Workbooks.Open(_fname)
-    End Sub
+            pract_Excel.Workbooks.Open(_fname)
+        End Sub
 
-    Public Sub Close_Excel()
-        pract_Excel.Workbooks.Close()
-        '  pract_Excel = Nothing
-    End Sub
+        Public Sub Close_Excel()
+            pract_Excel.Workbooks.Close()
+            '  pract_Excel = Nothing
+        End Sub
 
-End Class ' of class DogSession
+    End Class ' of class DogSession
 
 'Public Class SessionsClass
 '

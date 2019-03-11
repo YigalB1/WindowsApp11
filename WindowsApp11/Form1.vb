@@ -14,7 +14,7 @@ Public Class Form1
     Public default_sessions_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\" + "SessionsFiles\\"
     Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\practice_list.xlsx"
     Public LogFile = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\logDog.txt"
-    Public csv_pattern As String = "*0.csv"
+    Public csv_pattern As String = "*083229.csv"
 
     Dim DogsList As New DogsListClass
     Dim practiceList As New PracticesList
@@ -142,9 +142,9 @@ Public Class Form1
 
         ' set color before usage
         RdPracticeFile.BackColor = Color.Yellow
-        CreateDogsGrid(DGV_Dogs_list)
+        '      CreateDogsGrid(DGV_Dogs_list)
         ' CreatePracicesTypeGrid(DGV_Practices_list)
-        CreatePracicesListGrid((DGV_Practices_list))
+        '     CreatePracicesListGrid((DGV_Practices_list))
 
         'AddToDogsGrid(DGV_Dogs_list, 15, "AXY", Today(), 17)
 
@@ -314,38 +314,16 @@ Public Class Form1
         Dim col_cnt = 1
         Dim stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get first dog's name
 
-        ' check if date variables are realy date format
-
-
-
-
 
 
         Do
             Dim s As New Session
 
-            '      If counter = 3 Then
-            '      Exit Do
-            '      End If
+
 
             TxtPracticesNum.Text = counter
 
 
-
-            'Try
-            '    Dim d1, d2, d3 As Date
-            '    Dim s1, s2, s3 As String
-
-            '    ' d1 = MyExcel.Cells(row_cnt, col_cnt + 3).value
-            '    s1 = MyExcel.Cells(row_cnt, col_cnt + 3).text
-            '    d2 = CDate(s1)
-
-
-            '    d1 = MyExcel.Cells(row_cnt, col_cnt + 1).value
-            '    s1 = MyExcel.Cells(row_cnt, col_cnt + 1).text
-            '    d2 = CDate(s1)
-
-            '    s3 = s1
 
 
             'Catch ex As Exception
@@ -477,33 +455,6 @@ Public Class Form1
 
 
 
-    Private Sub trytableread()
-        'Try
-        '    Dim MyConnection As System.Data.OleDb.OleDbConnection
-        '    Dim DtSet As System.Data.DataSet
-        '    Dim MyCommand As System.Data.OleDb.OleDbDataAdapter
-        '    'Fill the [Excel file fullpath] with specific value
-        '    MyConnection = New System.Data.OleDb.OleDbConnection _
-        '    ("provider=Microsoft.Jet.OLEDB.4.0;Data source='C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list.xlsx';Extended Properties = Excel 8.0")
-        '    MyCommand = New System.Data.OleDb.OleDbDataAdapter _
-        '        ("select * from [Sheet1$]", MyConnection)
-        '    MyCommand.TableMappings.Add("Table", "TestTable")
-        '    DtSet = New System.Data.DataSet
-        '    MyCommand.Fill(DtSet)
-        '    '        DataGridView1.DataSource = DtSet.Tables(0)
-        '    MyConnection.Close()
-        'Catch ex As Exception
-        '    MessageBox.Show(ex.Message)
-        'End Try
-    End Sub
-
-
-
-  
-
-
-
-
     Private Sub try3()
 
 
@@ -516,10 +467,7 @@ Public Class Form1
         If Stage_Read_Practice_Table = False Then
             MessageBox.Show("Must read practice file BEFORE reading sessions list")
             Exit Sub
-
         End If
-
-
         Read_CSV_Session_files()
     End Sub
 
@@ -550,6 +498,7 @@ Public Class Form1
             dog_session.Open_Session_file(in_PathName + fileName)
             dog_session.Init_session()
             session_num = sessions.Is_Session_Needed(dog_session.pet_name, dog_session.start_day)
+            dog_session.Read_Lines()
 
             If session_num = -1 Then
                 no_match_cnt += 1
@@ -558,18 +507,18 @@ Public Class Form1
             Else
                 Print_to_log_file("Match ")
                 match_cnt += 1
+
+                ' start reading line by line, see if time is matching the pre/act/post
+
+
+
+
+
+
+
             End If
 
-            'Print_to_log_file("----- CSV file: " + fileName)
-
-            'Print_to_log_file("--------------------------------")
-
             dog_session.Close_Excel()
-
-            'petDay = Mid(stmp, 4, 2)
-            'petMonth = Left(stmp, 2)
-            'petYear = Right(stmp, 4)
-
 
             fileName = Dir()
             Console.WriteLine(" finished file number " + file_count.ToString())
@@ -609,37 +558,10 @@ Public Class Form1
 
     End Sub
 
-    Sub try1_read_to_memory()
 
 
 
-        'Dim file_Name = "place holder"
-        'Dim ds As DataSet = New DataSet
-        'Dim cn As New OleDbConnection
 
-        'Dim cmd As OleDbDataAdapter = Nothing
-        'Dim SheetName As String = ""
-        'cn = New OleDbConnection(("Provider=Microsoft.ACE.OLEDB.12.0;" + ("Data Source=" _
-        '                + (File_Name + ";Extended Properties=""Excel 12.0;HDR=NO;IMEX=1"""")"))), cmd = newOleDbDataAdapter(SELECT * FROM [+SheetName+$A1:E8],cnUnknown)
-        'cmd.Fill(ds, "ExcelFile")
-        'cmd = New OleDbDataAdapter(("SELECT [F1], [F2], [F3], [F4], [F5], [F7], [F8], [F15], [F17] FROM [" _
-        '                + (SheetName + ("$A10:Q1000" + "]"))), cn)
-        'cmd.Fill(ds, "ExcelFile")
-
-    End Sub
-
-    Sub try2()
-        '' Imports spire.xls
-
-        'Dim book As workbook = New workbook
-        'book.loadfromfile("d:\123.xlsx")
-        'Dim sheet As worksheet = book.worksheets("sheet1")
-        'Dim newbook As workbook = New workbook
-        'newbook.version = book.version
-        'newbook.worksheets.clear
-        'newbook.worksheets.addcopy(sheet, worksheetcopytype.copyall)
-        'newbook.savetostream(memorystream, fileformat.version2013)
-    End Sub
 
     Sub Print_to_log_file(_str As String, Optional _keep As Boolean = True)
         '        Dim LogFile = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\logDog.txt"

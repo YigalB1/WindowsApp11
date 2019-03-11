@@ -195,17 +195,11 @@ Class List_of_Sessions
         Dim is_needed As Integer = -1 ' default is false
         Dim cnt As Integer
 
-        'Dim t1 As Date = CDate(_date)
-        'Dim t2 As String = Format(_date, "dd mm yyyy")
-        'Dim t3 As String = Format(_date, "dd mmm yyyy")
-
-        'If sessionsList(cnt).practiceDate = t3 Then
-        '    Console.WriteLine("Shavim after all")
-        'End If
 
 
-        Try
-            For cnt = 0 To sessionsList.Count() - 1
+
+        'Try
+        For cnt = 0 To sessionsList.Count() - 1
                 If sessionsList(cnt).dogName = _name Then
                     If sessionsList(cnt).practiceDate = _date Then
                         is_needed = cnt
@@ -213,9 +207,9 @@ Class List_of_Sessions
                     End If
                 End If
             Next cnt
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        End Try
+        'Catch ex As Exception
+        'MessageBox.Show(ex.Message)
+        'End Try
 
 
 

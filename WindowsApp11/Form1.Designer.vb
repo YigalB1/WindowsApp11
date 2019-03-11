@@ -52,8 +52,6 @@ Partial Class Form1
         Me.TxtPracticeTypes = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.DGV_Dogs_list = New System.Windows.Forms.DataGridView()
-        Me.DGV_Practices_list = New System.Windows.Forms.DataGridView()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.RdSessionFiles = New System.Windows.Forms.Button()
@@ -61,15 +59,13 @@ Partial Class Form1
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DGV_Dogs_list, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DGV_Practices_list, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TxtBoxHeader
         '
         Me.TxtBoxHeader.Location = New System.Drawing.Point(155, 8)
-        Me.TxtBoxHeader.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TxtBoxHeader.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtBoxHeader.Name = "TxtBoxHeader"
         Me.TxtBoxHeader.Size = New System.Drawing.Size(153, 20)
         Me.TxtBoxHeader.TabIndex = 0
@@ -78,7 +74,7 @@ Partial Class Form1
         'TxtBoxWorkDir
         '
         Me.TxtBoxWorkDir.Location = New System.Drawing.Point(20, 49)
-        Me.TxtBoxWorkDir.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TxtBoxWorkDir.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtBoxWorkDir.Name = "TxtBoxWorkDir"
         Me.TxtBoxWorkDir.Size = New System.Drawing.Size(321, 20)
         Me.TxtBoxWorkDir.TabIndex = 1
@@ -87,7 +83,7 @@ Partial Class Form1
         'TxtBoxSessionDir
         '
         Me.TxtBoxSessionDir.Location = New System.Drawing.Point(20, 89)
-        Me.TxtBoxSessionDir.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TxtBoxSessionDir.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtBoxSessionDir.Name = "TxtBoxSessionDir"
         Me.TxtBoxSessionDir.Size = New System.Drawing.Size(321, 20)
         Me.TxtBoxSessionDir.TabIndex = 2
@@ -96,7 +92,7 @@ Partial Class Form1
         'TxtBoxNumOfFiles
         '
         Me.TxtBoxNumOfFiles.Location = New System.Drawing.Point(633, 99)
-        Me.TxtBoxNumOfFiles.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TxtBoxNumOfFiles.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtBoxNumOfFiles.Name = "TxtBoxNumOfFiles"
         Me.TxtBoxNumOfFiles.Size = New System.Drawing.Size(68, 20)
         Me.TxtBoxNumOfFiles.TabIndex = 3
@@ -114,7 +110,7 @@ Partial Class Form1
         'ButtonSelectWorkFolder
         '
         Me.ButtonSelectWorkFolder.Location = New System.Drawing.Point(364, 46)
-        Me.ButtonSelectWorkFolder.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.ButtonSelectWorkFolder.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectWorkFolder.Name = "ButtonSelectWorkFolder"
         Me.ButtonSelectWorkFolder.Size = New System.Drawing.Size(126, 25)
         Me.ButtonSelectWorkFolder.TabIndex = 5
@@ -124,7 +120,7 @@ Partial Class Form1
         'Button2
         '
         Me.Button2.Location = New System.Drawing.Point(364, 85)
-        Me.Button2.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.Button2.Margin = New System.Windows.Forms.Padding(2)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(126, 26)
         Me.Button2.TabIndex = 6
@@ -134,7 +130,7 @@ Partial Class Form1
         'TxtPreTime
         '
         Me.TxtPreTime.Location = New System.Drawing.Point(635, 50)
-        Me.TxtPreTime.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TxtPreTime.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtPreTime.Name = "TxtPreTime"
         Me.TxtPreTime.Size = New System.Drawing.Size(80, 20)
         Me.TxtPreTime.TabIndex = 7
@@ -143,7 +139,7 @@ Partial Class Form1
         'NumericUpDown2
         '
         Me.NumericUpDown2.Location = New System.Drawing.Point(196, 255)
-        Me.NumericUpDown2.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.NumericUpDown2.Margin = New System.Windows.Forms.Padding(2)
         Me.NumericUpDown2.Name = "NumericUpDown2"
         Me.NumericUpDown2.Size = New System.Drawing.Size(5, 20)
         Me.NumericUpDown2.TabIndex = 8
@@ -151,7 +147,7 @@ Partial Class Form1
         'TxtPostTime
         '
         Me.TxtPostTime.Location = New System.Drawing.Point(635, 71)
-        Me.TxtPostTime.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TxtPostTime.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtPostTime.Name = "TxtPostTime"
         Me.TxtPostTime.Size = New System.Drawing.Size(80, 20)
         Me.TxtPostTime.TabIndex = 9
@@ -317,27 +313,11 @@ Partial Class Form1
         Me.Label8.TabIndex = 29
         Me.Label8.Text = "Practices list"
         '
-        'DGV_Dogs_list
-        '
-        Me.DGV_Dogs_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DGV_Dogs_list.Location = New System.Drawing.Point(20, 280)
-        Me.DGV_Dogs_list.Name = "DGV_Dogs_list"
-        Me.DGV_Dogs_list.Size = New System.Drawing.Size(238, 188)
-        Me.DGV_Dogs_list.TabIndex = 30
-        '
-        'DGV_Practices_list
-        '
-        Me.DGV_Practices_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DGV_Practices_list.Location = New System.Drawing.Point(283, 280)
-        Me.DGV_Practices_list.Name = "DGV_Practices_list"
-        Me.DGV_Practices_list.Size = New System.Drawing.Size(265, 188)
-        Me.DGV_Practices_list.TabIndex = 31
-        '
         'DataGridView1
         '
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.Location = New System.Drawing.Point(754, 471)
-        Me.DataGridView1.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.DataGridView1.Margin = New System.Windows.Forms.Padding(2)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.RowTemplate.Height = 28
         Me.DataGridView1.Size = New System.Drawing.Size(160, 97)
@@ -346,7 +326,7 @@ Partial Class Form1
         'Button1
         '
         Me.Button1.Location = New System.Drawing.Point(742, 414)
-        Me.Button1.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.Button1.Margin = New System.Windows.Forms.Padding(2)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(81, 40)
         Me.Button1.TabIndex = 33
@@ -356,7 +336,7 @@ Partial Class Form1
         'RdSessionFiles
         '
         Me.RdSessionFiles.Location = New System.Drawing.Point(364, 205)
-        Me.RdSessionFiles.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.RdSessionFiles.Margin = New System.Windows.Forms.Padding(2)
         Me.RdSessionFiles.Name = "RdSessionFiles"
         Me.RdSessionFiles.Size = New System.Drawing.Size(126, 24)
         Me.RdSessionFiles.TabIndex = 34
@@ -371,8 +351,6 @@ Partial Class Form1
         Me.Controls.Add(Me.RdSessionFiles)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.DataGridView1)
-        Me.Controls.Add(Me.DGV_Practices_list)
-        Me.Controls.Add(Me.DGV_Dogs_list)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.TxtPracticeTypes)
@@ -401,15 +379,13 @@ Partial Class Form1
         Me.Controls.Add(Me.TxtBoxSessionDir)
         Me.Controls.Add(Me.TxtBoxWorkDir)
         Me.Controls.Add(Me.TxtBoxHeader)
-        Me.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.Margin = New System.Windows.Forms.Padding(2)
         Me.Name = "Form1"
         Me.Text = "Form1"
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DGV_Dogs_list, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DGV_Practices_list, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -446,8 +422,6 @@ Partial Class Form1
     Friend WithEvents TxtPracticeTypes As TextBox
     Friend WithEvents Label7 As Label
     Friend WithEvents Label8 As Label
-    Friend WithEvents DGV_Dogs_list As DataGridView
-    Friend WithEvents DGV_Practices_list As DataGridView
     Friend WithEvents DataGridView1 As DataGridView
     Friend WithEvents Button1 As Button
     Friend WithEvents RdSessionFiles As Button
