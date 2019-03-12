@@ -14,8 +14,8 @@ Public Class Form1
     Public default_sessions_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\" + "SessionsFiles\\"
     Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\practice_list.xlsx"
     Public LogFile = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\logDog.txt"
-    Public csv_pattern As String = "*083229.csv"
-
+    Public csv_pattern As String = "*9.csv"
+    ' *083229.csv
     Dim DogsList As New DogsListClass
     Dim practiceList As New PracticesList
     Dim sessions As New List_of_Sessions
@@ -186,7 +186,8 @@ Public Class Form1
 
     Private Sub RdPracticeFile_Click(sender As Object, e As EventArgs) Handles RdPracticeFile.Click
 
-        Print_to_log_file("Starting " + Date.Now(), False)
+        Print_to_log_file("Reading Practice file " + Date.Now(), False)
+        Print_to_log_file("Practice file: " + Me.TxtBoxPracticeFile.Text)
         Print_to_log_file("------------------------------")
 
 
@@ -264,8 +265,6 @@ Public Class Form1
     End Sub ' of Read_Dog_List 
 
     Private Sub Read_Pracice_Types_List()
-
-
         Dim pname As String
         Dim pnum As Integer
 
@@ -280,7 +279,6 @@ Public Class Form1
 
         Do
             stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get Practice name
-
 
             If counter < MAX_NUM_OF_PRACTICES_TYPES And stmp <> "END" Then
                 counter = counter + 1
@@ -298,7 +296,6 @@ Public Class Form1
         MyExcel.Workbooks.Close()
         MyExcel = Nothing
 
-
     End Sub ' of Read_Pracice_Types_List
 
     Private Sub Read_sessions_list()
@@ -308,30 +305,19 @@ Public Class Form1
         Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
         MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
 
-
         Dim counter = 1
         Dim row_cnt = 2
         Dim col_cnt = 1
         Dim stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get first dog's name
 
-
-
         Do
             Dim s As New Session
 
-
-
             TxtPracticesNum.Text = counter
-
-
-
 
             'Catch ex As Exception
             '    MessageBox.Show(ex.Message)
             'End Try
-
-
-
 
             s.SetdogName(MyExcel.Cells(row_cnt, col_cnt).text)
             s.SetPracticeDate(MyExcel.Cells(row_cnt, col_cnt + 1).value)
@@ -341,20 +327,6 @@ Public Class Form1
             s.SetvideoNum(MyExcel.Cells(row_cnt, col_cnt + 5).text)
             sessions.add_session(s)
 
-            'Try
-
-            '    Dim t1 As DateTime = Convert.ToDateTime(s.startTime)
-            '    Dim t2 As DateTime = Convert.ToDateTime(s.endTime)
-
-            '    Console.WriteLine(t1.ToString("HH:mm"))
-            '    Console.WriteLine(t2.ToString("HH:mm"))
-
-            'Catch ex As Exception
-            '    MessageBox.Show(ex.Message)
-            'End Try
-
-
-
             counter = counter + 1
             row_cnt = row_cnt + 1
             stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get next dog's name
@@ -362,7 +334,6 @@ Public Class Form1
 
         MyExcel.Workbooks.Close()
         MyExcel = Nothing
-
 
     End Sub ' of Read_sessions_list
 
@@ -490,7 +461,8 @@ Public Class Form1
         Dim match_cnt As Integer = 0
         '    fileName = Dir(in_PathName & "*084330.csv")
         fileName = Dir(in_PathName & csv_pattern)
-
+        Print_to_log_file("Start reading CSV files")
+        Print_to_log_file("Dir is: " + in_PathName)
         Do While fileName <> ""
 
             file_count += 1
@@ -498,7 +470,7 @@ Public Class Form1
             dog_session.Open_Session_file(in_PathName + fileName)
             dog_session.Init_session()
             session_num = sessions.Is_Session_Needed(dog_session.pet_name, dog_session.start_day)
-            dog_session.Read_Lines()
+            '   dog_session.Read_Lines()
 
             If session_num = -1 Then
                 no_match_cnt += 1

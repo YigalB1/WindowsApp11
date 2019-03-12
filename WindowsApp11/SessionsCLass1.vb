@@ -71,7 +71,7 @@ Public Class DogSession
             While (tLine <> "")
                 tdate = pract_Excel.Cells(tCnt, 2).value
                 lineDate = get_date(tdate)
-                lineTime = get_time(tdate)
+                'lineTime = get_time(tdate)
                 tCnt += 1
                 tLine = pract_Excel.Cells(tCnt, 1).Text
                 '        Console.WriteLine(lineDate.ToString() + "  " + lineTime.ToString())
@@ -128,15 +128,15 @@ Public Class DogSession
         End If
     End Function
 
-    Function get_time(_inline As Date) As Date
-        ' TBD current content just for start
+    'Function get_time(_inline As Date) As Date
+    '    ' TBD current content just for start
 
-        If IsDate(_inline) Then
-            Return _inline.time()
-        Else
-            Return Date.Now()
-        End If
-    End Function
+    '    If IsDate(_inline) Then
+    '        Return _inline.time()
+    '    Else
+    '        Return Date.Now()
+    '    End If
+    'End Function
 
 
 
