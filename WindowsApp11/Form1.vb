@@ -471,6 +471,7 @@ Public Class Form1
         Dim pet_id As String
         Dim csv_start_date As DateTime
         Dim csv_end_date As DateTime
+        Dim total_lines_of_csv As Integer = 0
 
         Dim total_sessions As New List(Of Session_file) ' will include all CSV files contect
 
@@ -533,11 +534,11 @@ Public Class Form1
 
 
 
-            Dim tdate As Date
-            Dim tCnt As Integer = 3 ' number of header lines
-            Dim LineCnt As Integer = 4
-            Dim prev_time_stamp As String = ""
-            Dim lineDate As Date
+            'Dim tdate As Date
+            ' Dim tCnt As Integer = 3 ' number of header lines
+            Dim line_Cnt As Integer = 3
+            'Dim prev_time_stamp As String = ""
+
             ' Dim lineTime As Date
 
 
@@ -547,27 +548,71 @@ Public Class Form1
 
 
 
-            Dim tLine As String = "BLABLA"   ' just to enter the loop
+            Dim line_data_type As String = "BLABLA"   ' just to enter the loop
+            Dim line_date As DateTime
+            Dim to_ignore As New List(Of String)
+            to_ignore.Add("Fever Indication")
+            to_ignore.Add("Position")
+            Dim posi_cnt As Integer = 0
+            Dim acti_cnt As Integer = 0
+            Dim pulse_cnt As Integer = 0
+            Dim resp_cnt As Integer = 0
+            Dim vvti_cnt As Integer = 0
 
 
 
-            While (tLine <> "")
+            While (line_data_type <> "")
                 Dim line_data As New Session_file.dog_data
-                tCnt += 1
-                tLine = pract_Excel.Cells(tCnt, 1).Text
-                tdate = pract_Excel.Cells(tCnt, 2).value
-                line_data.pract_type = tLine
-                line_data.pract_time = tdate
+                line_Cnt += 1
+                line_data_type = pract_Excel.Cells(line_Cnt, 1).Text
+                If to_ignore.Contains(line_data_type) Then
+                    Continue While
+                End If
 
-                'lineDate = get_date(tdate)
-                'lineTime = get_time(tdate)
+                line_date = pract_Excel.Cells(line_Cnt, 2).value
+                line_data.pract_type = line_data_type
+                line_data.pract_time = line_date
+
+                ' now collect the data according to the data type
+
+                Select Case line_data_type
+                    Case "Position"
+                        posi_cnt += 1
+                        line_data.position = pract_Excel.Cells(line_Cnt, 5).text
+                        line_data.position_duration = pract_Excel.Cells(line_Cnt, 6).value
+                    Case "Activity"
+                        acti_cnt += 1
+                        line_data.activity = pract_Excel.Cells(line_Cnt, 7).value
+
+                    Case "Pulse"
+                        pulse_cnt += 1
+                        line_data.pulse = pract_Excel.Cells(line_Cnt, 9).value
+
+                    Case "Respiration"
+                        resp_cnt += 1
+                        line_data.respiration = pract_Excel.Cells(line_Cnt, 10).value
+
+                    Case "VVTI"
+                        vvti_cnt += 1
+                        line_data.vvti = pract_Excel.Cells(line_Cnt, 11).value
+
+                    Case Else
+                        Console.WriteLine("Wrong place in case of data type in CSV lines")
+                        Console.WriteLine("line number: " + line_Cnt.ToString())
+                End Select
 
 
                 '        Console.WriteLine(lineDate.ToString() + "  " + lineTime.ToString())
                 curr_session.List_of_dog_data.Add(line_data)
             End While
+            total_lines_of_csv += line_Cnt
 
-            Print_to_log_file("Total numre of lines read: " + tCnt.ToString())
+            Print_to_log_file("Total number of lines read: " + line_Cnt.ToString())
+            Print_to_log_file("Lines with Posiiton       : " + posi_cnt.ToString())
+            Print_to_log_file("Lines with Activity       : " + acti_cnt.ToString())
+            Print_to_log_file("Lines with Pulse          : " + pulse_cnt.ToString())
+            Print_to_log_file("Lines with Respiration    : " + resp_cnt.ToString())
+            Print_to_log_file("Lines with VVTI           : " + vvti_cnt.ToString())
 
 
             pract_Excel.Workbooks.Close()
@@ -596,8 +641,9 @@ Public Class Form1
             Console.WriteLine("Pet name & ID: {0} {1} ", dog_session.pet_name, dog_session.pet_ID)
         Loop ' go and read next CSV file
 
-        Print_to_log_file("file count:             " + file_count.ToString())
-        Print_to_log_file("Had a match:            " + match_cnt.ToString())
+        Print_to_log_file("Total lines ewad      : " + total_lines_of_csv.ToString())
+        Print_to_log_file("file count            : " + file_count.ToString())
+        Print_to_log_file("Had a match           : " + match_cnt.ToString())
         Print_to_log_file("Failed to find a match: " + no_match_cnt.ToString())
 
         'MyExcel.Workbooks.Close(Me.TxtBoxPracticeFile.Text)
