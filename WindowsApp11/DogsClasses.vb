@@ -145,23 +145,6 @@ Class Session
         ' because the date comes as string from the practice file 
         ' TBD - check if string comes as string or as date and act accordingly
 
-
-        'Try
-        '    ' Dim t1 As DateTime = Convert.ToDateTime(_start_time)
-        '    Dim t1 As Date = Convert.ToDateTime(_start_time)
-        '    Console.WriteLine(t1.ToString("HH:mm"))
-        '    startTime = _start_time
-        'Catch ex As Exception
-        '    MessageBox.Show(ex.Message)
-        'End Try
-
-
-        '  Dim t2 As DateTime = Convert.ToDateTime(s.endTime)
-
-
-
-
-
         startTime = _start_time
     End Sub
 
@@ -194,10 +177,6 @@ Class List_of_Sessions
 
         Dim is_needed As Integer = -1 ' default is false
         Dim cnt As Integer
-
-
-
-
         'Try
         For cnt = 0 To sessionsList.Count() - 1
                 If sessionsList(cnt).dogName = _name Then
@@ -210,10 +189,6 @@ Class List_of_Sessions
         'Catch ex As Exception
         'MessageBox.Show(ex.Message)
         'End Try
-
-
-
-
 
         Return is_needed
     End Function

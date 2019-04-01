@@ -115,16 +115,13 @@ Public Class Form1
     End Sub
 
     Public Sub ShowEvent(sender As Object, e As EventArgs) Handles Me.Shown
-        ' ****** START AUTOMATICALLY WITH FORM
-
-
+        ' ****** STARTs AUTOMATICALLY running WITH FORM
 
         'set default directory
         TxtBoxWorkDir.Text = default_work_dir
         'TxtBoxWorkDir.Text = "C:\Users\yigal\Documents\Yigal\DogsProj\"
         TxtBoxSessionDir.Text = default_sessions_dir
         'TxtBoxSessionDir.Text = TxtBoxWorkDir.Text + "SessionsFiles\"
-
 
         TxtBoxPracticeFile.Text = default_pratice_file_name
         'TxtBoxPracticeFile.Text = TxtBoxWorkDir.Text + "practice_list1.xlsx"
@@ -142,11 +139,6 @@ Public Class Form1
 
         ' set color before usage
         RdPracticeFile.BackColor = Color.Yellow
-        '      CreateDogsGrid(DGV_Dogs_list)
-        ' CreatePracicesTypeGrid(DGV_Practices_list)
-        '     CreatePracicesListGrid((DGV_Practices_list))
-
-        'AddToDogsGrid(DGV_Dogs_list, 15, "AXY", Today(), 17)
 
         ProgressBar1.Value = 10
 
@@ -315,9 +307,15 @@ Public Class Form1
 
             TxtPracticesNum.Text = counter
 
+
+
+
             'Catch ex As Exception
             '    MessageBox.Show(ex.Message)
             'End Try
+
+
+
 
             s.SetdogName(MyExcel.Cells(row_cnt, col_cnt).text)
             s.SetPracticeDate(MyExcel.Cells(row_cnt, col_cnt + 1).value)
@@ -326,6 +324,20 @@ Public Class Form1
             s.SetendTime(MyExcel.Cells(row_cnt, col_cnt + 4).text)
             s.SetvideoNum(MyExcel.Cells(row_cnt, col_cnt + 5).text)
             sessions.add_session(s)
+
+            'Try
+
+            '    Dim t1 As DateTime = Convert.ToDateTime(s.startTime)
+            '    Dim t2 As DateTime = Convert.ToDateTime(s.endTime)
+
+            '    Console.WriteLine(t1.ToString("HH:mm"))
+            '    Console.WriteLine(t2.ToString("HH:mm"))
+
+            'Catch ex As Exception
+            '    MessageBox.Show(ex.Message)
+            'End Try
+
+
 
             counter = counter + 1
             row_cnt = row_cnt + 1
@@ -470,7 +482,9 @@ Public Class Form1
             dog_session.Open_Session_file(in_PathName + fileName)
             dog_session.Init_session()
             session_num = sessions.Is_Session_Needed(dog_session.pet_name, dog_session.start_day)
-            '   dog_session.Read_Lines()
+            dog_session.Read_Lines()
+
+
 
             If session_num = -1 Then
                 no_match_cnt += 1
