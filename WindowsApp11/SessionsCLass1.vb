@@ -14,6 +14,7 @@ Public Class DogSession
     Public lines_read As New List(Of String)
 
     Public Sub Init_session()
+        ' TBD - moving parts to read CSV procedure
         pet_name = pract_Excel.Cells(2, 1).text.Substring(10)
         pet_ID = pract_Excel.Cells(2, 2).text.substring(8)
 
@@ -59,7 +60,7 @@ Public Class DogSession
         Dim LineCnt As Integer = 4
         Dim prev_time_stamp As String = ""
         Dim lineDate As Date
-        Dim lineTime As Date
+        ' Dim lineTime As Date
 
         Try
 
@@ -126,6 +127,7 @@ Public Class DogSession
         Else
             Console.WriteLine("Error with date: " + _inline.ToString())
         End If
+        Return _inline ' in case of error only
     End Function
 
     'Function get_time(_inline As Date) As Date
@@ -141,7 +143,7 @@ Public Class DogSession
 
 
     Public Sub Open_Session_file(_fname As String)
-            pract_Excel.Workbooks.Open(_fname)
+            pract_Excel.Workbooks.Open(_fname) ' TBD - not needed, file opened at CDV routine
         End Sub
 
         Public Sub Close_Excel()

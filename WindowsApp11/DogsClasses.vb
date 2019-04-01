@@ -179,13 +179,13 @@ Class List_of_Sessions
         Dim cnt As Integer
         'Try
         For cnt = 0 To sessionsList.Count() - 1
-                If sessionsList(cnt).dogName = _name Then
-                    If sessionsList(cnt).practiceDate = _date Then
-                        is_needed = cnt
-                        Exit For
-                    End If
+            If sessionsList(cnt).dogName = _name Then
+                If sessionsList(cnt).practiceDate = _date Then
+                    is_needed = cnt
+                    Exit For
                 End If
-            Next cnt
+            End If
+        Next cnt
         'Catch ex As Exception
         'MessageBox.Show(ex.Message)
         'End Try
@@ -213,3 +213,69 @@ Class List_of_Sessions
 
 
 End Class   ' List_of_Sessions
+
+Class Session_file
+    Public session_file_name As String
+    Public session_start_time As DateTime
+    Public session_end_time As DateTime
+    Public pet_name As String
+    Public pet_ID As String
+    Public pet_gender As Char
+    Public pet_species As String
+    Public pet_breed As String
+    Public pet_owner As String
+    Public pet_weight As String
+    Public sessio_pre_start As DateTime
+    Public session_post_end As DateTime
+
+    Public Class dog_data
+        Public pract_type As String
+        Public pract_time As DateTime
+        Public pract_source As String
+        Public fever_indication As String
+        Public position As String
+        Public position_duration As Integer
+        Public activity As Double
+        Public activity_group As String
+        Public pulse As Integer
+        Public respiration As Integer
+        Public vvti As Double
+        Public Manual_data_note As String
+        Public Manual_data_value As String
+    End Class
+
+
+    Public List_of_dog_data As New List(Of dog_data)
+
+
+    Public Sub Set_file_name(ByVal _fname As String)
+        session_file_name = _fname
+    End Sub
+
+    Public Sub Set_start_end_date(ByVal _start As String, ByVal _end As String)
+        session_start_time = _start
+        session_end_time = _end
+    End Sub
+
+    Public Sub Set_pet_date(ByVal _name As String, ByVal _ID As String, ByVal _gender As Char, ByVal _species As String,
+                            ByVal _breed As String, ByVal _owner As String, ByVal _weight As String)
+        pet_name = _name
+        pet_ID = _ID
+        pet_gender = _gender
+        pet_species = _species
+        pet_breed = _breed
+        pet_owner = _owner
+        pet_weight = _weight
+    End Sub
+
+End Class ' of Session_file
+
+Class List_of_session_files
+    Public session_files As New List(Of Session_file)
+End Class
+
+
+
+
+
+

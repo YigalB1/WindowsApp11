@@ -12,9 +12,9 @@ Public Class Form1
     Public in_PathName As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\SessionsFiles\\"
     Public default_work_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
     Public default_sessions_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\" + "SessionsFiles\\"
-    Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\practice_list.xlsx"
+    Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\practice_list1.xlsx"
     Public LogFile = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\logDog.txt"
-    Public csv_pattern As String = "*9.csv"
+    Public csv_pattern As String = "export-all-Bell-11302018_083229.csv"
     ' *083229.csv
     Dim DogsList As New DogsListClass
     Dim practiceList As New PracticesList
@@ -435,15 +435,10 @@ Public Class Form1
         'try3()
     End Sub
 
-
-
-
     Private Sub try3()
 
 
     End Sub
-
-
 
     Private Sub RdSessionFiles_Click(sender As Object, e As EventArgs) Handles RdSessionFiles.Click
 
@@ -464,6 +459,7 @@ Public Class Form1
     Public Sub Read_CSV_Session_files()
         ' reading CSV files 
 
+        Dim pract_Excel As New Microsoft.Office.Interop.Excel.Application
         Dim dog_session As New DogSession
 
         Dim file_count As Integer = 0
@@ -471,40 +467,129 @@ Public Class Form1
         Dim session_num As Integer
         Dim no_match_cnt As Integer = 0
         Dim match_cnt As Integer = 0
+        Dim pet_name As String
+        Dim pet_id As String
+        Dim csv_start_date As DateTime
+        Dim csv_end_date As DateTime
+
+        Dim total_sessions As New List(Of Session_file) ' will include all CSV files contect
+
+
         '    fileName = Dir(in_PathName & "*084330.csv")
         fileName = Dir(in_PathName & csv_pattern)
         Print_to_log_file("Start reading CSV files")
         Print_to_log_file("Dir is: " + in_PathName)
-        Do While fileName <> ""
 
+        Do While fileName <> ""
+            Dim curr_session As New Session_file
             file_count += 1
 
-            dog_session.Open_Session_file(in_PathName + fileName)
-            dog_session.Init_session()
-            session_num = sessions.Is_Session_Needed(dog_session.pet_name, dog_session.start_day)
-            dog_session.Read_Lines()
+            'dog_session.Open_Session_file(in_PathName + fileName)
+            Print_to_log_file("Start reading CSV file: " + in_PathName + fileName)
+            pract_Excel.Workbooks.Open(in_PathName + fileName)
+
+            'dog_session.Init_session()
 
 
-
-            If session_num = -1 Then
-                no_match_cnt += 1
-                Print_to_log_file("Failed to find session for CSV file: " + fileName)
-                Print_to_log_file("Dog: " + dog_session.pet_name + "  " + dog_session.start_day)
-            Else
-                Print_to_log_file("Match ")
-                match_cnt += 1
-
-                ' start reading line by line, see if time is matching the pre/act/post
+            pet_name = pract_Excel.Cells(2, 1).text.Replace("Pet name: ", "").Replace(" ", "")
+            curr_session.pet_name = pet_name
+            pet_id = pract_Excel.Cells(2, 2).text.Replace("Pet id: ", "").Replace(" ", "")
+            curr_session.pet_ID = pet_id
+            Print_to_log_file("Pet name & ID: " + pet_name + " / " + pet_id)
 
 
+            ' get the start date & end date of this session file
+            Dim s1 As String = pract_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
 
-
-
-
-
+            Dim t_bool As Boolean = Date.TryParseExact(s1, "MM/dd/yyyy",
+                               Globalization.CultureInfo.InvariantCulture,
+                               Globalization.DateTimeStyles.None, csv_start_date)
+            curr_session.session_start_time = csv_start_date
+            curr_session.session_end_time = csv_end_date
+            If (t_bool = False) Then
+                MessageBox.Show("Error E1 while checking CSV file date")
+                Console.WriteLine("Error E1 while checking CSV file date")
             End If
 
-            dog_session.Close_Excel()
+
+            s1 = pract_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
+
+            t_bool = Date.TryParseExact(s1, "MM/dd/yyyy",
+                               Globalization.CultureInfo.InvariantCulture,
+                               Globalization.DateTimeStyles.None, csv_end_date)
+            If (t_bool = False) Then
+                MessageBox.Show("Error E2 while checking CSV file date")
+                Console.WriteLine("Error E2 while checking CSV file date")
+            End If
+
+
+            ' moved to later stage. First we read all CSV files
+            'session_num = sessions.Is_Session_Needed(dog_session.pet_name, dog_session.start_day)
+
+            ' done below, not in class
+            'dog_session.Read_Lines()
+
+
+
+
+
+            Dim tdate As Date
+            Dim tCnt As Integer = 3 ' number of header lines
+            Dim LineCnt As Integer = 4
+            Dim prev_time_stamp As String = ""
+            Dim lineDate As Date
+            ' Dim lineTime As Date
+
+
+            ' columns to ignore: source, fever indication, position, position duration, 
+            '                   activity group, manual data note, manual data value
+            ' lines to ignore: fever indication, position
+
+
+
+            Dim tLine As String = "BLABLA"   ' just to enter the loop
+
+
+
+            While (tLine <> "")
+                Dim line_data As New Session_file.dog_data
+                tCnt += 1
+                tLine = pract_Excel.Cells(tCnt, 1).Text
+                tdate = pract_Excel.Cells(tCnt, 2).value
+                line_data.pract_type = tLine
+                line_data.pract_time = tdate
+
+                'lineDate = get_date(tdate)
+                'lineTime = get_time(tdate)
+
+
+                '        Console.WriteLine(lineDate.ToString() + "  " + lineTime.ToString())
+                curr_session.List_of_dog_data.Add(line_data)
+            End While
+
+            Print_to_log_file("Total numre of lines read: " + tCnt.ToString())
+
+
+            pract_Excel.Workbooks.Close()
+            total_sessions.Add(curr_session)
+
+
+
+
+
+
+            'If session_num = -1 Then
+            '    no_match_cnt += 1
+            '    Print_to_log_file("Failed to find session for CSV file: " + fileName)
+            '    Print_to_log_file("Dog: " + dog_session.pet_name + "  " + dog_session.start_day)
+            'Else
+            '    Print_to_log_file("Match ")
+            '    match_cnt += 1
+
+            '    ' start reading line by line, see if time is matching the pre/act/post
+            'End If
+
+            ' dog_session.Close_Excel()
 
             fileName = Dir()
             Console.WriteLine(" finished file number " + file_count.ToString())
