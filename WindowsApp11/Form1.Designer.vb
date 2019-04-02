@@ -55,6 +55,10 @@ Partial Class Form1
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.RdSessionFiles = New System.Windows.Forms.Button()
+        Me.chk_sessions_button = New System.Windows.Forms.Button()
+        Me.Create_results_button = New System.Windows.Forms.Button()
+        Me.Create_stats_button = New System.Windows.Forms.Button()
+        Me.Button3 = New System.Windows.Forms.Button()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -199,7 +203,7 @@ Partial Class Form1
         Me.RdPracticeFile.Name = "RdPracticeFile"
         Me.RdPracticeFile.Size = New System.Drawing.Size(126, 23)
         Me.RdPracticeFile.TabIndex = 14
-        Me.RdPracticeFile.Text = "Read Practice file"
+        Me.RdPracticeFile.Text = "1) Read Practice file"
         Me.RdPracticeFile.UseVisualStyleBackColor = True
         '
         'ProgressBar1
@@ -340,14 +344,54 @@ Partial Class Form1
         Me.RdSessionFiles.Name = "RdSessionFiles"
         Me.RdSessionFiles.Size = New System.Drawing.Size(126, 24)
         Me.RdSessionFiles.TabIndex = 34
-        Me.RdSessionFiles.Text = "Read Session files"
+        Me.RdSessionFiles.Text = "2) Read Session files"
         Me.RdSessionFiles.UseVisualStyleBackColor = True
+        '
+        'chk_sessions_button
+        '
+        Me.chk_sessions_button.Location = New System.Drawing.Point(364, 244)
+        Me.chk_sessions_button.Name = "chk_sessions_button"
+        Me.chk_sessions_button.Size = New System.Drawing.Size(126, 23)
+        Me.chk_sessions_button.TabIndex = 35
+        Me.chk_sessions_button.Text = "3)  Check Sessions"
+        Me.chk_sessions_button.UseVisualStyleBackColor = True
+        '
+        'Create_results_button
+        '
+        Me.Create_results_button.Location = New System.Drawing.Point(364, 284)
+        Me.Create_results_button.Name = "Create_results_button"
+        Me.Create_results_button.Size = New System.Drawing.Size(126, 23)
+        Me.Create_results_button.TabIndex = 36
+        Me.Create_results_button.Text = "4) Create results"
+        Me.Create_results_button.UseVisualStyleBackColor = True
+        '
+        'Create_stats_button
+        '
+        Me.Create_stats_button.Location = New System.Drawing.Point(364, 323)
+        Me.Create_stats_button.Name = "Create_stats_button"
+        Me.Create_stats_button.Size = New System.Drawing.Size(126, 23)
+        Me.Create_stats_button.TabIndex = 37
+        Me.Create_stats_button.Text = "5) Create statistics"
+        Me.Create_stats_button.UseVisualStyleBackColor = True
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(298, 179)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(42, 166)
+        Me.Button3.TabIndex = 38
+        Me.Button3.Text = "Run ALL"
+        Me.Button3.UseVisualStyleBackColor = True
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1189, 556)
+        Me.Controls.Add(Me.Button3)
+        Me.Controls.Add(Me.Create_stats_button)
+        Me.Controls.Add(Me.Create_results_button)
+        Me.Controls.Add(Me.chk_sessions_button)
         Me.Controls.Add(Me.RdSessionFiles)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.DataGridView1)
@@ -425,4 +469,8 @@ Partial Class Form1
     Friend WithEvents DataGridView1 As DataGridView
     Friend WithEvents Button1 As Button
     Friend WithEvents RdSessionFiles As Button
+    Friend WithEvents chk_sessions_button As Button
+    Friend WithEvents Create_results_button As Button
+    Friend WithEvents Create_stats_button As Button
+    Friend WithEvents Button3 As Button
 End Class

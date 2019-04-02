@@ -178,6 +178,45 @@ Public Class Form1
 
     Private Sub RdPracticeFile_Click(sender As Object, e As EventArgs) Handles RdPracticeFile.Click
 
+        ReadPracticeFile()
+        'Print_to_log_file("Reading Practice file " + Date.Now(), False)
+        'Print_to_log_file("Practice file: " + Me.TxtBoxPracticeFile.Text)
+        'Print_to_log_file("------------------------------")
+
+
+
+        'RdPracticeFile.BackColor = Color.GreenYellow
+
+        'Console.BackgroundColor = ConsoleColor.Blue
+        'Console.WriteLine(" ......STARTING.................")
+        'Console.BackgroundColor = ConsoleColor.White
+
+
+        'Read_Dog_List()
+        'DogsList.Print_dogs_list() ' create text file with list of dogs
+        'ProgressBar1.Value = 40
+
+        'Read_Pracice_Types_List()
+        'practiceList.Print_practices_list() ' the class way
+        'ProgressBar1.Value = 50
+
+        'Read_sessions_list()
+        'sessions.Print_sessions_list()
+        'ProgressBar1.Value = 60
+
+        ''        Dim pname As String
+        ''        Dim pnum As Integer
+
+
+        'RdPracticeFile.BackColor = Color.Green
+        'Stage_Read_Practice_Table = True
+
+    End Sub ' of RdPracticeFile_Click (invoked from button)
+
+
+
+    Private Sub ReadPracticeFile()
+
         Print_to_log_file("Reading Practice file " + Date.Now(), False)
         Print_to_log_file("Practice file: " + Me.TxtBoxPracticeFile.Text)
         Print_to_log_file("------------------------------")
@@ -210,7 +249,11 @@ Public Class Form1
         RdPracticeFile.BackColor = Color.Green
         Stage_Read_Practice_Table = True
 
-    End Sub ' of RdPracticeFile_Click (invoked from button)
+    End Sub ' of RdPracticeFile
+
+
+
+
 
     Private Sub Read_Dog_List()
         ' Reading dogs from practice file
@@ -362,24 +405,24 @@ Public Class Form1
 
     End Sub
 
-    Private Sub ReadPracticeFile()
-        ' TBD, Not used in code
-        ' Reads directly from file to dataset
-        Dim practice_connection As System.Data.OleDb.OleDbConnection
-        Dim DtSet As System.Data.DataSet
-        Dim my_command As System.Data.OleDb.OleDbDataAdapter
+    'Private Sub ReadPracticeFile()
+    '    ' TBD, Not used in code
+    '    ' Reads directly from file to dataset
+    '    Dim practice_connection As System.Data.OleDb.OleDbConnection
+    '    Dim DtSet As System.Data.DataSet
+    '    Dim my_command As System.Data.OleDb.OleDbDataAdapter
 
-        practice_connection = New System.Data.OleDb.OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;Data source='C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list.xlsx';Extended Properties = Excel 8.0")
-        my_command = New System.Data.OleDb.OleDbDataAdapter("select * from [Sheet1$]", practice_connection)
-        my_command.TableMappings.Add("Table", "TestTable")
-        DtSet = New System.Data.DataSet()
-        my_command.Fill(DtSet)
+    '    practice_connection = New System.Data.OleDb.OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;Data source='C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list.xlsx';Extended Properties = Excel 8.0")
+    '    my_command = New System.Data.OleDb.OleDbDataAdapter("select * from [Sheet1$]", practice_connection)
+    '    my_command.TableMappings.Add("Table", "TestTable")
+    '    DtSet = New System.Data.DataSet()
+    '    my_command.Fill(DtSet)
 
-        DataGridView1.DataSource = DtSet.Tables
-        practice_connection.Close()
+    '    DataGridView1.DataSource = DtSet.Tables
+    '    practice_connection.Close()
 
 
-    End Sub
+    'End Sub
 
     Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
 
@@ -441,13 +484,24 @@ Public Class Form1
     End Sub
 
     Private Sub RdSessionFiles_Click(sender As Object, e As EventArgs) Handles RdSessionFiles.Click
+        Read_session_files()
 
+        'If Stage_Read_Practice_Table = False Then
+        '    MessageBox.Show("Must read practice file BEFORE reading sessions list")
+        '    Exit Sub
+        'End If
+        'Read_CSV_Session_files()
+    End Sub
+
+    Private Sub Read_session_files()
         If Stage_Read_Practice_Table = False Then
             MessageBox.Show("Must read practice file BEFORE reading sessions list")
             Exit Sub
         End If
         Read_CSV_Session_files()
+
     End Sub
+
 
     Private Sub TxtBoxHeader_TextChanged(sender As Object, e As EventArgs) Handles TxtBoxHeader.TextChanged
 
@@ -608,7 +662,7 @@ Public Class Form1
             total_lines_of_csv += line_Cnt
 
             Print_to_log_file("Total number of lines read: " + line_Cnt.ToString())
-            Print_to_log_file("Lines with Posiiton       : " + posi_cnt.ToString())
+            Print_to_log_file("Lines with Position       : " + posi_cnt.ToString())
             Print_to_log_file("Lines with Activity       : " + acti_cnt.ToString())
             Print_to_log_file("Lines with Pulse          : " + pulse_cnt.ToString())
             Print_to_log_file("Lines with Respiration    : " + resp_cnt.ToString())
@@ -691,6 +745,10 @@ Public Class Form1
 
     End Sub ' Print_to_log_file
 
+    Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
+        ReadPracticeFile()
+        Read_session_files()
 
+    End Sub
 End Class
 
