@@ -60,7 +60,7 @@ Public Class DogSession
         Dim LineCnt As Integer = 4
         Dim prev_time_stamp As String = ""
         Dim lineDate As Date
-        'Dim lineTime As Date
+        ' Dim lineTime As Date
 
         Try
             tLine = pract_Excel.Cells(tCnt, 1).Text
@@ -125,7 +125,7 @@ Public Class DogSession
         Return _inline ' in case of error only
     End Function
 
-    'Function get_time(_inline As Date) As Date
+    ' Function get_time(_inline As Date) As Date
     '    ' TBD current content just for start
 
     '    If IsDate(_inline) Then

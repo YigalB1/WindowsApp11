@@ -535,7 +535,7 @@ Public Class Form1
 
         Dim file_count As Integer = 0
         Dim fileName As String
-        Dim session_num As Integer
+        'Dim session_num As Integer
         Dim no_match_cnt As Integer = 0
         Dim match_cnt As Integer = 0
         Dim pet_name As String
@@ -777,10 +777,15 @@ Public Class Form1
 
     Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
         ' Run them all
+        Button3.BackColor = Color.GreenYellow
+
         ReadPracticeFile()
         Read_session_files()
         check_sessions()
+        Create_results()
+        create_statistics()
 
+        Button3.BackColor = Color.Green
     End Sub
 
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles num_of_lines_TextBox.TextChanged
@@ -804,22 +809,78 @@ Public Class Form1
                 '                Console.WriteLine(s.practiceDate.ToString)
                 '                Console.WriteLine(f.session_start_time.ToString())
                 If (s.practiceDate = f.session_start_time) Then
-                    match_cnt += 1
+
+                    s.list_of_CSV_matches.Add(match_cnt)
+
                     Console.WriteLine("Match")
+                    match_cnt += 1
                 End If
 
+            Next ' of foreach f
+            '  Print_to_log_file("Session " & sessio_num.ToString() & " has " & match_cnt & " matches")
+        Next    ' of foreach s
+
+        Print_to_log_file("re-print all matches")
+
+        sessio_num = 0
+        For Each c In sessions.sessionsList
+            Dim c_cnt As Integer = 0
+            For Each t In c.list_of_CSV_matches
+                c_cnt += 1
             Next
-            Print_to_log_file(sessio_num.ToString() & " has " & match_cnt & " matches")
+            Print_to_log_file("Session " & match_cnt.ToString() & " has " & c_cnt & " matches")
+
         Next
 
 
 
-            chk_sessions_button.BackColor = Color.Green
+        chk_sessions_button.BackColor = Color.Green
 
     End Sub
 
+    Private Sub Create_results_button_Click(sender As Object, e As EventArgs) Handles Create_results_button.Click
+        Create_results()
+    End Sub
+
+    Private Sub Create_results()
+        Create_results_button.BackColor = Color.GreenYellow
+
+        ' go over the sessions list (were read from pratice file)
+        ' get the relevant CSV files, and get the pre_act_post data
+
+        For Each s In sessions.sessionsList
+            For Each c In s.list_of_CSV_matches
+                ' go over all relevant CSV files 
+                Console.WriteLine("looking at c         : " & c.ToString())
+                Console.WriteLine("looking at dog       : " & sessions.sessionsList(c).dogName)
+                Console.WriteLine("looking at pract date: " & sessions.sessionsList(c).practiceDate)
+                Console.WriteLine("looking at pract type: " & sessions.sessionsList(c).practiceType)
+                Console.WriteLine("looking at start     : " & sessions.sessionsList(c).startTime)
+                Console.WriteLine("looking at end       : " & sessions.sessionsList(c).endTime)
 
 
+
+
+            Next
+        Next
+
+
+
+        'TBD
+
+        Create_results_button.BackColor = Color.Green
+    End Sub
+
+    Private Sub Create_stats_button_Click(sender As Object, e As EventArgs) Handles Create_stats_button.Click
+        create_statistics()
+    End Sub
+
+    Private Sub create_statistics()
+        Create_stats_button.BackColor = Color.GreenYellow
+        ' TBD
+
+        Create_stats_button.BackColor = Color.Green
+    End Sub
 
 
 

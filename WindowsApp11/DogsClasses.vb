@@ -121,13 +121,17 @@ Public Class PracticesList
 End Class ' of class PracticesList
 
 Class Session
-    Public dogName As String
-    Public practiceDate As Date
-    Public practiceType As String
-    Public startTime As Date
-    Public endTime As Date
-    Public videoNum As String
-    Public sessionOnAday As Integer
+    Public dogName As String        ' read from practice file
+    Public practiceDate As Date     ' read from practice file
+    Public practiceType As String   ' read from practice file
+    Public startTime As Date        ' read from practice file
+    Public endTime As Date          ' read from practice file
+    Public videoNum As String       ' read from practice file
+    Public sessionOnAday As Integer ' read from practice file
+
+    Public list_of_CSV_matches As New List(Of Integer) ' to be filled after reading CSV files
+    ' with CSVs that match this session
+
 
     Public Sub SetdogName(ByVal _name As String)
         dogName = _name
@@ -246,6 +250,7 @@ Class Session_file
 
 
     Public List_of_dog_data As New List(Of dog_data)
+
 
 
     Public Sub Set_file_name(ByVal _fname As String)
