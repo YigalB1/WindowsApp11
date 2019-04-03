@@ -59,6 +59,8 @@ Partial Class Form1
         Me.Create_results_button = New System.Windows.Forms.Button()
         Me.Create_stats_button = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
+        Me.num_of_lines_TextBox = New System.Windows.Forms.TextBox()
+        Me.Label9 = New System.Windows.Forms.Label()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -95,7 +97,7 @@ Partial Class Form1
         '
         'TxtBoxNumOfFiles
         '
-        Me.TxtBoxNumOfFiles.Location = New System.Drawing.Point(633, 99)
+        Me.TxtBoxNumOfFiles.Location = New System.Drawing.Point(639, 99)
         Me.TxtBoxNumOfFiles.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtBoxNumOfFiles.Name = "TxtBoxNumOfFiles"
         Me.TxtBoxNumOfFiles.Size = New System.Drawing.Size(68, 20)
@@ -133,7 +135,7 @@ Partial Class Form1
         '
         'TxtPreTime
         '
-        Me.TxtPreTime.Location = New System.Drawing.Point(635, 50)
+        Me.TxtPreTime.Location = New System.Drawing.Point(641, 50)
         Me.TxtPreTime.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtPreTime.Name = "TxtPreTime"
         Me.TxtPreTime.Size = New System.Drawing.Size(80, 20)
@@ -150,7 +152,7 @@ Partial Class Form1
         '
         'TxtPostTime
         '
-        Me.TxtPostTime.Location = New System.Drawing.Point(635, 71)
+        Me.TxtPostTime.Location = New System.Drawing.Point(641, 71)
         Me.TxtPostTime.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtPostTime.Name = "TxtPostTime"
         Me.TxtPostTime.Size = New System.Drawing.Size(80, 20)
@@ -225,7 +227,7 @@ Partial Class Form1
         '
         'TxtNumOfDogs
         '
-        Me.TxtNumOfDogs.Location = New System.Drawing.Point(633, 127)
+        Me.TxtNumOfDogs.Location = New System.Drawing.Point(639, 127)
         Me.TxtNumOfDogs.Name = "TxtNumOfDogs"
         Me.TxtNumOfDogs.Size = New System.Drawing.Size(68, 20)
         Me.TxtNumOfDogs.TabIndex = 19
@@ -252,7 +254,7 @@ Partial Class Form1
         'BoxDogsList
         '
         Me.BoxDogsList.FormattingEnabled = True
-        Me.BoxDogsList.Location = New System.Drawing.Point(568, 228)
+        Me.BoxDogsList.Location = New System.Drawing.Point(215, 471)
         Me.BoxDogsList.Name = "BoxDogsList"
         Me.BoxDogsList.Size = New System.Drawing.Size(162, 56)
         Me.BoxDogsList.TabIndex = 21
@@ -269,7 +271,7 @@ Partial Class Form1
         '
         'TxtPracticesNum
         '
-        Me.TxtPracticesNum.Location = New System.Drawing.Point(633, 182)
+        Me.TxtPracticesNum.Location = New System.Drawing.Point(639, 182)
         Me.TxtPracticesNum.Name = "TxtPracticesNum"
         Me.TxtPracticesNum.Size = New System.Drawing.Size(68, 20)
         Me.TxtPracticesNum.TabIndex = 23
@@ -294,7 +296,7 @@ Partial Class Form1
         '
         'TxtPracticeTypes
         '
-        Me.TxtPracticeTypes.Location = New System.Drawing.Point(633, 156)
+        Me.TxtPracticeTypes.Location = New System.Drawing.Point(639, 156)
         Me.TxtPracticeTypes.Name = "TxtPracticeTypes"
         Me.TxtPracticeTypes.Size = New System.Drawing.Size(68, 20)
         Me.TxtPracticeTypes.TabIndex = 27
@@ -302,7 +304,7 @@ Partial Class Form1
         'Label7
         '
         Me.Label7.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.Label7.Location = New System.Drawing.Point(570, 212)
+        Me.Label7.Location = New System.Drawing.Point(212, 455)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(60, 13)
         Me.Label7.TabIndex = 28
@@ -329,7 +331,7 @@ Partial Class Form1
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(742, 414)
+        Me.Button1.Location = New System.Drawing.Point(227, 393)
         Me.Button1.Margin = New System.Windows.Forms.Padding(2)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(81, 40)
@@ -383,11 +385,29 @@ Partial Class Form1
         Me.Button3.Text = "Run ALL"
         Me.Button3.UseVisualStyleBackColor = True
         '
+        'num_of_lines_TextBox
+        '
+        Me.num_of_lines_TextBox.Location = New System.Drawing.Point(639, 208)
+        Me.num_of_lines_TextBox.Name = "num_of_lines_TextBox"
+        Me.num_of_lines_TextBox.Size = New System.Drawing.Size(68, 20)
+        Me.num_of_lines_TextBox.TabIndex = 39
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(534, 208)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(104, 13)
+        Me.Label9.TabIndex = 40
+        Me.Label9.Text = "Number of lines read"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1189, 556)
+        Me.Controls.Add(Me.Label9)
+        Me.Controls.Add(Me.num_of_lines_TextBox)
         Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.Create_stats_button)
         Me.Controls.Add(Me.Create_results_button)
@@ -473,4 +493,6 @@ Partial Class Form1
     Friend WithEvents Create_results_button As Button
     Friend WithEvents Create_stats_button As Button
     Friend WithEvents Button3 As Button
+    Friend WithEvents num_of_lines_TextBox As TextBox
+    Friend WithEvents Label9 As Label
 End Class

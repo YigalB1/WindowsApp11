@@ -4,24 +4,30 @@
 'Imports System.Data.OleDb
 'Imports Console = System.Console
 Imports System.Data.OleDb
-
+Imports Microsoft.Office.Interop
 
 Public Class Form1
 
 
-    Public in_PathName As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\SessionsFiles\\"
+    Public in_PathName As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\SessionsFiles\\"
     Public default_work_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
     Public default_sessions_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\" + "SessionsFiles\\"
-    Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\practice_list1.xlsx"
-    Public LogFile = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\logDog.txt"
+    Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list1.xlsx"
+    Public LogFile = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\logDog.txt"
     Public csv_pattern As String = "export-all-Bell-11302018_083229.csv"
     ' *083229.csv
+
+    Public result_out_file_name As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
+
     Dim DogsList As New DogsListClass
     Dim practiceList As New PracticesList
     Dim sessions As New List_of_Sessions
+    Dim total_sessions As New List(Of Session_file) ' will include all CSV files contect
 
     Dim Stage_Read_Practice_Table As Boolean = False
     Dim Stage_Read_Session_Files As Boolean = False
+
+    Dim total_line_cnt As Integer
 
 
 
@@ -350,16 +356,6 @@ Public Class Form1
 
             TxtPracticesNum.Text = counter
 
-
-
-
-            'Catch ex As Exception
-            '    MessageBox.Show(ex.Message)
-            'End Try
-
-
-
-
             s.SetdogName(MyExcel.Cells(row_cnt, col_cnt).text)
             s.SetPracticeDate(MyExcel.Cells(row_cnt, col_cnt + 1).value)
             s.SetpracticeType(MyExcel.Cells(row_cnt, col_cnt + 2).text)
@@ -367,20 +363,6 @@ Public Class Form1
             s.SetendTime(MyExcel.Cells(row_cnt, col_cnt + 4).text)
             s.SetvideoNum(MyExcel.Cells(row_cnt, col_cnt + 5).text)
             sessions.add_session(s)
-
-            'Try
-
-            '    Dim t1 As DateTime = Convert.ToDateTime(s.startTime)
-            '    Dim t2 As DateTime = Convert.ToDateTime(s.endTime)
-
-            '    Console.WriteLine(t1.ToString("HH:mm"))
-            '    Console.WriteLine(t2.ToString("HH:mm"))
-
-            'Catch ex As Exception
-            '    MessageBox.Show(ex.Message)
-            'End Try
-
-
 
             counter = counter + 1
             row_cnt = row_cnt + 1
@@ -426,56 +408,91 @@ Public Class Form1
 
     Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
 
-        '' All is just games. Can be deleted
+        Dim xlApp As New Excel.Application
+        Dim xlWorkbook As Excel.Workbook = xlApp.Workbooks.Add()
+        Dim xlWorksheet As Excel.Worksheet = CType(xlWorkbook.Sheets("sheet1"), Excel.Worksheet)
+
+        xlWorksheet.Cells(1, 1) = "Dog"
+        xlWorksheet.Cells(1, 2) = "Age"
+        xlWorksheet.Cells(1, 3) = "Date"
+        xlWorksheet.Cells(1, 4) = "Session in day"
+        xlWorksheet.Cells(1, 5) = "Practice"
+        xlWorksheet.Cells(1, 6) = "Predictability"
+        xlWorksheet.Cells(1, 7) = "Video num"
+        xlWorksheet.Cells(1, 8) = "Time Zone"
+        xlWorksheet.Cells(1, 9) = "Start"
+        xlWorksheet.Cells(1, 10) = "End"
+        xlWorksheet.Cells(1, 11) = "Reading Time"
+        xlWorksheet.Cells(1, 12) = "Activity"
+        xlWorksheet.Cells(1, 13) = "Pulse"
+        xlWorksheet.Cells(1, 14) = "Respiration"
+        xlWorksheet.Cells(1, 15) = "HRV"
+
+        xlWorksheet.Cells(1, 4).Interior.Color = Color.Yellow
+
+
+        'Cells(1, 4).Interior.Color = Color.Yellow
+
+
+        'xlWorksheet.Cells.Range(1, 4).Interior.Color = Color.Yellow
+
+
+        ' Selection.Rows(Counter).Interior.Pattern = xlGray16
+
+
+
+        Dim s1 As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
+        xlWorksheet.SaveAs(result_out_file_name)
+        ' result_out_file_name
+
+        xlWorkbook.Close()
+        xlApp.Quit()
+
+        xlApp = Nothing
+        xlWorkbook = Nothing
+        xlWorksheet = Nothing
+
+
+
+
+
+        'Dim xlsWorkBook As Microsoft.Office.Interop.Excel.Workbook
+        'Dim xlsWorkSheet As Microsoft.Office.Interop.Excel.Worksheet
+        'Dim xls As New Microsoft.Office.Interop.Excel.Application
+
+        'Dim resourcesFolder = IO.Path.GetFullPath(Application.StartupPath & "\..\..\Resources\")
+        'Dim fileName = "trial.xlsx"
+
+        ''xlsWorkBook = xls.Workbooks.Open(resourcesFolder & fileName)
+        'xlsWorkBook = xls.Workbooks.Open(result_out_file_name)
+        'xlsWorkSheet = xlsWorkBook.Sheets("Sheet1")
+
+        ''xlsWorkSheet.Cells(1, 1) = "11"
+        'xlsWorkSheet.Cells(1, 1) = "11"
+        'xlsWorkSheet.Cells(1, 2) = "12"
+        'xlsWorkSheet.Cells(1, 3) = "13"
+        'xlsWorkSheet.Cells(2, 1) = "21"
+        'xlsWorkSheet.Cells(2, 2) = "22"
+        'xlsWorkSheet.Cells(2, 3) = "23"
+
+        'xlsWorkBook.Close()
+        'xls.Quit()
+
 
 
         'Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
-        'MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+        'MyExcel.Workbooks.Open(result_out_file_name)
 
-
-        'Dim counter = 1
-        'Dim row_cnt = 2
-        'Dim col_cnt = 1
-        'Dim stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get first dog's name
-
-        '' check if date variables are realy date format
-
-
-        'Do
-        '    Dim s As New Session
-
-        '    TxtPracticesNum.Text = counter
-
-        '    s.SetdogName(MyExcel.Cells(row_cnt, col_cnt).text)
-        '    s.SetPracticeDate(MyExcel.Cells(row_cnt, col_cnt + 1).value)
-        '    s.SetpracticeType(MyExcel.Cells(row_cnt, col_cnt + 2).text)
-        '    s.SetstartTime(MyExcel.Cells(row_cnt, col_cnt + 3).text)
-        '    s.SetendTime(MyExcel.Cells(row_cnt, col_cnt + 4).text)
-        '    s.SetvideoNum(MyExcel.Cells(row_cnt, col_cnt + 5).text)
-        '    sessions.add_session(s)
-
-        '    counter = counter + 1
-        '    row_cnt = row_cnt + 1
-        '    stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get next dog's name
-        'Loop Until counter > MAX_NUM_OF_PRACTICES Or stmp = "END"
+        'MyExcel.Cells(1, 1).text = "11"
+        'MyExcel.Cells(1, 2).text = "12"
+        'MyExcel.Cells(1, 3).text = "13"
+        'MyExcel.Cells(2, 1).text = "21"
+        'MyExcel.Cells(2, 2).text = "22"
+        'MyExcel.Cells(2, 3).text = "23"
 
         'MyExcel.Workbooks.Close()
         'MyExcel = Nothing
 
-
-
-
-
-
-
-
-
-
-
-        ''       ReadPracticeFile()
-        ''  trytableread()
-        ''lulu()
-        'try3()
     End Sub
 
     Private Sub try3()
@@ -527,7 +544,15 @@ Public Class Form1
         Dim csv_end_date As DateTime
         Dim total_lines_of_csv As Integer = 0
 
-        Dim total_sessions As New List(Of Session_file) ' will include all CSV files contect
+
+        RdSessionFiles.BackColor = Color.GreenYellow
+
+        '       Dim total_sessions As New List(Of Session_file) ' will include all CSV files contect
+
+        num_of_lines_TextBox.BackColor = Color.Yellow
+        num_of_lines_TextBox.Text = "starting"
+
+
 
 
         '    fileName = Dir(in_PathName & "*084330.csv")
@@ -618,6 +643,9 @@ Public Class Form1
             While (line_data_type <> "")
                 Dim line_data As New Session_file.dog_data
                 line_Cnt += 1
+                total_line_cnt += 1
+                num_of_lines_TextBox.Text = total_line_cnt.ToString()
+
                 line_data_type = pract_Excel.Cells(line_Cnt, 1).Text
                 If to_ignore.Contains(line_data_type) Then
                     Continue While
@@ -672,9 +700,7 @@ Public Class Form1
             pract_Excel.Workbooks.Close()
             total_sessions.Add(curr_session)
 
-
-
-
+            num_of_lines_TextBox.Text = total_line_cnt.ToString()
 
 
             'If session_num = -1 Then
@@ -702,6 +728,10 @@ Public Class Form1
 
         'MyExcel.Workbooks.Close(Me.TxtBoxPracticeFile.Text)
         ProgressBar1.Value = 75
+        RdSessionFiles.BackColor = Color.Green
+
+        num_of_lines_TextBox.BackColor = Color.Green
+
         RdSessionFiles.BackColor = Color.Green
 
     End Sub ' of Read_Session_files
@@ -746,9 +776,52 @@ Public Class Form1
     End Sub ' Print_to_log_file
 
     Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
+        ' Run them all
         ReadPracticeFile()
         Read_session_files()
+        check_sessions()
 
     End Sub
+
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles num_of_lines_TextBox.TextChanged
+
+    End Sub
+
+    Private Sub chk_sessions_button_Click(sender As Object, e As EventArgs) Handles chk_sessions_button.Click
+        check_sessions()
+    End Sub
+
+    Private Sub check_sessions()
+        'find if sessions have relevant session file
+        chk_sessions_button.BackColor = Color.GreenYellow
+
+        Dim sessio_num As Integer = 0
+        Dim match_cnt As Integer
+
+        For Each s In sessions.sessionsList
+            For Each f In total_sessions
+                match_cnt = 0
+                '                Console.WriteLine(s.practiceDate.ToString)
+                '                Console.WriteLine(f.session_start_time.ToString())
+                If (s.practiceDate = f.session_start_time) Then
+                    match_cnt += 1
+                    Console.WriteLine("Match")
+                End If
+
+            Next
+            Print_to_log_file(sessio_num.ToString() & " has " & match_cnt & " matches")
+        Next
+
+
+
+            chk_sessions_button.BackColor = Color.Green
+
+    End Sub
+
+
+
+
+
+
 End Class
 
