@@ -60,7 +60,7 @@ Public Class DogSession
         Dim LineCnt As Integer = 4
         Dim prev_time_stamp As String = ""
         Dim lineDate As Date
-        ' Dim lineTime As Date
+        '  Dim lineTime As Date
 
         Try
             tLine = pract_Excel.Cells(tCnt, 1).Text

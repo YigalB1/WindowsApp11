@@ -61,6 +61,8 @@ Partial Class Form1
         Me.Button3 = New System.Windows.Forms.Button()
         Me.num_of_lines_TextBox = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.output_lines_textbox = New System.Windows.Forms.TextBox()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -401,11 +403,29 @@ Partial Class Form1
         Me.Label9.TabIndex = 40
         Me.Label9.Text = "Number of lines read"
         '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(534, 239)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(98, 13)
+        Me.Label10.TabIndex = 41
+        Me.Label10.Text = "Num of output lines"
+        '
+        'output_lines_textbox
+        '
+        Me.output_lines_textbox.Location = New System.Drawing.Point(639, 235)
+        Me.output_lines_textbox.Name = "output_lines_textbox"
+        Me.output_lines_textbox.Size = New System.Drawing.Size(100, 20)
+        Me.output_lines_textbox.TabIndex = 42
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1189, 556)
+        Me.Controls.Add(Me.output_lines_textbox)
+        Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.num_of_lines_TextBox)
         Me.Controls.Add(Me.Button3)
@@ -495,4 +515,6 @@ Partial Class Form1
     Friend WithEvents Button3 As Button
     Friend WithEvents num_of_lines_TextBox As TextBox
     Friend WithEvents Label9 As Label
+    Friend WithEvents Label10 As Label
+    Friend WithEvents output_lines_textbox As TextBox
 End Class

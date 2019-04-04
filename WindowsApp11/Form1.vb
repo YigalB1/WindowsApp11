@@ -22,7 +22,7 @@ Public Class Form1
     Dim DogsList As New DogsListClass
     Dim practiceList As New PracticesList
     Dim sessions As New List_of_Sessions
-    Dim total_sessions As New List(Of Session_file) ' will include all CSV files contect
+    Dim total_sessions As New List(Of Session_CSV_file) ' will include all CSV files contect
 
     Dim Stage_Read_Practice_Table As Boolean = False
     Dim Stage_Read_Session_Files As Boolean = False
@@ -240,6 +240,10 @@ Public Class Form1
         DogsList.Print_dogs_list() ' create text file with list of dogs
         ProgressBar1.Value = 40
 
+
+        Dim tmp As Integer = DogsList.GetDogAge("Bell")
+
+
         Read_Pracice_Types_List()
         practiceList.Print_practices_list() ' the class way
         ProgressBar1.Value = 50
@@ -281,7 +285,7 @@ Public Class Form1
                 Dim tdog As New DogClass  ' *** the Class way
                 tdog.SetDogName(MyExcel.Cells(row_cnt, col_cnt).text)
                 tdog.SetDogDOB(MyExcel.Cells(row_cnt, col_cnt + 1).value)
-                tdog.SetDogAge()
+                'tdog.SetDogAge()
 
                 DogsList.AddDog(tdog)                                    ' *** the class way
 
@@ -356,8 +360,29 @@ Public Class Form1
 
             TxtPracticesNum.Text = counter
 
-            s.SetdogName(MyExcel.Cells(row_cnt, col_cnt).text)
-            s.SetPracticeDate(MyExcel.Cells(row_cnt, col_cnt + 1).value)
+            Dim dog_name As String = MyExcel.Cells(row_cnt, col_cnt).text
+            s.SetdogName(dog_name)
+
+            Dim pract_date As Date = MyExcel.Cells(row_cnt, col_cnt + 1).value
+            s.SetPracticeDate(pract_date)
+
+            Dim dog_dob As Date
+            Dim bool_find As Boolean = False
+            For Each d In DogsList.dogs_List
+                If (d.Name = dog_name) Then
+                    dog_dob = d.Dob
+                    bool_find = True
+                End If
+            Next
+
+            If bool_find = False Then
+                MessageBox.Show("Error in getting DOB")
+                Print_to_log_file("Error in getting DOB")
+            End If
+
+
+            s.SetDogsAge(pract_date, dog_dob)
+
             s.SetpracticeType(MyExcel.Cells(row_cnt, col_cnt + 2).text)
             s.SetstartTime(MyExcel.Cells(row_cnt, col_cnt + 3).text)
             s.SetendTime(MyExcel.Cells(row_cnt, col_cnt + 4).text)
@@ -503,11 +528,6 @@ Public Class Form1
     Private Sub RdSessionFiles_Click(sender As Object, e As EventArgs) Handles RdSessionFiles.Click
         Read_session_files()
 
-        'If Stage_Read_Practice_Table = False Then
-        '    MessageBox.Show("Must read practice file BEFORE reading sessions list")
-        '    Exit Sub
-        'End If
-        'Read_CSV_Session_files()
     End Sub
 
     Private Sub Read_session_files()
@@ -561,7 +581,7 @@ Public Class Form1
         Print_to_log_file("Dir is: " + in_PathName)
 
         Do While fileName <> ""
-            Dim curr_session As New Session_file
+            Dim curr_session As New Session_CSV_file
             file_count += 1
 
             'dog_session.Open_Session_file(in_PathName + fileName)
@@ -641,7 +661,7 @@ Public Class Form1
 
 
             While (line_data_type <> "")
-                Dim line_data As New Session_file.dog_data
+                Dim line_data As New Session_CSV_file.dog_data
                 line_Cnt += 1
                 total_line_cnt += 1
                 num_of_lines_TextBox.Text = total_line_cnt.ToString()
@@ -844,6 +864,7 @@ Public Class Form1
 
     Private Sub Create_results()
         Create_results_button.BackColor = Color.GreenYellow
+        output_lines_textbox.Text = "starting"
 
         ' go over the sessions list (were read from pratice file)
         ' get the relevant CSV files, and get the pre_act_post data
@@ -857,6 +878,79 @@ Public Class Form1
                 Console.WriteLine("looking at pract type: " & sessions.sessionsList(c).practiceType)
                 Console.WriteLine("looking at start     : " & sessions.sessionsList(c).startTime)
                 Console.WriteLine("looking at end       : " & sessions.sessionsList(c).endTime)
+
+
+                Dim xlApp As New Excel.Application
+                Dim xlWorkbook As Excel.Workbook = xlApp.Workbooks.Add()
+                Dim xlWorksheet As Excel.Worksheet = CType(xlWorkbook.Sheets("sheet1"), Excel.Worksheet)
+
+                xlWorksheet.Cells(1, 1) = "Dog"
+                xlWorksheet.Cells(1, 2) = "Age"
+                xlWorksheet.Cells(1, 3) = "Date"
+                xlWorksheet.Cells(1, 4) = "Session in day"
+                xlWorksheet.Cells(1, 5) = "Practice"
+                xlWorksheet.Cells(1, 6) = "Predictability"
+                xlWorksheet.Cells(1, 7) = "Video num"
+                xlWorksheet.Cells(1, 8) = "Time Zone"
+                xlWorksheet.Cells(1, 9) = "Start"
+                xlWorksheet.Cells(1, 10) = "End"
+                xlWorksheet.Cells(1, 11) = "Reading Time"
+                xlWorksheet.Cells(1, 12) = "Activity"
+                xlWorksheet.Cells(1, 13) = "Pulse"
+                xlWorksheet.Cells(1, 14) = "Respiration"
+                xlWorksheet.Cells(1, 15) = "HRV"
+
+
+                Dim out_line_cnt As Integer = 2
+                For Each l In total_sessions(c).List_of_dog_data
+
+                    xlWorksheet.Cells(out_line_cnt, 1) = total_sessions(c).pet_ID
+
+                    ' get Dog's age
+                    Dim l_age = DogsList.GetDogAge(total_sessions(c).pet_name)
+                    xlWorksheet.Cells(out_line_cnt, 2) = l_age
+
+                    xlWorksheet.Cells(out_line_cnt, 3) = total_sessions(c).session_start_time
+
+                    'xlWorksheet.Cells(out_line_cnt, 4) = "Session in day"
+                    'xlWorksheet.Cells(out_line_cnt, 5) = "Practice"
+                    'xlWorksheet.Cells(1, 6) = "Predictability"
+                    'xlWorksheet.Cells(1, 7) = "Video num"
+                    'xlWorksheet.Cells(1, 8) = "Time Zone"
+                    'xlWorksheet.Cells(1, 9) = "Start"
+                    'xlWorksheet.Cells(1, 10) = "End"
+                    'xlWorksheet.Cells(1, 11) = "Reading Time"
+                    'xlWorksheet.Cells(1, 12) = "Activity"
+                    'xlWorksheet.Cells(1, 13) = "Pulse"
+                    'xlWorksheet.Cells(1, 14) = "Respiration"
+                    'xlWorksheet.Cells(1, 15) = "HRV"
+
+
+
+
+                    output_lines_textbox.Text = (out_line_cnt - 1).ToString()
+                    out_line_cnt += 1
+
+                Next
+
+
+                xlWorksheet.Cells(1, 4).Interior.Color = Color.Green
+                xlWorksheet.SaveAs(result_out_file_name)
+                ' result_out_file_name
+
+                xlWorkbook.Close()
+                xlApp.Quit()
+
+                xlApp = Nothing
+                xlWorkbook = Nothing
+                xlWorksheet = Nothing
+
+
+
+
+
+
+
 
 
 

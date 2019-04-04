@@ -1,9 +1,5 @@
 ﻿Imports System.Collections.Specialized
 
-
-
-
-
 Public Class DogClass
     Public Name As String
     Public Dob As Date
@@ -16,21 +12,31 @@ Public Class DogClass
     Public Sub SetDogDOB(ByVal _dob As Date)
         Dob = _dob
     End Sub
-    Public Sub SetDogAge()
-        Dim curTime As DateTime = DateTime.Now
+    Public Sub SetDogAge(ByVal _pract_date As Date)
+        'Dim curTime As DateTime = DateTime.Now
         Dim ageindays As TimeSpan
 
-        ageindays = curTime - Dob
+        'ageindays = curTime - Dob
+        ageindays = _pract_date - Dob
         Age = Int(ageindays.Days / 7)
 
     End Sub
     Public Sub SetDogSex(ByVal _sex As String)
         Sex = _sex
     End Sub
+
 End Class ' of DogClass
 
 Public Class DogsListClass
     Public dogs_List As New List(Of DogClass)
+
+    Public Function GetDogAge(_dog_name As String) As Integer
+
+        Dim loc As Integer = dogs_List.FindIndex(Function(s) s.Name.Equals(_dog_name))
+        Dim t_age As Integer = dogs_List(loc).Age
+        Return t_age
+    End Function
+
 
     Public Function DodgsCnt() As Integer
         DodgsCnt = dogs_List.Count()
@@ -122,6 +128,7 @@ End Class ' of class PracticesList
 
 Class Session
     Public dogName As String        ' read from practice file
+    Public dog_dob As String        ' read from practice file
     Public practiceDate As Date     ' read from practice file
     Public practiceType As String   ' read from practice file
     Public startTime As Date        ' read from practice file
@@ -139,6 +146,13 @@ Class Session
 
     Public Sub SetPracticeDate(ByVal _date As Date)
         practiceDate = _date
+    End Sub
+
+    Public Sub SetDogsAge(ByVal _date As Date, ByVal _dob As Date)
+        Dim ageindays As TimeSpan
+
+        ageindays = _date - _dob
+        dog_dob = Int(ageindays.Days / 7)
     End Sub
 
     Public Sub SetpracticeType(ByVal _type As String)
@@ -218,7 +232,7 @@ Class List_of_Sessions
 
 End Class   ' List_of_Sessions
 
-Class Session_file
+Class Session_CSV_file
     Public session_file_name As String
     Public session_start_time As DateTime
     Public session_end_time As DateTime
@@ -276,7 +290,7 @@ Class Session_file
 End Class ' of Session_file
 
 Class List_of_session_files
-    Public session_files As New List(Of Session_file)
+    Public session_files As New List(Of Session_CSV_file)
 End Class
 
 
