@@ -852,8 +852,6 @@ Public Class Form1
 
         Next
 
-
-
         chk_sessions_button.BackColor = Color.Green
 
     End Sub
