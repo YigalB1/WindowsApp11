@@ -241,7 +241,7 @@ Public Class Form1
         ProgressBar1.Value = 40
 
 
-        Dim tmp As Integer = DogsList.GetDogAge("Bell")
+        '  Dim tmp As Integer = DogsList.GetDogAge("Bell")
 
 
         Read_Pracice_Types_List()
@@ -866,6 +866,29 @@ Public Class Form1
         Create_results_button.BackColor = Color.GreenYellow
         output_lines_textbox.Text = "starting"
 
+
+        Dim xlApp As New Excel.Application
+        Dim xlWorkbook As Excel.Workbook = xlApp.Workbooks.Add()
+        Dim xlWorksheet As Excel.Worksheet = CType(xlWorkbook.Sheets("sheet1"), Excel.Worksheet)
+
+        xlWorksheet.Cells(1, 1) = "Dog"
+        xlWorksheet.Cells(1, 2) = "Age"
+        xlWorksheet.Cells(1, 3) = "Session Date"
+        xlWorksheet.Cells(1, 4) = "Session in day"
+        xlWorksheet.Cells(1, 5) = "Practice"
+        xlWorksheet.Cells(1, 6) = "Predictability"
+        xlWorksheet.Cells(1, 7) = "Video num"
+        xlWorksheet.Cells(1, 8) = "Time Zone"
+        xlWorksheet.Cells(1, 9) = "Start"
+        xlWorksheet.Cells(1, 10) = "End"
+        xlWorksheet.Cells(1, 11) = "Reading Time"
+        xlWorksheet.Cells(1, 12) = "Activity"
+        xlWorksheet.Cells(1, 13) = "Pulse"
+        xlWorksheet.Cells(1, 14) = "Respiration"
+        xlWorksheet.Cells(1, 15) = "HRV"
+
+        Dim out_line_cnt As Integer = 2
+
         ' go over the sessions list (were read from pratice file)
         ' get the relevant CSV files, and get the pre_act_post data
 
@@ -880,50 +903,64 @@ Public Class Form1
                 Console.WriteLine("looking at end       : " & sessions.sessionsList(c).endTime)
 
 
-                Dim xlApp As New Excel.Application
-                Dim xlWorkbook As Excel.Workbook = xlApp.Workbooks.Add()
-                Dim xlWorksheet As Excel.Worksheet = CType(xlWorkbook.Sheets("sheet1"), Excel.Worksheet)
-
-                xlWorksheet.Cells(1, 1) = "Dog"
-                xlWorksheet.Cells(1, 2) = "Age"
-                xlWorksheet.Cells(1, 3) = "Date"
-                xlWorksheet.Cells(1, 4) = "Session in day"
-                xlWorksheet.Cells(1, 5) = "Practice"
-                xlWorksheet.Cells(1, 6) = "Predictability"
-                xlWorksheet.Cells(1, 7) = "Video num"
-                xlWorksheet.Cells(1, 8) = "Time Zone"
-                xlWorksheet.Cells(1, 9) = "Start"
-                xlWorksheet.Cells(1, 10) = "End"
-                xlWorksheet.Cells(1, 11) = "Reading Time"
-                xlWorksheet.Cells(1, 12) = "Activity"
-                xlWorksheet.Cells(1, 13) = "Pulse"
-                xlWorksheet.Cells(1, 14) = "Respiration"
-                xlWorksheet.Cells(1, 15) = "HRV"
-
-
-                Dim out_line_cnt As Integer = 2
                 For Each l In total_sessions(c).List_of_dog_data
+
+                    Dim l_start_pre_time As DateTime = sessions.sessionsList(c).startTime.AddMinutes(-TxtPreTime.Value)
+                    Dim l_end_post_time As DateTime = sessions.sessionsList(c).startTime.AddMinutes(TxtPreTime.Value)
+
+
+                    If l.pract_time < l_start_pre_time Then
+                        Continue For
+                    End If
+
+
+                    If l.pract_time > l_end_post_time Then
+                        Continue For
+                    End If
+
+                    ' Means that time is within pre/act/post
+                    Dim l_time_zone As Integer
+
+                    If l.pract_time < sessions.sessionsList(c).startTime Then
+                        l_time_zone = 1
+                    ElseIf l.pract_time <= sessions.sessionsList(c).endTime Then
+                        l_time_zone = 2
+                    Else
+                        l_time_zone = 3
+                    End If
+
+
+
+
+                    ' TBD - to check if this time step is within the pre-act-post 
+
 
                     xlWorksheet.Cells(out_line_cnt, 1) = total_sessions(c).pet_ID
 
                     ' get Dog's age
-                    Dim l_age = DogsList.GetDogAge(total_sessions(c).pet_name)
+                    ' Console.WriteLine("Dog's name: " + total_sessions(c).pet_name)
+                    ' calc dog age at time of the session
+                    Dim l_pet_dob As Date = DogsList.GetDogDob(total_sessions(c).pet_name)
+                    Dim l_pract_date As Date = sessions.sessionsList(c).practiceDate
+                    Dim ageindays As TimeSpan = l_pract_date - l_pet_dob
+                    Dim l_age = Int(ageindays.Days / 7)
                     xlWorksheet.Cells(out_line_cnt, 2) = l_age
 
+                    'session's date
                     xlWorksheet.Cells(out_line_cnt, 3) = total_sessions(c).session_start_time
 
-                    'xlWorksheet.Cells(out_line_cnt, 4) = "Session in day"
-                    'xlWorksheet.Cells(out_line_cnt, 5) = "Practice"
-                    'xlWorksheet.Cells(1, 6) = "Predictability"
-                    'xlWorksheet.Cells(1, 7) = "Video num"
-                    'xlWorksheet.Cells(1, 8) = "Time Zone"
-                    'xlWorksheet.Cells(1, 9) = "Start"
-                    'xlWorksheet.Cells(1, 10) = "End"
-                    'xlWorksheet.Cells(1, 11) = "Reading Time"
-                    'xlWorksheet.Cells(1, 12) = "Activity"
-                    'xlWorksheet.Cells(1, 13) = "Pulse"
-                    'xlWorksheet.Cells(1, 14) = "Respiration"
-                    'xlWorksheet.Cells(1, 15) = "HRV"
+                    xlWorksheet.Cells(out_line_cnt, 4) = sessions.sessionsList(c).sessionOnAday
+                    xlWorksheet.Cells(out_line_cnt, 5) = sessions.sessionsList(c).practiceNum
+                    xlWorksheet.Cells(out_line_cnt, 6) = "TBD"
+                    xlWorksheet.Cells(out_line_cnt, 7) = "TBD"
+                    xlWorksheet.Cells(out_line_cnt, 8) = l_time_zone
+                    xlWorksheet.Cells(out_line_cnt, 9) = "TBD"
+                    xlWorksheet.Cells(out_line_cnt, 10) = "TBD"
+                    xlWorksheet.Cells(out_line_cnt, 11) = "TBD"
+                    xlWorksheet.Cells(out_line_cnt, 12) = "TBD"
+                    xlWorksheet.Cells(out_line_cnt, 13) = "TBD"
+                    xlWorksheet.Cells(out_line_cnt, 14) = "TBD"
+                    xlWorksheet.Cells(out_line_cnt, 15) = "TBD"
 
 
 

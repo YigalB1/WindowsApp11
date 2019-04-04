@@ -30,11 +30,19 @@ End Class ' of DogClass
 Public Class DogsListClass
     Public dogs_List As New List(Of DogClass)
 
-    Public Function GetDogAge(_dog_name As String) As Integer
+    Public Function GetDogDob(_dog_name As String) As Date
 
-        Dim loc As Integer = dogs_List.FindIndex(Function(s) s.Name.Equals(_dog_name))
-        Dim t_age As Integer = dogs_List(loc).Age
-        Return t_age
+        Dim loc As Integer = 0
+
+        For Each d In dogs_List
+            If d.Name = _dog_name Then
+                Return d.Dob
+            End If
+            loc += 1
+        Next
+
+        MessageBox.Show("Error: dog not found. Name: " + _dog_name)
+        Return Date.Now() ' in case of error
     End Function
 
 
@@ -131,6 +139,7 @@ Class Session
     Public dog_dob As String        ' read from practice file
     Public practiceDate As Date     ' read from practice file
     Public practiceType As String   ' read from practice file
+    Public practiceNum As Integer   ' matching the pratice type
     Public startTime As Date        ' read from practice file
     Public endTime As Date          ' read from practice file
     Public videoNum As String       ' read from practice file
@@ -157,6 +166,7 @@ Class Session
 
     Public Sub SetpracticeType(ByVal _type As String)
         practiceType = _type
+        practiceNum = 77 ' TBD 
     End Sub
 
     Public Sub SetstartTime(ByVal _start_time As Date)
@@ -243,8 +253,8 @@ Class Session_CSV_file
     Public pet_breed As String
     Public pet_owner As String
     Public pet_weight As String
-    Public sessio_pre_start As DateTime
-    Public session_post_end As DateTime
+    '    Public sessio_pre_start As DateTime
+    '    Public session_post_end As DateTime
 
     Public Class dog_data
         Public pract_type As String
