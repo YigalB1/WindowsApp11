@@ -903,8 +903,12 @@ Public Class Form1
 
                 For Each l In total_sessions(c).List_of_dog_data
 
-                    Dim l_start_pre_time As DateTime = sessions.sessionsList(c).startTime.AddMinutes(-TxtPreTime.Value)
-                    Dim l_end_post_time As DateTime = sessions.sessionsList(c).startTime.AddMinutes(TxtPreTime.Value)
+                    Dim l_start = sessions.sessionsList(c).practiceDate.Add(sessions.sessionsList(c).startTime.TimeOfDay)
+                    Dim l_end = sessions.sessionsList(c).practiceDate.Add(sessions.sessionsList(c).endTime.TimeOfDay)
+
+
+                    Dim l_start_pre_time As DateTime = l_start.AddMinutes(-TxtPreTime.Value)
+                    Dim l_end_post_time As DateTime = l_end.AddMinutes(TxtPreTime.Value)
 
 
                     If l.pract_time < l_start_pre_time Then
@@ -919,9 +923,9 @@ Public Class Form1
                     ' Means that time is within pre/act/post
                     Dim l_time_zone As Integer
 
-                    If l.pract_time < sessions.sessionsList(c).startTime Then
+                    If l.pract_time < l_start Then
                         l_time_zone = 1
-                    ElseIf l.pract_time <= sessions.sessionsList(c).endTime Then
+                    ElseIf l.pract_time <= l_end Then
                         l_time_zone = 2
                     Else
                         l_time_zone = 3
@@ -954,7 +958,7 @@ Public Class Form1
                     xlWorksheet.Cells(out_line_cnt, 8) = l_time_zone
                     xlWorksheet.Cells(out_line_cnt, 9) = "TBD"
                     xlWorksheet.Cells(out_line_cnt, 10) = "TBD"
-                    xlWorksheet.Cells(out_line_cnt, 11) = "TBD"
+                    xlWorksheet.Cells(out_line_cnt, 11) = l.pract_time
                     xlWorksheet.Cells(out_line_cnt, 12) = "TBD"
                     xlWorksheet.Cells(out_line_cnt, 13) = "TBD"
                     xlWorksheet.Cells(out_line_cnt, 14) = "TBD"
