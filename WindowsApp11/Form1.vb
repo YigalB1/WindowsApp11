@@ -844,8 +844,9 @@ Public Class Form1
                 Console.WriteLine("looking at start     : " & sessions.sessionsList(c).startTime)
                 Console.WriteLine("looking at end       : " & sessions.sessionsList(c).endTime)
 
-                Dim dog_data_cnt As Integer = 0
+                Dim dog_data_cnt As Integer = -1
                 For Each l In total_sessions(c).List_of_dog_data
+                    dog_data_cnt += 1
 
                     Dim l_start = sessions.sessionsList(c).practiceDate.Add(sessions.sessionsList(c).startTime.TimeOfDay)
                     Dim l_end = sessions.sessionsList(c).practiceDate.Add(sessions.sessionsList(c).endTime.TimeOfDay)
@@ -938,7 +939,7 @@ Public Class Form1
 
                     output_lines_textbox.Text = (out_line_cnt - 1).ToString()
                     out_line_cnt += 1
-                    dog_data_cnt += 1
+                    'dog_data_cnt += 1
 
                 Next ' of total_sessions(c).List_of_dog_data
 
