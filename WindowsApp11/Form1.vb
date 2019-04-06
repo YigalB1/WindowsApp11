@@ -185,37 +185,7 @@ Public Class Form1
     Private Sub RdPracticeFile_Click(sender As Object, e As EventArgs) Handles RdPracticeFile.Click
 
         ReadPracticeFile()
-        'Print_to_log_file("Reading Practice file " + Date.Now(), False)
-        'Print_to_log_file("Practice file: " + Me.TxtBoxPracticeFile.Text)
-        'Print_to_log_file("------------------------------")
 
-
-
-        'RdPracticeFile.BackColor = Color.GreenYellow
-
-        'Console.BackgroundColor = ConsoleColor.Blue
-        'Console.WriteLine(" ......STARTING.................")
-        'Console.BackgroundColor = ConsoleColor.White
-
-
-        'Read_Dog_List()
-        'DogsList.Print_dogs_list() ' create text file with list of dogs
-        'ProgressBar1.Value = 40
-
-        'Read_Pracice_Types_List()
-        'practiceList.Print_practices_list() ' the class way
-        'ProgressBar1.Value = 50
-
-        'Read_sessions_list()
-        'sessions.Print_sessions_list()
-        'ProgressBar1.Value = 60
-
-        ''        Dim pname As String
-        ''        Dim pnum As Integer
-
-
-        'RdPracticeFile.BackColor = Color.Green
-        'Stage_Read_Practice_Table = True
 
     End Sub ' of RdPracticeFile_Click (invoked from button)
 
@@ -433,49 +403,51 @@ Public Class Form1
 
     Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
 
-        Dim xlApp As New Excel.Application
-        Dim xlWorkbook As Excel.Workbook = xlApp.Workbooks.Add()
-        Dim xlWorksheet As Excel.Worksheet = CType(xlWorkbook.Sheets("sheet1"), Excel.Worksheet)
+        ' for games only
 
-        xlWorksheet.Cells(1, 1) = "Dog"
-        xlWorksheet.Cells(1, 2) = "Age"
-        xlWorksheet.Cells(1, 3) = "Date"
-        xlWorksheet.Cells(1, 4) = "Session in day"
-        xlWorksheet.Cells(1, 5) = "Practice"
-        xlWorksheet.Cells(1, 6) = "Predictability"
-        xlWorksheet.Cells(1, 7) = "Video num"
-        xlWorksheet.Cells(1, 8) = "Time Zone"
-        xlWorksheet.Cells(1, 9) = "Start"
-        xlWorksheet.Cells(1, 10) = "End"
-        xlWorksheet.Cells(1, 11) = "Reading Time"
-        xlWorksheet.Cells(1, 12) = "Activity"
-        xlWorksheet.Cells(1, 13) = "Pulse"
-        xlWorksheet.Cells(1, 14) = "Respiration"
-        xlWorksheet.Cells(1, 15) = "HRV"
+        'Dim xlApp As New Excel.Application
+        'Dim xlWorkbook As Excel.Workbook = xlApp.Workbooks.Add()
+        'Dim xlWorksheet As Excel.Worksheet = CType(xlWorkbook.Sheets("sheet1"), Excel.Worksheet)
 
-        xlWorksheet.Cells(1, 4).Interior.Color = Color.Yellow
+        'xlWorksheet.Cells(1, 1) = "Dog"
+        'xlWorksheet.Cells(1, 2) = "Age"
+        'xlWorksheet.Cells(1, 3) = "Date"
+        'xlWorksheet.Cells(1, 4) = "Session in day"
+        'xlWorksheet.Cells(1, 5) = "Practice"
+        'xlWorksheet.Cells(1, 6) = "Predictability"
+        'xlWorksheet.Cells(1, 7) = "Video num"
+        'xlWorksheet.Cells(1, 8) = "Time Zone"
+        'xlWorksheet.Cells(1, 9) = "Start"
+        'xlWorksheet.Cells(1, 10) = "End"
+        'xlWorksheet.Cells(1, 11) = "Reading Time"
+        'xlWorksheet.Cells(1, 12) = "Activity"
+        'xlWorksheet.Cells(1, 13) = "Pulse"
+        'xlWorksheet.Cells(1, 14) = "Respiration"
+        'xlWorksheet.Cells(1, 15) = "HRV"
 
-
-        'Cells(1, 4).Interior.Color = Color.Yellow
-
-
-        'xlWorksheet.Cells.Range(1, 4).Interior.Color = Color.Yellow
+        'xlWorksheet.Cells(1, 4).Interior.Color = Color.Yellow
 
 
-        ' Selection.Rows(Counter).Interior.Pattern = xlGray16
+        ''Cells(1, 4).Interior.Color = Color.Yellow
+
+
+        ''xlWorksheet.Cells.Range(1, 4).Interior.Color = Color.Yellow
+
+
+        '' Selection.Rows(Counter).Interior.Pattern = xlGray16
 
 
 
-        Dim s1 As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
-        xlWorksheet.SaveAs(result_out_file_name)
-        ' result_out_file_name
+        'Dim s1 As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
+        'xlWorksheet.SaveAs(result_out_file_name)
+        '' result_out_file_name
 
-        xlWorkbook.Close()
-        xlApp.Quit()
+        'xlWorkbook.Close()
+        'xlApp.Quit()
 
-        xlApp = Nothing
-        xlWorkbook = Nothing
-        xlWorksheet = Nothing
+        'xlApp = Nothing
+        'xlWorkbook = Nothing
+        'xlWorksheet = Nothing
 
 
 
@@ -572,9 +544,6 @@ Public Class Form1
         num_of_lines_TextBox.BackColor = Color.Yellow
         num_of_lines_TextBox.Text = "starting"
 
-
-
-
         '    fileName = Dir(in_PathName & "*084330.csv")
         fileName = Dir(in_PathName & csv_pattern)
         Print_to_log_file("Start reading CSV files")
@@ -588,15 +557,11 @@ Public Class Form1
             Print_to_log_file("Start reading CSV file: " + in_PathName + fileName)
             pract_Excel.Workbooks.Open(in_PathName + fileName)
 
-            'dog_session.Init_session()
-
-
             pet_name = pract_Excel.Cells(2, 1).text.Replace("Pet name: ", "").Replace(" ", "")
             curr_session.pet_name = pet_name
             pet_id = pract_Excel.Cells(2, 2).text.Replace("Pet id: ", "").Replace(" ", "")
             curr_session.pet_ID = pet_id
             Print_to_log_file("Pet name & ID: " + pet_name + " / " + pet_id)
-
 
             ' get the start date & end date of this session file
             Dim s1 As String = pract_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
@@ -611,7 +576,6 @@ Public Class Form1
                 Console.WriteLine("Error E1 while checking CSV file date")
             End If
 
-
             s1 = pract_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
 
             t_bool = Date.TryParseExact(s1, "MM/dd/yyyy",
@@ -622,30 +586,11 @@ Public Class Form1
                 Console.WriteLine("Error E2 while checking CSV file date")
             End If
 
-
-            ' moved to later stage. First we read all CSV files
-            'session_num = sessions.Is_Session_Needed(dog_session.pet_name, dog_session.start_day)
-
-            ' done below, not in class
-            'dog_session.Read_Lines()
-
-
-
-
-
-            'Dim tdate As Date
-            ' Dim tCnt As Integer = 3 ' number of header lines
             Dim line_Cnt As Integer = 3
-            'Dim prev_time_stamp As String = ""
-
-            ' Dim lineTime As Date
-
 
             ' columns to ignore: source, fever indication, position, position duration, 
             '                   activity group, manual data note, manual data value
             ' lines to ignore: fever indication, position
-
-
 
             Dim line_data_type As String = "BLABLA"   ' just to enter the loop
             Dim line_date As DateTime
@@ -658,8 +603,6 @@ Public Class Form1
             Dim resp_cnt As Integer = 0
             Dim vvti_cnt As Integer = 0
 
-
-
             While (line_data_type <> "")
                 Dim line_data As New Session_CSV_file.dog_data
                 line_Cnt += 1
@@ -668,7 +611,7 @@ Public Class Form1
 
                 line_data_type = pract_Excel.Cells(line_Cnt, 1).Text
                 If to_ignore.Contains(line_data_type) Then
-                    Continue While
+                    Continue While ' ignore this line because type is on the black list
                 End If
 
                 line_date = pract_Excel.Cells(line_Cnt, 2).value
@@ -844,11 +787,12 @@ Public Class Form1
 
         sessio_num = 0
         For Each c In sessions.sessionsList
+            sessio_num += 1
             Dim c_cnt As Integer = 0
             For Each t In c.list_of_CSV_matches
                 c_cnt += 1
             Next
-            Print_to_log_file("Session " & match_cnt.ToString() & " has " & c_cnt & " matches")
+            Print_to_log_file("Session " & sessio_num.ToString() & " has " & c_cnt & " matches")
 
         Next
 
@@ -900,7 +844,7 @@ Public Class Form1
                 Console.WriteLine("looking at start     : " & sessions.sessionsList(c).startTime)
                 Console.WriteLine("looking at end       : " & sessions.sessionsList(c).endTime)
 
-
+                Dim dog_data_cnt As Integer = 0
                 For Each l In total_sessions(c).List_of_dog_data
 
                     Dim l_start = sessions.sessionsList(c).practiceDate.Add(sessions.sessionsList(c).startTime.TimeOfDay)
@@ -931,12 +875,6 @@ Public Class Form1
                         l_time_zone = 3
                     End If
 
-
-
-
-                    ' TBD - to check if this time step is within the pre-act-post 
-
-
                     xlWorksheet.Cells(out_line_cnt, 1) = total_sessions(c).pet_ID
 
                     ' get Dog's age
@@ -952,28 +890,62 @@ Public Class Form1
                     xlWorksheet.Cells(out_line_cnt, 3) = total_sessions(c).session_start_time
 
                     xlWorksheet.Cells(out_line_cnt, 4) = sessions.sessionsList(c).sessionOnAday
-                    xlWorksheet.Cells(out_line_cnt, 5) = sessions.sessionsList(c).practiceNum
-                    xlWorksheet.Cells(out_line_cnt, 6) = "TBD"
-                    xlWorksheet.Cells(out_line_cnt, 7) = "TBD"
+
+                    ' find the practice type number in the practices table
+                    Dim l_pract = -77
+                    For Each p In practiceList.practicesList
+                        If sessions.sessionsList(c).practiceType = p.praticeName Then
+                            l_pract = p.practiceNum
+                        End If
+
+                    Next
+
+
+                    xlWorksheet.Cells(out_line_cnt, 5) = l_pract
+                    xlWorksheet.Cells(out_line_cnt, 6) = sessions.sessionsList(c).predictability.ToString()
+                    xlWorksheet.Cells(out_line_cnt, 7) = sessions.sessionsList(c).videoNum
                     xlWorksheet.Cells(out_line_cnt, 8) = l_time_zone
-                    xlWorksheet.Cells(out_line_cnt, 9) = "TBD"
-                    xlWorksheet.Cells(out_line_cnt, 10) = "TBD"
+
+                    ' mark start time of each timezone (pre/act/post)
+                    Dim l1, l2 As DateTime
+
+                    Select Case l_time_zone
+                        Case 1
+                            l1 = l_start_pre_time
+                            l2 = l_start
+                        Case 2
+                            l1 = l_start
+                            l2 = l_end
+                        Case 3
+                            l1 = l_end
+                            l2 = l_end_post_time
+                        Case Else
+                            MessageBox.Show("Error in case of timeZone, num is: " + l_time_zone.ToString())
+                            Debug.WriteLine("Error in case of timeZone, num is: " + l_time_zone.ToString())
+                    End Select
+
+                    xlWorksheet.Cells(out_line_cnt, 9) = l1.ToString("hh:mm")
+                    xlWorksheet.Cells(out_line_cnt, 10) = l2.ToString("hh:mm")
                     xlWorksheet.Cells(out_line_cnt, 11) = l.pract_time
-                    xlWorksheet.Cells(out_line_cnt, 12) = "TBD"
-                    xlWorksheet.Cells(out_line_cnt, 13) = "TBD"
-                    xlWorksheet.Cells(out_line_cnt, 14) = "TBD"
-                    xlWorksheet.Cells(out_line_cnt, 15) = "TBD"
+                    'xlWorksheet.Cells(out_line_cnt, 12) = total_sessions(c).get_activity(c)
+                    xlWorksheet.Cells(out_line_cnt, 12) = total_sessions(c).List_of_dog_data(dog_data_cnt).activity
+                    xlWorksheet.Cells(out_line_cnt, 13) = total_sessions(c).List_of_dog_data(dog_data_cnt).pulse
+                    xlWorksheet.Cells(out_line_cnt, 14) = total_sessions(c).List_of_dog_data(dog_data_cnt).respiration
+                    xlWorksheet.Cells(out_line_cnt, 15) = total_sessions(c).List_of_dog_data(dog_data_cnt).vvti
 
 
 
 
                     output_lines_textbox.Text = (out_line_cnt - 1).ToString()
                     out_line_cnt += 1
+                    dog_data_cnt += 1
 
-                Next
+                Next ' of total_sessions(c).List_of_dog_data
 
 
                 xlWorksheet.Cells(1, 4).Interior.Color = Color.Green
+
+                result_out_file_name = result_out_file_name.Replace(".xlsx", "_" & System.DateTime.Now.ToString("yyyyMMddhhmm") & ".xlsx")
                 xlWorksheet.SaveAs(result_out_file_name)
                 ' result_out_file_name
 
@@ -994,8 +966,8 @@ Public Class Form1
 
 
 
-            Next
-        Next
+            Next ' of s.list_of_CSV_matches
+        Next ' of foreach sessions.sessionsList
 
 
 

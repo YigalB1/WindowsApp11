@@ -99,7 +99,8 @@ End Class ' of Practice
 
 Public Class PracticesList
 
-    Dim practicesList As New List(Of PracticeClass)
+    Public practicesList As New List(Of PracticeClass)
+
     Public Sub add_practice(_pract As String, _num As Integer)
         Dim p As New PracticeClass
         p.praticeName = _pract
@@ -136,14 +137,16 @@ End Class ' of class PracticesList
 
 Class Session
     Public dogName As String        ' read from practice file
-    Public dog_dob As String        ' read from practice file
-    Public practiceDate As Date     ' read from practice file
-    Public practiceType As String   ' read from practice file
+    Public dog_dob As String        ' 
+    Public practiceDate As Date     ' 
+    Public practiceType As String   ' 
     Public practiceNum As Integer   ' matching the pratice type
-    Public startTime As Date        ' read from practice file
-    Public endTime As Date          ' read from practice file
-    Public videoNum As String       ' read from practice file
-    Public sessionOnAday As Integer ' read from practice file
+    Public startTime As Date        ' 
+    Public endTime As Date          ' 
+    Public videoNum As String       ' the video numbers have no meaning (at this time, so said Amit)
+    Public predictability As Boolean ' if video exists: it was a planned session and recorded
+    Public sessionOnAday As Integer ' 
+
 
     Public list_of_CSV_matches As New List(Of Integer) ' to be filled after reading CSV files
     ' with CSVs that match this session
@@ -164,9 +167,13 @@ Class Session
         dog_dob = Int(ageindays.Days / 7)
     End Sub
 
-    Public Sub SetpracticeType(ByVal _type As String)
-        practiceType = _type
-        practiceNum = 77 ' TBD 
+    Public Sub SetpracticeType(ByVal _ptype As String)
+        practiceType = _ptype
+        ' search in practice table
+
+
+
+        practiceNum = 77 ' will be done in main? not here ....
     End Sub
 
     Public Sub SetstartTime(ByVal _start_time As Date)
@@ -183,6 +190,11 @@ Class Session
 
     Public Sub SetvideoNum(ByVal _videoNum As String)
         videoNum = _videoNum
+        If (_videoNum = "") Then
+            predictability = False
+        Else
+            predictability = True
+        End If
     End Sub
 
     Public Sub SetSessiomOnAday(ByVal _Sessiononaday As Integer)
@@ -220,6 +232,7 @@ Class List_of_Sessions
 
         Return is_needed
     End Function
+
 
     Public Sub Print_sessions_list()
         Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\sessions_list.txt"
@@ -296,6 +309,10 @@ Class Session_CSV_file
         pet_owner = _owner
         pet_weight = _weight
     End Sub
+
+    Public Function get_activity(_c As Integer) As Double
+        Return List_of_dog_data(_c).activity
+    End Function
 
 End Class ' of Session_file
 
