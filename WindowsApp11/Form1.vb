@@ -14,7 +14,9 @@ Public Class Form1
     Public default_sessions_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\" + "SessionsFiles\\"
     Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list1.xlsx"
     Public LogFile = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\logDog.txt"
-    Public csv_pattern As String = "export-all-Bell-11302018_083229.csv"
+    ' Public csv_pattern As String = "export-all-Bell-11302018_083229.csv" 10 Nov 19
+    Public csv_pattern As String = "export-all-Cooper-11022019_122853.csv"
+
     ' *083229.csv
 
     Public result_out_file_name As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
@@ -22,7 +24,7 @@ Public Class Form1
     Dim DogsList As New DogsListClass
     Dim practiceList As New PracticesList
     Dim sessions As New List_of_Sessions
-    Dim total_sessions As New List(Of Session_CSV_file) ' will include all CSV files contect
+    Dim total_sessions As New List(Of Session_CSV_file) ' will include all CSV files content
 
     Dim Stage_Read_Practice_Table As Boolean = False
     Dim Stage_Read_Session_Files As Boolean = False
@@ -197,43 +199,29 @@ Public Class Form1
         Print_to_log_file("Practice file: " + Me.TxtBoxPracticeFile.Text)
         Print_to_log_file("------------------------------")
 
-
-
         RdPracticeFile.BackColor = Color.GreenYellow
 
         Console.BackgroundColor = ConsoleColor.Blue
         Console.WriteLine(" ......STARTING.................")
         Console.BackgroundColor = ConsoleColor.White
 
-
-        Read_Dog_List()
+        Read_Dog_List() ' into DogList list (name and dob)
         DogsList.Print_dogs_list() ' create text file with list of dogs
         ProgressBar1.Value = 40
-
-
         '  Dim tmp As Integer = DogsList.GetDogAge("Bell")
 
-
-        Read_Pracice_Types_List()
+        Read_Pracice_Types_List() ' into practiceList (pract name & pract number)
         practiceList.Print_practices_list() ' the class way
         ProgressBar1.Value = 50
 
         Read_sessions_list()
-        sessions.Print_sessions_list()
+        sessions.Print_sessions_list() ' into sessions pract name, pract type, start time, end time, video num )
         ProgressBar1.Value = 60
-
-        '        Dim pname As String
-        '        Dim pnum As Integer
-
 
         RdPracticeFile.BackColor = Color.Green
         Stage_Read_Practice_Table = True
 
     End Sub ' of RdPracticeFile
-
-
-
-
 
     Private Sub Read_Dog_List()
         ' Reading dogs from practice file
@@ -352,6 +340,7 @@ Public Class Form1
 
 
             s.SetDogsAge(pract_date, dog_dob)
+            s.SetDogsDOB(dog_dob)
 
             s.SetpracticeType(MyExcel.Cells(row_cnt, col_cnt + 2).text)
             s.SetstartTime(MyExcel.Cells(row_cnt, col_cnt + 3).text)
@@ -569,18 +558,19 @@ Public Class Form1
             Dim t_bool As Boolean = Date.TryParseExact(s1, "MM/dd/yyyy",
                                Globalization.CultureInfo.InvariantCulture,
                                Globalization.DateTimeStyles.None, csv_start_date)
-            curr_session.session_start_time = csv_start_date
-            curr_session.session_end_time = csv_end_date
+            curr_session.session_start_time = csv_start_date ' Oct 23, 2019
+            'curr_session.session_end_time = csv_end_date
             If (t_bool = False) Then
                 MessageBox.Show("Error E1 while checking CSV file date")
                 Console.WriteLine("Error E1 while checking CSV file date")
             End If
 
-            s1 = pract_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
+            s1 = pract_Excel.Cells(1, 2).text.Replace("To:", "").Replace(" ", "")
 
             t_bool = Date.TryParseExact(s1, "MM/dd/yyyy",
                                Globalization.CultureInfo.InvariantCulture,
                                Globalization.DateTimeStyles.None, csv_end_date)
+            curr_session.session_end_time = csv_end_date ' Oct 23 2019
             If (t_bool = False) Then
                 MessageBox.Show("Error E2 while checking CSV file date")
                 Console.WriteLine("Error E2 while checking CSV file date")
@@ -593,53 +583,148 @@ Public Class Form1
             ' lines to ignore: fever indication, position
 
             Dim line_data_type As String = "BLABLA"   ' just to enter the loop
-            Dim line_date As DateTime
-            Dim to_ignore As New List(Of String)
-            to_ignore.Add("Fever Indication")
-            to_ignore.Add("Position")
+            Dim line_date As DateTime = Nothing
+            Dim prev_line_date As DateTime = Nothing ' just to start the loop
+            Dim same_time As Boolean
+            'Dim to_ignore As New List(Of String)
+            'to_ignore.Add("Fever Indication")
+            'to_ignore.Add("Position")
             Dim posi_cnt As Integer = 0
             Dim acti_cnt As Integer = 0
             Dim pulse_cnt As Integer = 0
             Dim resp_cnt As Integer = 0
             Dim vvti_cnt As Integer = 0
 
+            'Dim line_data As New Session_CSV_file.dog_data
+            Dim prev_line_data As New Session_CSV_file.dog_data
+            'Dim line_data As New Session_CSV_file.dog_data
+
+
+            Dim pos_tmp As String
+            Dim pos_flag As Boolean = False
+            Dim pos_dur_tmp As Integer
+            Dim pos_dur_flag As Boolean = False
+            Dim activity_tmp As Double
+            Dim activity_flag As Boolean = False
+            Dim pulse_tmp As Integer
+            Dim pulse_flag As Boolean = False
+            Dim resp_tmp As Integer
+            Dim resp_flag As Boolean = False
+            Dim vvti_tmp As Double
+            Dim vvti_flag As Boolean = False
+
+            Dim first_cycle = True
+            Dim tmp_value As Boolean = False  ' to indicate there was a valur
+
+
+            ' read lines from CSV file, line after line
             While (line_data_type <> "")
-                Dim line_data As New Session_CSV_file.dog_data
+
+
+
                 line_Cnt += 1
                 total_line_cnt += 1
                 num_of_lines_TextBox.Text = total_line_cnt.ToString()
 
                 line_data_type = pract_Excel.Cells(line_Cnt, 1).Text
-                If to_ignore.Contains(line_data_type) Then
-                    Continue While ' ignore this line because type is on the black list
+                'If to_ignore.Contains(line_data_type) Then
+                ' Continue While ' ignore this line because type is on the black list
+                ' End If
+
+                prev_line_date = line_date
+                line_date = pract_Excel.Cells(line_Cnt, 2).value
+                line_date = line_date.AddSeconds(-line_date.Second) ' 31 Oct 
+                If Not first_cycle Then
+
+
+                    If line_date = prev_line_date Then
+                        same_time = True
+                    ElseIf tmp_value Then
+                        same_time = False
+                        Dim line_data As New Session_CSV_file.dog_data
+                        line_data.activity = activity_tmp
+                        line_data.activity_flag = activity_flag
+                        line_data.pract_type = line_data_type
+                        line_data.pract_time = prev_line_date
+                        line_data.pulse = pulse_tmp
+                        line_data.pulse_flag = pulse_flag
+                        line_data.respiration = resp_tmp
+                        line_data.resp_flag = resp_flag
+                        line_data.vvti = vvti_tmp
+                        line_data.vvti_flag = vvti_flag
+
+                        curr_session.List_of_dog_data.Add(line_data)
+
+                        activity_tmp = Nothing
+                        activity_flag = False
+                        pos_tmp = Nothing
+                        pos_flag = False
+                        pos_dur_tmp = Nothing
+                        pos_dur_flag = False
+                        pulse_tmp = Nothing
+                        pulse_flag = False
+                        resp_tmp = Nothing
+                        resp_flag = False
+                        vvti_tmp = Nothing
+                        vvti_flag = False
+
+                        tmp_value = False
+                    End If
+
                 End If
 
-                line_date = pract_Excel.Cells(line_Cnt, 2).value
-                line_data.pract_type = line_data_type
-                line_data.pract_time = line_date
+                first_cycle = False ' good only for first run of the while loop
+                'If (Not same_time) Then
+                ' curr_session.List_of_dog_data.Add(line_data)
+                ' line_date = Nothing
+                ' End If
+
+                'line_data.pract_type = line_data_type
+                'line_data.pract_time = line_date
 
                 ' now collect the data according to the data type
 
                 Select Case line_data_type
-                    Case "Position"
-                        posi_cnt += 1
-                        line_data.position = pract_Excel.Cells(line_Cnt, 5).text
-                        line_data.position_duration = pract_Excel.Cells(line_Cnt, 6).value
+                    'Case "Position"
+                    '    posi_cnt += 1
+                    '    pos_tmp = pract_Excel.Cells(line_Cnt, 5).text
+                    '    pos_dur_tmp = pract_Excel.Cells(line_Cnt, 6).value
+                    '    'line_data.position = pract_Excel.Cells(line_Cnt, 5).text
+                    '    'line_data.position_duration = pract_Excel.Cells(line_Cnt, 6).value
                     Case "Activity"
                         acti_cnt += 1
-                        line_data.activity = pract_Excel.Cells(line_Cnt, 7).value
-
+                        'line_data.activity = pract_Excel.Cells(line_Cnt, 7).value
+                        activity_tmp = pract_Excel.Cells(line_Cnt, 7).value
+                        activity_flag = True
+                        tmp_value = True
                     Case "Pulse"
                         pulse_cnt += 1
-                        line_data.pulse = pract_Excel.Cells(line_Cnt, 9).value
-
+                        'line_data.pulse = pract_Excel.Cells(line_Cnt, 9).value
+                        pulse_tmp = pract_Excel.Cells(line_Cnt, 9).value
+                        pulse_flag = True
+                        tmp_value = True
                     Case "Respiration"
                         resp_cnt += 1
-                        line_data.respiration = pract_Excel.Cells(line_Cnt, 10).value
-
+                        'line_data.respiration = pract_Excel.Cells(line_Cnt, 10).value
+                        resp_tmp = pract_Excel.Cells(line_Cnt, 10).value
+                        resp_flag = True
+                        tmp_value = True
                     Case "VVTI"
                         vvti_cnt += 1
-                        line_data.vvti = pract_Excel.Cells(line_Cnt, 11).value
+                        'line_data.vvti = pract_Excel.Cells(line_Cnt, 11).value
+                        vvti_tmp = pract_Excel.Cells(line_Cnt, 11).value
+                        vvti_flag = True
+                        tmp_value = True
+                    Case "Sleep"
+                        ' do nothing
+                    Case "Fever Indication"
+                        ' do nothing
+                    Case "Position"
+                        ' do nothing
+                    Case "Activity Score"
+                        ' do nothing
+                    Case "Position Score"
+                        ' do nothing
 
                     Case Else
                         Console.WriteLine("Wrong place in case of data type in CSV lines")
@@ -648,8 +733,10 @@ Public Class Form1
 
 
                 '        Console.WriteLine(lineDate.ToString() + "  " + lineTime.ToString())
-                curr_session.List_of_dog_data.Add(line_data)
-            End While
+                'If Not same_time Then
+                'End If
+
+            End While ' keep reading lines from this CSV file
             total_lines_of_csv += line_Cnt
 
             Print_to_log_file("Total number of lines read: " + line_Cnt.ToString())
@@ -742,12 +829,12 @@ Public Class Form1
         ' Run them all
         Button3.BackColor = Color.GreenYellow
 
-        ReadPracticeFile()
+        ReadPracticeFile() ' with dogs DOB but not age (depends on sessions day)
         Read_session_files()
         check_sessions()
         Create_results()
         create_statistics()
-
+        ProgressBar1.Value = 100
         Button3.BackColor = Color.Green
     End Sub
 
@@ -845,6 +932,11 @@ Public Class Form1
                 Console.WriteLine("looking at end       : " & sessions.sessionsList(c).endTime)
 
                 Dim dog_data_cnt As Integer = -1
+                Dim prev_date As Date = Nothing
+                Dim prev_pract_time As Date = Nothing
+
+
+
                 For Each l In total_sessions(c).List_of_dog_data
                     dog_data_cnt += 1
 
@@ -855,11 +947,9 @@ Public Class Form1
                     Dim l_start_pre_time As DateTime = l_start.AddMinutes(-TxtPreTime.Value)
                     Dim l_end_post_time As DateTime = l_end.AddMinutes(TxtPreTime.Value)
 
-
                     If l.pract_time < l_start_pre_time Then
                         Continue For
                     End If
-
 
                     If l.pract_time > l_end_post_time Then
                         Continue For
@@ -889,8 +979,8 @@ Public Class Form1
 
                     'session's date
                     xlWorksheet.Cells(out_line_cnt, 3) = total_sessions(c).session_start_time
-
-                    xlWorksheet.Cells(out_line_cnt, 4) = sessions.sessionsList(c).sessionOnAday
+                    'xlWorksheet.Cells(out_line_cnt, 4) = sessions.sessionsList(c).sessionOnAday
+                    xlWorksheet.Cells(out_line_cnt, 4) = sessions.Count_num_of_sessions_per_day(total_sessions(c).pet_name, l_pract_date)
 
                     ' find the practice type number in the practices table
                     Dim l_pract = -77
@@ -900,7 +990,6 @@ Public Class Form1
                         End If
 
                     Next
-
 
                     xlWorksheet.Cells(out_line_cnt, 5) = l_pract
                     xlWorksheet.Cells(out_line_cnt, 6) = sessions.sessionsList(c).predictability.ToString()
@@ -925,20 +1014,43 @@ Public Class Form1
                             Debug.WriteLine("Error in case of timeZone, num is: " + l_time_zone.ToString())
                     End Select
 
-                    xlWorksheet.Cells(out_line_cnt, 9) = l1.ToString("hh:mm")
-                    xlWorksheet.Cells(out_line_cnt, 10) = l2.ToString("hh:mm")
-                    xlWorksheet.Cells(out_line_cnt, 11) = l.pract_time
+                    ' 2o OCt trials
+                    'Dim xx As String
+                    'xx = Format(l.pract_time, "HH:mm")
+
+                    xlWorksheet.Cells(out_line_cnt, 9) = l1.ToString("HH:mm")
+                    xlWorksheet.Cells(out_line_cnt, 10) = l2.ToString("HH:mm")
+                    'xlWorksheet.Cells(out_line_cnt, 11) = l.pract_time 21 Oct 2019, nove to 24h clock
+                    xlWorksheet.Cells(out_line_cnt, 11) = Format(l.pract_time, "HH:mm")
                     'xlWorksheet.Cells(out_line_cnt, 12) = total_sessions(c).get_activity(c)
-                    xlWorksheet.Cells(out_line_cnt, 12) = total_sessions(c).List_of_dog_data(dog_data_cnt).activity
-                    xlWorksheet.Cells(out_line_cnt, 13) = total_sessions(c).List_of_dog_data(dog_data_cnt).pulse
-                    xlWorksheet.Cells(out_line_cnt, 14) = total_sessions(c).List_of_dog_data(dog_data_cnt).respiration
-                    xlWorksheet.Cells(out_line_cnt, 15) = total_sessions(c).List_of_dog_data(dog_data_cnt).vvti
 
+                    If total_sessions(c).List_of_dog_data(dog_data_cnt).activity_flag Then
+                        xlWorksheet.Cells(out_line_cnt, 12) = total_sessions(c).List_of_dog_data(dog_data_cnt).activity
+                    End If
 
+                    If total_sessions(c).List_of_dog_data(dog_data_cnt).pulse_flag Then
+                        xlWorksheet.Cells(out_line_cnt, 13) = total_sessions(c).List_of_dog_data(dog_data_cnt).pulse
+                    End If
+
+                    If total_sessions(c).List_of_dog_data(dog_data_cnt).resp_flag Then
+                        xlWorksheet.Cells(out_line_cnt, 14) = total_sessions(c).List_of_dog_data(dog_data_cnt).respiration
+                    End If
+
+                    If total_sessions(c).List_of_dog_data(dog_data_cnt).vvti_flag Then
+                        xlWorksheet.Cells(out_line_cnt, 15) = total_sessions(c).List_of_dog_data(dog_data_cnt).vvti
+                    End If
 
 
                     output_lines_textbox.Text = (out_line_cnt - 1).ToString()
-                    out_line_cnt += 1
+
+                    If (prev_date <> total_sessions(c).session_start_time) Or (prev_pract_time <> l.pract_time) Then
+                        'out_line_cnt += 1
+                    End If
+
+                    prev_date = total_sessions(c).session_start_time
+
+
+                    out_line_cnt += 1    '23 Oct 2019
                     'dog_data_cnt += 1
 
                 Next ' of total_sessions(c).List_of_dog_data
@@ -956,16 +1068,6 @@ Public Class Form1
                 xlApp = Nothing
                 xlWorkbook = Nothing
                 xlWorksheet = Nothing
-
-
-
-
-
-
-
-
-
-
 
             Next ' of s.list_of_CSV_matches
         Next ' of foreach sessions.sessionsList

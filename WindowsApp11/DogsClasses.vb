@@ -75,10 +75,17 @@ Public Class DogsListClass
         Dim file As System.IO.StreamWriter
 
         file = My.Computer.FileSystem.OpenTextFileWriter(docPath, False)
+        file.WriteLine("Print list of dogs and DOB")
         Dim cnt As Integer = 0
         For Each item In dogs_List
             cnt = cnt + 1
-            file.WriteLine(cnt.ToString() + " " + item.Name + " " + item.Age.ToString())
+
+            ' remove time from DOB, leave date only
+            Dim strArr() As String
+            strArr = item.Dob.ToString().Split(" ")
+
+            file.WriteLine(cnt.ToString() + " " + item.Name + " " + strArr(0))  ' 24 Oct was age instead of DOB
+            ' but age depends on practice date, unknown as for now
         Next
         file.Close()
     End Sub ' Print_dogs_list
@@ -137,7 +144,8 @@ End Class ' of class PracticesList
 
 Class Session
     Public dogName As String        ' read from practice file
-    Public dog_dob As String        ' 
+    Public dog_dob As Date        ' Oct 28: shouldnt be a date, instead of a string??
+    Public dog_age As String        ' Oct 28: shouldnt be a date, instead of a string??
     Public practiceDate As Date     ' 
     Public practiceType As String   ' 
     Public practiceNum As Integer   ' matching the pratice type
@@ -164,15 +172,25 @@ Class Session
         Dim ageindays As TimeSpan
 
         ageindays = _date - _dob
-        dog_dob = Int(ageindays.Days / 7)
+        dog_age = Int(ageindays.Days / 7)
     End Sub
+
+    '    Public Sub SetDogsDOB(ByVal _dog_name As String, ByVal _dogs_lst As DogsListClass)
+    Public Sub SetDogsDOB(ByVal _dog_dob As Date)
+        '       dog_dob = Nothing
+        '       For Each item In _dogs_lst.dogs_List
+        '       If item.Name = _dog_name Then
+        '      dog_dob = item.Dob
+        '     End If
+        '    Next
+        dog_dob = _dog_dob
+
+    End Sub
+
 
     Public Sub SetpracticeType(ByVal _ptype As String)
         practiceType = _ptype
         ' search in practice table
-
-
-
         practiceNum = 77 ' will be done in main? not here ....
     End Sub
 
@@ -253,6 +271,20 @@ Class List_of_Sessions
     End Sub ' Print_dogs_list
 
 
+    Public Function Count_num_of_sessions_per_day(_dog_name As String, _date As Date)
+        Dim cnt As Integer = 0
+        For Each item In sessionsList
+            If _dog_name = item.dogName And _date = item.practiceDate Then
+                cnt = cnt + 1
+
+            End If
+        Next
+        Count_num_of_sessions_per_day = cnt
+    End Function ' count_num_of_sessions_per_day
+
+
+
+
 End Class   ' List_of_Sessions
 
 Class Session_CSV_file
@@ -275,14 +307,21 @@ Class Session_CSV_file
         Public pract_source As String
         Public fever_indication As String
         Public position As String
+        Public pos_flag As Boolean
         Public position_duration As Integer
+        Public pos_dur_flag As Boolean
         Public activity As Double
+        Public activity_flag As Boolean
         Public activity_group As String
         Public pulse As Integer
+        Public pulse_flag As Boolean
         Public respiration As Integer
+        Public resp_flag As Boolean
         Public vvti As Double
+        Public vvti_flag As Boolean
         Public Manual_data_note As String
         Public Manual_data_value As String
+
     End Class
 
 
