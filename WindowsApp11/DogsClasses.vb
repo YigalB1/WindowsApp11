@@ -303,7 +303,7 @@ Class Session_CSV_file
     '    Public sessio_pre_start As DateTime
     '    Public session_post_end As DateTime
 
-    Public Class dog_data
+    Public Class Dog_data
         Public pract_type As String
         Public pract_time As DateTime
         Public pract_source As String
@@ -321,6 +321,12 @@ Class Session_CSV_file
         Public resp_flag As Boolean
         Public vvti As Double
         Public vvti_flag As Boolean
+
+        Public sleep As Double
+        Public sleep_flag As Boolean
+        Public activity_score As Integer
+        Public activity_score_flag As Boolean
+
         Public Manual_data_note As String
         Public Manual_data_value As String
 

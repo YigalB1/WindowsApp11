@@ -93,6 +93,12 @@ Public Class Form1
             TxtBoxWorkDir.Text = course_dir
             TxtBoxSessionDir.Text = in_files_dir
 
+            Dim d As New System.IO.DirectoryInfo(in_files_dir)
+            Dim intFiles As Integer
+            intFiles = d.GetFiles.GetUpperBound(0) + 1
+            TxtBoxNumOfFiles.Text = intFiles.ToString
+
+
             PreChecks.BackColor = Color.Green
             Return True
         Else
@@ -462,12 +468,8 @@ Public Class Form1
     Private Sub TxtBoxHeader_TextChanged(sender As Object, e As EventArgs) Handles TxtBoxHeader.TextChanged
     End Sub
 
-
-    ' **** new code below - reading session files
-
+    '  ***** reading CSV session files ********************
     Public Sub Read_CSV_Session_files(_dir As String)
-        ' reading CSV files 
-
         Dim pract_Excel As New Microsoft.Office.Interop.Excel.Application
         Dim dog_session As New DogSession
 
@@ -482,30 +484,23 @@ Public Class Form1
         Dim csv_end_date As DateTime
         Dim total_lines_of_csv As Integer = 0
 
-
         RdSessionFiles.BackColor = Color.GreenYellow
-
-        '       Dim total_sessions As New List(Of Session_file) ' will include all CSV files contect
-
         num_of_lines_TextBox.BackColor = Color.Yellow
         num_of_lines_TextBox.Text = "starting"
 
-        'fileName = Dir(in_PathName & "*084330.csv")
-        'fileName = Dir(in_PathName & csv_pattern)
-        fileName = Dir(_dir & csv_pattern)
-
         Print_to_log_file("Start reading CSV files")
         Print_to_log_file("Dir is: " + _dir)
+
+        fileName = Dir(_dir & csv_pattern)
 
         Do While fileName <> ""
             Dim curr_session As New Session_CSV_file
             file_count += 1
 
-            'dog_session.Open_Session_file(in_PathName + fileName)
             Print_to_log_file("Start reading CSV file: " + _dir + fileName)
-            'pract_Excel.Workbooks.Open(in_PathName + fileName)
+            '** Open CSV file
             pract_Excel.Workbooks.Open(_dir + fileName)
-
+            ' ** Get pet & date info about this session
             pet_name = pract_Excel.Cells(2, 1).text.Replace("Pet name: ", "").Replace(" ", "")
             curr_session.pet_name = pet_name
             pet_id = pract_Excel.Cells(2, 2).text.Replace("Pet id: ", "").Replace(" ", "")
@@ -554,6 +549,8 @@ Public Class Form1
             Dim pulse_cnt As Integer = 0
             Dim resp_cnt As Integer = 0
             Dim vvti_cnt As Integer = 0
+            Dim sleep_score_cnt = 0
+            Dim activity_score_cnt = 0
 
             'Dim line_data As New Session_CSV_file.dog_data
             Dim prev_line_data As New Session_CSV_file.dog_data
@@ -572,36 +569,32 @@ Public Class Form1
             Dim resp_flag As Boolean = False
             Dim vvti_tmp As Double
             Dim vvti_flag As Boolean = False
+            Dim sleep_score_tmp As Double
+            Dim sleep_score_flag As Boolean = False
+            Dim activity_score_tmp As Integer
+            Dim activity_score_flag As Boolean = False
 
             Dim first_cycle = True
             Dim tmp_value As Boolean = False  ' to indicate there was a valur
 
 
-            ' read lines from CSV file, line after line
+            ' ** read lines from CSV file, line after line
             While (line_data_type <> "")
-
-
-
                 line_Cnt += 1
                 total_line_cnt += 1
                 num_of_lines_TextBox.Text = total_line_cnt.ToString()
-
                 line_data_type = pract_Excel.Cells(line_Cnt, 1).Text
-                'If to_ignore.Contains(line_data_type) Then
-                ' Continue While ' ignore this line because type is on the black list
-                ' End If
 
                 prev_line_date = line_date
                 line_date = pract_Excel.Cells(line_Cnt, 2).value
                 line_date = line_date.AddSeconds(-line_date.Second) ' 31 Oct 
                 If Not first_cycle Then
 
-
                     If line_date = prev_line_date Then
                         same_time = True
                     ElseIf tmp_value Then
                         same_time = False
-                        Dim line_data As New Session_CSV_file.dog_data
+                        Dim line_data As New Session_CSV_file.Dog_data
                         line_data.activity = activity_tmp
                         line_data.activity_flag = activity_flag
                         line_data.pract_type = line_data_type
@@ -612,6 +605,10 @@ Public Class Form1
                         line_data.resp_flag = resp_flag
                         line_data.vvti = vvti_tmp
                         line_data.vvti_flag = vvti_flag
+                        line_data.sleep = sleep_score_tmp
+                        line_data.sleep_flag = sleep_score_flag
+                        line_data.activity_score = activity_score_tmp
+                        line_data.activity_score_flag = activity_score_flag
 
                         curr_session.List_of_dog_data.Add(line_data)
 
@@ -676,12 +673,18 @@ Public Class Form1
                         vvti_flag = True
                         tmp_value = True
                     Case "Sleep"
-                        ' do nothing
+                        sleep_score_cnt += 1
+                        sleep_score_tmp = pract_Excel.Cells(line_Cnt, 14).value
+                        sleep_score_flag = True
+                        tmp_value = True
+                    Case "Activity Score"
+                        activity_score_cnt += 1
+                        activity_score_tmp = pract_Excel.Cells(line_Cnt, 15).value
+                        activity_score_flag = True
+                        tmp_value = True
                     Case "Fever Indication"
                         ' do nothing
                     Case "Position"
-                        ' do nothing
-                    Case "Activity Score"
                         ' do nothing
                     Case "Position Score"
                         ' do nothing
@@ -705,26 +708,13 @@ Public Class Form1
             Print_to_log_file("Lines with Pulse          : " + pulse_cnt.ToString())
             Print_to_log_file("Lines with Respiration    : " + resp_cnt.ToString())
             Print_to_log_file("Lines with VVTI           : " + vvti_cnt.ToString())
-
+            Print_to_log_file("Lines with Sleep score    : " + sleep_score_cnt.ToString())
+            Print_to_log_file("Lines with Activity score : " + activity_score_cnt.ToString())
 
             pract_Excel.Workbooks.Close()
             total_sessions.Add(curr_session)
 
             num_of_lines_TextBox.Text = total_line_cnt.ToString()
-
-
-            'If session_num = -1 Then
-            '    no_match_cnt += 1
-            '    Print_to_log_file("Failed to find session for CSV file: " + fileName)
-            '    Print_to_log_file("Dog: " + dog_session.pet_name + "  " + dog_session.start_day)
-            'Else
-            '    Print_to_log_file("Match ")
-            '    match_cnt += 1
-
-            '    ' start reading line by line, see if time is matching the pre/act/post
-            'End If
-
-            ' dog_session.Close_Excel()
 
             fileName = Dir()
             Console.WriteLine(" finished file number " + file_count.ToString())
@@ -910,6 +900,8 @@ Public Class Form1
         xlWorksheet.Cells(1, 13) = "Pulse"
         xlWorksheet.Cells(1, 14) = "Respiration"
         xlWorksheet.Cells(1, 15) = "HRV"
+        xlWorksheet.Cells(1, 16) = "Sleep score"
+        xlWorksheet.Cells(1, 17) = "Activity Score"
 
         Dim out_line_cnt As Integer = 2
 
@@ -1031,6 +1023,18 @@ Public Class Form1
                     If total_sessions(c).List_of_dog_data(dog_data_cnt).vvti_flag Then
                         xlWorksheet.Cells(out_line_cnt, 15) = total_sessions(c).List_of_dog_data(dog_data_cnt).vvti
                     End If
+
+
+                    If total_sessions(c).List_of_dog_data(dog_data_cnt).sleep_flag Then
+                        xlWorksheet.Cells(out_line_cnt, 16) = total_sessions(c).List_of_dog_data(dog_data_cnt).sleep
+                    End If
+
+                    If total_sessions(c).List_of_dog_data(dog_data_cnt).activity_flag Then
+                        xlWorksheet.Cells(out_line_cnt, 17) = total_sessions(c).List_of_dog_data(dog_data_cnt).activity_score
+                    End If
+
+
+
 
 
                     output_lines_textbox.Text = (out_line_cnt - 1).ToString()
