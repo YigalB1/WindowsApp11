@@ -20,8 +20,6 @@ Public Class DogSession
 
         Dim s1 As String = pract_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
 
-        '      Try
-        '  d1 = CDate(s1)
         Dim x1 As String = s1.Substring(0, 2)
         Dim x2 As String = s1.Substring(3, 2)
         Dim x3 As String = x2 + "/" + x1 + "/" + s1.Substring(6, 4)
@@ -39,7 +37,6 @@ Public Class DogSession
         x3 = x2 + "/" + x1 + "/" + s1.Substring(6, 4)
         d3 = CDate(x3)
         end_day = d3
-
 
     End Sub
 

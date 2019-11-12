@@ -5,17 +5,27 @@
 'Imports Console = System.Console
 Imports System.Data.OleDb
 Imports Microsoft.Office.Interop
+Imports System.IO
 
 Public Class Form1
+
+    ' 10 Nov 2019: making directories according to courses
+    Public root_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
+    Public course_dir As String ' will be assigned according to selected course
+    Public in_files_dir As String
+    Public out_files_dir As String
+    Public practice_file As String
 
 
     Public in_PathName As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\SessionsFiles\\"
     Public default_work_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
     Public default_sessions_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\" + "SessionsFiles\\"
     Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list1.xlsx"
-    Public LogFile = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\logDog.txt"
+    'Public LogFile = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\logDog.txt"
+    Public LogFile ' 11 Nov 2019: folder is assigned according to course
+
     ' Public csv_pattern As String = "export-all-Bell-11302018_083229.csv" 10 Nov 19
-    Public csv_pattern As String = "export-all-Cooper-11022019_122853.csv"
+    Public csv_pattern As String = ""
 
     ' *083229.csv
 
@@ -30,12 +40,91 @@ Public Class Form1
     Dim Stage_Read_Session_Files As Boolean = False
 
     Dim total_line_cnt As Integer
+    Dim course_name As String = Nothing ' will hold the course name year 2016-17 or 2017-18
 
 
 
     Dim MAX_NUM_OF_DOGS As Integer = 50
     Dim MAX_NUM_OF_PRACTICES As Integer = 500
     Dim MAX_NUM_OF_PRACTICES_TYPES As Integer = 50
+
+
+    Private Function check_course()
+        Dim ret As Boolean
+        ret = False
+        ' "201617"
+        If RadioButton1.Checked Then
+            course_name = "2016_17"
+            ret = True
+        ElseIf RadioButton2.Checked Then
+            course_name = "2017_18"
+            ret = True
+        Else
+            ' MessageBox.Show("No project was selected")
+        End If
+        course_dir = root_dir + "Course" + course_name + "\\"
+        in_files_dir = course_dir + "in_files\\"
+        out_files_dir = course_dir + "out_files\\"
+        practice_file = course_dir + "practice_list_" + course_name + ".xlsx"
+        LogFile = course_dir + "logDog.txt"
+
+        Return ret
+    End Function
+
+
+    Private Function check_files_and_folders()
+
+        If check_course() = False Then
+            MessageBox.Show("Select a project")
+            Return False
+        End If
+        Print_to_log_file("Course name: " + course_name)
+
+        PreChecks.BackColor = Color.Yellow
+        Dim dir_bool1 As Boolean = IO.Directory.Exists(root_dir)
+        Dim dir_bool2 As Boolean = IO.Directory.Exists(course_dir)
+        Dim dir_bool3 As Boolean = IO.Directory.Exists(in_files_dir)
+        Dim dir_bool4 As Boolean = IO.Directory.Exists(out_files_dir)
+
+        Dim file_bool1 As Boolean = IO.File.Exists(practice_file)
+
+        If dir_bool1 And dir_bool2 And dir_bool3 And dir_bool4 And file_bool1 Then
+            Print_to_log_file("OK - Files and folders")
+            TxtBoxWorkDir.Text = course_dir
+            TxtBoxSessionDir.Text = in_files_dir
+
+            PreChecks.BackColor = Color.Green
+            Return True
+        Else
+
+            If dir_bool1 = False Then
+                Print_to_log_file("Error: root_dir is missing")
+            End If
+            If dir_bool2 = False Then
+                Print_to_log_file("Error: course_dir is missing")
+            End If
+            If dir_bool3 = False Then
+                Print_to_log_file("Error: in_files_dir is missing")
+            End If
+            If dir_bool4 = False Then
+                Print_to_log_file("Error: out_files_dir is missing")
+            End If
+            If file_bool1 = False Then
+                Print_to_log_file("Error: practice_file is missing")
+            End If
+            MessageBox.Show("Missing files or folders. Look at LOG file")
+            Return False
+        End If
+    End Function
+
+
+
+
+
+
+
+
+
 
     Sub CreateDogsGrid(ByRef _dgv As DataGridView)
         ' Create an unbound DataGridView by declaring a column count.
@@ -53,8 +142,6 @@ Public Class Form1
         _dgv.Columns(1).Name = "Name"
         _dgv.Columns(2).Name = "DOB"
         _dgv.Columns(3).Name = "Age"
-
-
     End Sub
 
     Sub CreatePracicesTypeGrid(ByRef _dgv1 As DataGridView)
@@ -81,8 +168,6 @@ Public Class Form1
         ColumnHeaderStyle.Font = New Font("Verdana", 4, FontStyle.Bold)
         _dgv.ColumnHeadersDefaultCellStyle = ColumnHeaderStyle
 
-
-
         _dgv.Rows.Add(_num.ToString,
                       _name,
                       _date,
@@ -91,11 +176,7 @@ Public Class Form1
                       _end.ToString,
                       _video)
         _dgv.AutoResizeColumns()
-
-
-
     End Sub
-
 
     Sub CreatePracicesListGrid(ByRef _dgv1 As DataGridView)
 
@@ -119,38 +200,40 @@ Public Class Form1
         _dgv1.Columns(5).Name = "Pract End"
         _dgv1.Columns(6).Name = "Video Num"
 
-
     End Sub
 
-    Public Sub ShowEvent(sender As Object, e As EventArgs) Handles Me.Shown
-        ' ****** STARTs AUTOMATICALLY running WITH FORM
+    'Public Sub ShowEvent(sender As Object, e As EventArgs) Handles Me.Shown
+    '    ' ****** STARTs AUTOMATICALLY running WITH FORM
 
-        'set default directory
-        TxtBoxWorkDir.Text = default_work_dir
-        'TxtBoxWorkDir.Text = "C:\Users\yigal\Documents\Yigal\DogsProj\"
-        TxtBoxSessionDir.Text = default_sessions_dir
-        'TxtBoxSessionDir.Text = TxtBoxWorkDir.Text + "SessionsFiles\"
+    '    'set default directory
+    '    ' TxtBoxWorkDir.Text = default_work_dir
+    '    TxtBoxWorkDir.Text = course_dir
 
-        TxtBoxPracticeFile.Text = default_pratice_file_name
-        'TxtBoxPracticeFile.Text = TxtBoxWorkDir.Text + "practice_list1.xlsx"
 
-        ' count files in session directory
-        Dim FilesInFolder As Integer = 0
-        Dim d As New System.IO.DirectoryInfo(TxtBoxSessionDir.Text)
-        Dim intFiles As Integer
-        intFiles = d.GetFiles.GetUpperBound(0) + 1
-        TxtBoxNumOfFiles.Text = intFiles.ToString
+    '    TxtBoxSessionDir.Text = default_sessions_dir
+    '    TxtBoxSessionDir.Text = in_files_dir
 
-        ' Display picture
-        PictureBox1.Image.RotateFlip(RotateFlipType.Rotate180FlipNone)
-        PictureBox1.Refresh()
 
-        ' set color before usage
-        RdPracticeFile.BackColor = Color.Yellow
+    '    'TxtBoxPracticeFile.Text = default_pratice_file_name
+    '    TxtBoxPracticeFile.Text = practice_file
 
-        ProgressBar1.Value = 10
+    '    ' count files in session directory
+    '    Dim FilesInFolder As Integer = 0
+    '    Dim d As New System.IO.DirectoryInfo(TxtBoxSessionDir.Text)
+    '    Dim intFiles As Integer
+    '    intFiles = d.GetFiles.GetUpperBound(0) + 1
+    '    TxtBoxNumOfFiles.Text = intFiles.ToString
 
-    End Sub
+    '    ' Display picture
+    '    PictureBox1.Image.RotateFlip(RotateFlipType.Rotate180FlipNone)
+    '    PictureBox1.Refresh()
+
+    '    ' set color before usage
+    '    RdPracticeFile.BackColor = Color.Yellow
+
+    '    ProgressBar1.Value = 10
+
+    'End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles ButtonSelectWorkFolder.Click
         If (FolderBrowserDialog1.ShowDialog() = DialogResult.OK) Then
@@ -167,33 +250,26 @@ Public Class Form1
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles SelectPracticeFile.Click
         ' Call ShowDialog.
-
         OpenFileDialog1.InitialDirectory = TxtBoxWorkDir.Text
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
 
         ' Test result.
         If result = Windows.Forms.DialogResult.OK Then
-
             ' Get the file name.
             Dim path As String = OpenFileDialog1.FileName
             TxtBoxPracticeFile.Text = path
             ProgressBar1.Value = 30
         End If
-
-
-
     End Sub
 
     Private Sub RdPracticeFile_Click(sender As Object, e As EventArgs) Handles RdPracticeFile.Click
-
         ReadPracticeFile()
-
-
     End Sub ' of RdPracticeFile_Click (invoked from button)
 
-
-
     Private Sub ReadPracticeFile()
+
+
+
 
         Print_to_log_file("Reading Practice file " + Date.Now(), False)
         Print_to_log_file("Practice file: " + Me.TxtBoxPracticeFile.Text)
@@ -206,12 +282,12 @@ Public Class Form1
         Console.BackgroundColor = ConsoleColor.White
 
         Read_Dog_List() ' into DogList list (name and dob)
-        DogsList.Print_dogs_list() ' create text file with list of dogs
+        DogsList.Print_dogs_list(course_dir) ' create text file with list of dogs
         ProgressBar1.Value = 40
         '  Dim tmp As Integer = DogsList.GetDogAge("Bell")
 
         Read_Pracice_Types_List() ' into practiceList (pract name & pract number)
-        practiceList.Print_practices_list() ' the class way
+        practiceList.Print_practices_list(course_dir) ' the class way
         ProgressBar1.Value = 50
 
         Read_sessions_list()
@@ -220,7 +296,6 @@ Public Class Form1
 
         RdPracticeFile.BackColor = Color.Green
         Stage_Read_Practice_Table = True
-
     End Sub ' of RdPracticeFile
 
     Private Sub Read_Dog_List()
@@ -229,32 +304,26 @@ Public Class Form1
         ' Dim DogsList As New DogsListClass   ' *** the Class way
         Dim counter As Integer = 0
         Dim row_cnt As Integer = 2
-        Dim col_cnt As Integer = 12
+        Dim col_cnt As Integer = 14
         Dim stmp As String
 
         Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
-        MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+        'MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+        MyExcel.Workbooks.Open(practice_file)
 
         counter = 0
         Do
-
             If counter < MAX_NUM_OF_DOGS And MyExcel.Cells(row_cnt, col_cnt).text <> "END" Then
-
                 Dim tdog As New DogClass  ' *** the Class way
                 tdog.SetDogName(MyExcel.Cells(row_cnt, col_cnt).text)
                 tdog.SetDogDOB(MyExcel.Cells(row_cnt, col_cnt + 1).value)
                 'tdog.SetDogAge()
-
                 DogsList.AddDog(tdog)                                    ' *** the class way
-
-
                 stmp = CStr(MyExcel.ActiveCell.Row) + " " + CStr(MyExcel.ActiveCell.Column)
                 counter = counter + 1
                 row_cnt = row_cnt + 1
                 '           MyExcel.ActiveCell.Offset(1, 0).Activate() ' move to col 2
-
                 TxtNumOfDogs.Text = counter
-
             Else
                 Exit Do
             End If
@@ -274,11 +343,12 @@ Public Class Form1
         ' ******  Count Practices types table
         Dim counter = 0
         Dim row_cnt = 2
-        Dim col_cnt = 9
+        Dim col_cnt = 11
         Dim stmp As String
 
         Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
-        MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+        'MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+        MyExcel.Workbooks.Open(practice_file)
 
         Do
             stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get Practice name
@@ -306,7 +376,8 @@ Public Class Form1
 
 
         Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
-        MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+        'MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+        MyExcel.Workbooks.Open(practice_file)
 
         Dim counter = 1
         Dim row_cnt = 2
@@ -362,7 +433,6 @@ Public Class Form1
         Me.Close()
     End Sub
 
-
     Private Sub Button1_Click_2(sender As Object, e As EventArgs)
         BoxDogsList.Items.Add("xxx".PadRight(10, " ") + CStr(17))
     End Sub
@@ -371,124 +441,14 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub ReadPracticeFile()
-    '    ' TBD, Not used in code
-    '    ' Reads directly from file to dataset
-    '    Dim practice_connection As System.Data.OleDb.OleDbConnection
-    '    Dim DtSet As System.Data.DataSet
-    '    Dim my_command As System.Data.OleDb.OleDbDataAdapter
-
-    '    practice_connection = New System.Data.OleDb.OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;Data source='C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list.xlsx';Extended Properties = Excel 8.0")
-    '    my_command = New System.Data.OleDb.OleDbDataAdapter("select * from [Sheet1$]", practice_connection)
-    '    my_command.TableMappings.Add("Table", "TestTable")
-    '    DtSet = New System.Data.DataSet()
-    '    my_command.Fill(DtSet)
-
-    '    DataGridView1.DataSource = DtSet.Tables
-    '    practice_connection.Close()
-
-
-    'End Sub
-
     Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
-
-        ' for games only
-
-        'Dim xlApp As New Excel.Application
-        'Dim xlWorkbook As Excel.Workbook = xlApp.Workbooks.Add()
-        'Dim xlWorksheet As Excel.Worksheet = CType(xlWorkbook.Sheets("sheet1"), Excel.Worksheet)
-
-        'xlWorksheet.Cells(1, 1) = "Dog"
-        'xlWorksheet.Cells(1, 2) = "Age"
-        'xlWorksheet.Cells(1, 3) = "Date"
-        'xlWorksheet.Cells(1, 4) = "Session in day"
-        'xlWorksheet.Cells(1, 5) = "Practice"
-        'xlWorksheet.Cells(1, 6) = "Predictability"
-        'xlWorksheet.Cells(1, 7) = "Video num"
-        'xlWorksheet.Cells(1, 8) = "Time Zone"
-        'xlWorksheet.Cells(1, 9) = "Start"
-        'xlWorksheet.Cells(1, 10) = "End"
-        'xlWorksheet.Cells(1, 11) = "Reading Time"
-        'xlWorksheet.Cells(1, 12) = "Activity"
-        'xlWorksheet.Cells(1, 13) = "Pulse"
-        'xlWorksheet.Cells(1, 14) = "Respiration"
-        'xlWorksheet.Cells(1, 15) = "HRV"
-
-        'xlWorksheet.Cells(1, 4).Interior.Color = Color.Yellow
-
-
-        ''Cells(1, 4).Interior.Color = Color.Yellow
-
-
-        ''xlWorksheet.Cells.Range(1, 4).Interior.Color = Color.Yellow
-
-
-        '' Selection.Rows(Counter).Interior.Pattern = xlGray16
-
-
-
-        'Dim s1 As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
-        'xlWorksheet.SaveAs(result_out_file_name)
-        '' result_out_file_name
-
-        'xlWorkbook.Close()
-        'xlApp.Quit()
-
-        'xlApp = Nothing
-        'xlWorkbook = Nothing
-        'xlWorksheet = Nothing
-
-
-
-
-
-        'Dim xlsWorkBook As Microsoft.Office.Interop.Excel.Workbook
-        'Dim xlsWorkSheet As Microsoft.Office.Interop.Excel.Worksheet
-        'Dim xls As New Microsoft.Office.Interop.Excel.Application
-
-        'Dim resourcesFolder = IO.Path.GetFullPath(Application.StartupPath & "\..\..\Resources\")
-        'Dim fileName = "trial.xlsx"
-
-        ''xlsWorkBook = xls.Workbooks.Open(resourcesFolder & fileName)
-        'xlsWorkBook = xls.Workbooks.Open(result_out_file_name)
-        'xlsWorkSheet = xlsWorkBook.Sheets("Sheet1")
-
-        ''xlsWorkSheet.Cells(1, 1) = "11"
-        'xlsWorkSheet.Cells(1, 1) = "11"
-        'xlsWorkSheet.Cells(1, 2) = "12"
-        'xlsWorkSheet.Cells(1, 3) = "13"
-        'xlsWorkSheet.Cells(2, 1) = "21"
-        'xlsWorkSheet.Cells(2, 2) = "22"
-        'xlsWorkSheet.Cells(2, 3) = "23"
-
-        'xlsWorkBook.Close()
-        'xls.Quit()
-
-
-
-        'Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
-        'MyExcel.Workbooks.Open(result_out_file_name)
-
-        'MyExcel.Cells(1, 1).text = "11"
-        'MyExcel.Cells(1, 2).text = "12"
-        'MyExcel.Cells(1, 3).text = "13"
-        'MyExcel.Cells(2, 1).text = "21"
-        'MyExcel.Cells(2, 2).text = "22"
-        'MyExcel.Cells(2, 3).text = "23"
-
-        'MyExcel.Workbooks.Close()
-        'MyExcel = Nothing
-
     End Sub
 
     Private Sub try3()
-
-
     End Sub
 
     Private Sub RdSessionFiles_Click(sender As Object, e As EventArgs) Handles RdSessionFiles.Click
         Read_session_files()
-
     End Sub
 
     Private Sub Read_session_files()
@@ -496,19 +456,16 @@ Public Class Form1
             MessageBox.Show("Must read practice file BEFORE reading sessions list")
             Exit Sub
         End If
-        Read_CSV_Session_files()
-
+        Read_CSV_Session_files(in_files_dir)
     End Sub
 
-
     Private Sub TxtBoxHeader_TextChanged(sender As Object, e As EventArgs) Handles TxtBoxHeader.TextChanged
-
     End Sub
 
 
     ' **** new code below - reading session files
 
-    Public Sub Read_CSV_Session_files()
+    Public Sub Read_CSV_Session_files(_dir As String)
         ' reading CSV files 
 
         Dim pract_Excel As New Microsoft.Office.Interop.Excel.Application
@@ -533,18 +490,21 @@ Public Class Form1
         num_of_lines_TextBox.BackColor = Color.Yellow
         num_of_lines_TextBox.Text = "starting"
 
-        '    fileName = Dir(in_PathName & "*084330.csv")
-        fileName = Dir(in_PathName & csv_pattern)
+        'fileName = Dir(in_PathName & "*084330.csv")
+        'fileName = Dir(in_PathName & csv_pattern)
+        fileName = Dir(_dir & csv_pattern)
+
         Print_to_log_file("Start reading CSV files")
-        Print_to_log_file("Dir is: " + in_PathName)
+        Print_to_log_file("Dir is: " + _dir)
 
         Do While fileName <> ""
             Dim curr_session As New Session_CSV_file
             file_count += 1
 
             'dog_session.Open_Session_file(in_PathName + fileName)
-            Print_to_log_file("Start reading CSV file: " + in_PathName + fileName)
-            pract_Excel.Workbooks.Open(in_PathName + fileName)
+            Print_to_log_file("Start reading CSV file: " + _dir + fileName)
+            'pract_Excel.Workbooks.Open(in_PathName + fileName)
+            pract_Excel.Workbooks.Open(_dir + fileName)
 
             pet_name = pract_Excel.Cells(2, 1).text.Replace("Pet name: ", "").Replace(" ", "")
             curr_session.pet_name = pet_name
@@ -771,7 +731,7 @@ Public Class Form1
             Console.WriteLine("Pet name & ID: {0} {1} ", dog_session.pet_name, dog_session.pet_ID)
         Loop ' go and read next CSV file
 
-        Print_to_log_file("Total lines ewad      : " + total_lines_of_csv.ToString())
+        Print_to_log_file("Total lines read      : " + total_lines_of_csv.ToString())
         Print_to_log_file("file count            : " + file_count.ToString())
         Print_to_log_file("Had a match           : " + match_cnt.ToString())
         Print_to_log_file("Failed to find a match: " + no_match_cnt.ToString())
@@ -828,6 +788,42 @@ Public Class Form1
     Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
         ' Run them all
         Button3.BackColor = Color.GreenYellow
+
+        '       If check_course() = False Then
+        '        MessageBox.Show("Select a project")
+        '        Return
+        '        End If
+        '        Print_to_log_file("Course name: " + course_name)
+        '        ' now letr's check that the folders and basic input files exist
+
+        ' PLAY YARD
+        Dim f1 As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list1.xlsx"
+        If File.Exists(f1) Then
+            Console.WriteLine("exists")
+            Dim fn As String = Path.GetFileNameWithoutExtension(f1)
+            Dim ext As String = Path.GetExtension(f1)
+            Dim fn_with_ext As String = Path.GetFileName(f1)
+            Dim fn_plus_path As String = Path.GetFullPath(f1)
+            Dim dir As String = Path.GetDirectoryName(f1)
+            fn = fn + "_old"
+            Dim new_file As String = Path.Combine(dir, fn + ext)
+
+        End If
+
+        Dim ext1 As String = Path.GetExtension(f1)
+
+
+        '
+        If check_files_and_folders() = False Then
+            'MessageBox.Show("Missing files or folders. Look at LOG file")
+            Return
+        End If
+
+        'Dim s As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\x.xlsx"
+        'Dim s As String = out_files_dir + "course_" + course_name + "out.xlsx"
+        'Dim s1 As String = s.Replace("\\", "^^")
+        'Dim s2 As String = s1.Replace("^^", "\")
+
 
         ReadPracticeFile() ' with dogs DOB but not age (depends on sessions day)
         Read_session_files()
@@ -895,7 +891,6 @@ Public Class Form1
         Create_results_button.BackColor = Color.GreenYellow
         output_lines_textbox.Text = "starting"
 
-
         Dim xlApp As New Excel.Application
         Dim xlWorkbook As Excel.Workbook = xlApp.Workbooks.Add()
         Dim xlWorksheet As Excel.Worksheet = CType(xlWorkbook.Sheets("sheet1"), Excel.Worksheet)
@@ -942,15 +937,12 @@ Public Class Form1
 
                     Dim l_start = sessions.sessionsList(c).practiceDate.Add(sessions.sessionsList(c).startTime.TimeOfDay)
                     Dim l_end = sessions.sessionsList(c).practiceDate.Add(sessions.sessionsList(c).endTime.TimeOfDay)
-
-
                     Dim l_start_pre_time As DateTime = l_start.AddMinutes(-TxtPreTime.Value)
                     Dim l_end_post_time As DateTime = l_end.AddMinutes(TxtPreTime.Value)
 
                     If l.pract_time < l_start_pre_time Then
                         Continue For
                     End If
-
                     If l.pract_time > l_end_post_time Then
                         Continue For
                     End If
@@ -1049,7 +1041,6 @@ Public Class Form1
 
                     prev_date = total_sessions(c).session_start_time
 
-
                     out_line_cnt += 1    '23 Oct 2019
                     'dog_data_cnt += 1
 
@@ -1058,21 +1049,44 @@ Public Class Form1
 
                 xlWorksheet.Cells(1, 4).Interior.Color = Color.Green
 
-                result_out_file_name = result_out_file_name.Replace(".xlsx", "_" & System.DateTime.Now.ToString("yyyyMMddhhmm") & ".xlsx")
-                xlWorksheet.SaveAs(result_out_file_name)
-                ' result_out_file_name
+                result_out_file_name = out_files_dir + "course_" + course_name + "out.xlsx"
+                Dim t As String = result_out_file_name.Replace("\\", "^^")
+                Dim t1 = result_out_file_name.Replace("^^", "\")
 
-                xlWorkbook.Close()
-                xlApp.Quit()
+                Dim t2 As String = t1.Replace("\\", "\")
+                result_out_file_name = result_out_file_name.Replace("\\", "\")
 
-                xlApp = Nothing
-                xlWorkbook = Nothing
-                xlWorksheet = Nothing
-
+                Print_to_log_file("Out file name is: " + result_out_file_name)
             Next ' of s.list_of_CSV_matches
         Next ' of foreach sessions.sessionsList
 
+        ' **** save the result file ******
+        If File.Exists(result_out_file_name) Then
+            Print_to_log_file("outfile " + result_out_file_name + "renaming")
+            Dim fn As String = Path.GetFileNameWithoutExtension(result_out_file_name)
+            Dim ext As String = Path.GetExtension(result_out_file_name)
+            'Dim fn_with_ext As String = Path.GetFileName(f1)
+            'Dim fn_plus_path As String = Path.GetFullPath(f1)
+            Dim dir As String = Path.GetDirectoryName(result_out_file_name)
+            fn = fn + "_old"
 
+            Dim new_out_file_name As String = Path.Combine(dir, fn + ext)
+            If File.Exists(new_out_file_name) Then
+                File.Delete(new_out_file_name)
+            End If
+
+            File.Move(result_out_file_name, new_out_file_name)
+        End If
+
+        xlWorksheet.SaveAs(result_out_file_name)
+        ' result_out_file_name
+
+        xlWorkbook.Close()
+        xlApp.Quit()
+
+        xlApp = Nothing
+        xlWorkbook = Nothing
+        xlWorksheet = Nothing
 
         'TBD
 
@@ -1090,7 +1104,18 @@ Public Class Form1
         Create_stats_button.BackColor = Color.Green
     End Sub
 
+    Private Sub Button4_Click(sender As Object, e As EventArgs)
 
+    End Sub
 
+    Private Sub PreChecks_Click(sender As Object, e As EventArgs) Handles PreChecks.Click
+
+        check_files_and_folders()
+
+    End Sub
+
+    Private Sub TxtBoxPracticeFile_TextChanged(sender As Object, e As EventArgs) Handles TxtBoxPracticeFile.TextChanged
+
+    End Sub
 End Class
 

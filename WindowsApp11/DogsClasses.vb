@@ -64,13 +64,14 @@ Public Class DogsListClass
         dogs_List.Add(_dog)
     End Sub
 
-    Public Sub Print_dogs_list()
+    Public Sub Print_dogs_list(_dir As String)
         ' Create a string array with the lines of text
         ' String[] lines = { "First line", "Second line", "Third line" };
 
         '  Set a variable to the Documents path.
         ' docPath As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-        Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\dogs_list.txt"
+        ' Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\dogs_list.txt"
+        Dim docPath = _dir + "dogs_list.txt"
 
         Dim file As System.IO.StreamWriter
 
@@ -126,8 +127,9 @@ Public Class PracticesList
         get_prtactice_num = num
     End Function
 
-    Public Sub Print_practices_list()
-        Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\practices_list.txt"
+    Public Sub Print_practices_list(_dir)
+        'Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\practices_list.txt"
+        Dim docPath = _dir + "practices_list.txt"
 
         Dim file As System.IO.StreamWriter
 

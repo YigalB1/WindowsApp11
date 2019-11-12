@@ -63,11 +63,16 @@ Partial Class Form1
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.output_lines_textbox = New System.Windows.Forms.TextBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
+        Me.PreChecks = New System.Windows.Forms.Button()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'TxtBoxHeader
@@ -108,7 +113,7 @@ Partial Class Form1
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(494, 99)
+        Me.Label1.Location = New System.Drawing.Point(510, 99)
         Me.Label1.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(122, 13)
@@ -117,7 +122,7 @@ Partial Class Form1
         '
         'ButtonSelectWorkFolder
         '
-        Me.ButtonSelectWorkFolder.Location = New System.Drawing.Point(364, 46)
+        Me.ButtonSelectWorkFolder.Location = New System.Drawing.Point(364, 32)
         Me.ButtonSelectWorkFolder.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectWorkFolder.Name = "ButtonSelectWorkFolder"
         Me.ButtonSelectWorkFolder.Size = New System.Drawing.Size(126, 25)
@@ -127,7 +132,7 @@ Partial Class Form1
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(364, 85)
+        Me.Button2.Location = New System.Drawing.Point(364, 66)
         Me.Button2.Margin = New System.Windows.Forms.Padding(2)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(126, 26)
@@ -419,11 +424,55 @@ Partial Class Form1
         Me.output_lines_textbox.Size = New System.Drawing.Size(100, 20)
         Me.output_lines_textbox.TabIndex = 42
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.RadioButton2)
+        Me.GroupBox1.Controls.Add(Me.RadioButton1)
+        Me.GroupBox1.Location = New System.Drawing.Point(29, 170)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(161, 82)
+        Me.GroupBox1.TabIndex = 43
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Select projects"
+        '
+        'RadioButton2
+        '
+        Me.RadioButton2.AutoSize = True
+        Me.RadioButton2.Location = New System.Drawing.Point(7, 41)
+        Me.RadioButton2.Name = "RadioButton2"
+        Me.RadioButton2.Size = New System.Drawing.Size(64, 17)
+        Me.RadioButton2.TabIndex = 1
+        Me.RadioButton2.TabStop = True
+        Me.RadioButton2.Text = "2017-18"
+        Me.RadioButton2.UseVisualStyleBackColor = True
+        '
+        'RadioButton1
+        '
+        Me.RadioButton1.AutoSize = True
+        Me.RadioButton1.Location = New System.Drawing.Point(7, 14)
+        Me.RadioButton1.Name = "RadioButton1"
+        Me.RadioButton1.Size = New System.Drawing.Size(64, 17)
+        Me.RadioButton1.TabIndex = 0
+        Me.RadioButton1.TabStop = True
+        Me.RadioButton1.Text = "2016-17"
+        Me.RadioButton1.UseVisualStyleBackColor = True
+        '
+        'PreChecks
+        '
+        Me.PreChecks.Location = New System.Drawing.Point(364, 103)
+        Me.PreChecks.Name = "PreChecks"
+        Me.PreChecks.Size = New System.Drawing.Size(138, 19)
+        Me.PreChecks.TabIndex = 45
+        Me.PreChecks.Text = "Check Files and Folders"
+        Me.PreChecks.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1189, 556)
+        Me.Controls.Add(Me.PreChecks)
+        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.output_lines_textbox)
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.Label9)
@@ -471,6 +520,8 @@ Partial Class Form1
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -517,4 +568,8 @@ Partial Class Form1
     Friend WithEvents Label9 As Label
     Friend WithEvents Label10 As Label
     Friend WithEvents output_lines_textbox As TextBox
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents RadioButton2 As RadioButton
+    Friend WithEvents RadioButton1 As RadioButton
+    Friend WithEvents PreChecks As Button
 End Class
