@@ -13,6 +13,7 @@ Public Class DogSession
     Public pet_name, pet_ID As String
     Public lines_read As New List(Of String)
 
+
     Public Sub Init_session()
         ' TBD - moving parts to read CSV procedure
         pet_name = pract_Excel.Cells(2, 1).text.Substring(10)

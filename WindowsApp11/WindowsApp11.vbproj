@@ -101,6 +101,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CSVclass.vb" />
     <Compile Include="DogsClasses.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>

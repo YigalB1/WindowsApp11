@@ -156,6 +156,7 @@ Class Session
     Public videoNum As String       ' the video numbers have no meaning (at this time, so said Amit)
     Public predictability As Boolean ' if video exists: it was a planned session and recorded
     Public sessionOnAday As Integer ' 
+    Public csv_fname As String
 
 
     Public list_of_CSV_matches As New List(Of Integer) ' to be filled after reading CSV files

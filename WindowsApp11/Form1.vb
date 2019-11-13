@@ -36,6 +36,9 @@ Public Class Form1
     Dim sessions As New List_of_Sessions
     Dim total_sessions As New List(Of Session_CSV_file) ' will include all CSV files content
 
+    ' 13 Nov 2019 adding new stracture of CSV files fast scan (just header, no lines)
+    Dim CSV_files_headers As New List(Of CSV_file_header)
+
     Dim Stage_Read_Practice_Table As Boolean = False
     Dim Stage_Read_Session_Files As Boolean = False
 
@@ -122,15 +125,6 @@ Public Class Form1
             Return False
         End If
     End Function
-
-
-
-
-
-
-
-
-
 
     Sub CreateDogsGrid(ByRef _dgv As DataGridView)
         ' Create an unbound DataGridView by declaring a column count.
@@ -274,9 +268,6 @@ Public Class Form1
 
     Private Sub ReadPracticeFile()
 
-
-
-
         Print_to_log_file("Reading Practice file " + Date.Now(), False)
         Print_to_log_file("Practice file: " + Me.TxtBoxPracticeFile.Text)
         Print_to_log_file("------------------------------")
@@ -289,16 +280,16 @@ Public Class Form1
 
         Read_Dog_List() ' into DogList list (name and dob)
         DogsList.Print_dogs_list(course_dir) ' create text file with list of dogs
-        ProgressBar1.Value = 40
+        'ProgressBar1.Value = 40
         '  Dim tmp As Integer = DogsList.GetDogAge("Bell")
 
         Read_Pracice_Types_List() ' into practiceList (pract name & pract number)
         practiceList.Print_practices_list(course_dir) ' the class way
-        ProgressBar1.Value = 50
+        'ProgressBar1.Value = 50
 
         Read_sessions_list()
         sessions.Print_sessions_list() ' into sessions pract name, pract type, start time, end time, video num )
-        ProgressBar1.Value = 60
+        'ProgressBar1.Value = 60
 
         RdPracticeFile.BackColor = Color.Green
         Stage_Read_Practice_Table = True
@@ -379,8 +370,6 @@ Public Class Form1
 
     Private Sub Read_sessions_list()
         ' read list pf required practics from practice excel file
-
-
         Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
         'MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
         MyExcel.Workbooks.Open(practice_file)
@@ -397,10 +386,8 @@ Public Class Form1
 
             Dim dog_name As String = MyExcel.Cells(row_cnt, col_cnt).text
             s.SetdogName(dog_name)
-
             Dim pract_date As Date = MyExcel.Cells(row_cnt, col_cnt + 1).value
             s.SetPracticeDate(pract_date)
-
             Dim dog_dob As Date
             Dim bool_find As Boolean = False
             For Each d In DogsList.dogs_List
@@ -412,9 +399,8 @@ Public Class Form1
 
             If bool_find = False Then
                 MessageBox.Show("Error in getting DOB")
-                Print_to_log_file("Error in getting DOB")
+                Print_to_log_file("Error in getting DOB, dog name: " + dog_name)
             End If
-
 
             s.SetDogsAge(pract_date, dog_dob)
             s.SetDogsDOB(dog_dob)
@@ -776,32 +762,12 @@ Public Class Form1
     End Sub ' Print_to_log_file
 
     Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
-        ' Run them all
+        ' Run ALL stages 
         Button3.BackColor = Color.GreenYellow
 
-        '       If check_course() = False Then
-        '        MessageBox.Show("Select a project")
-        '        Return
-        '        End If
-        '        Print_to_log_file("Course name: " + course_name)
-        '        ' now letr's check that the folders and basic input files exist
-
-        ' PLAY YARD
-        Dim f1 As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list1.xlsx"
-        If File.Exists(f1) Then
-            Console.WriteLine("exists")
-            Dim fn As String = Path.GetFileNameWithoutExtension(f1)
-            Dim ext As String = Path.GetExtension(f1)
-            Dim fn_with_ext As String = Path.GetFileName(f1)
-            Dim fn_plus_path As String = Path.GetFullPath(f1)
-            Dim dir As String = Path.GetDirectoryName(f1)
-            fn = fn + "_old"
-            Dim new_file As String = Path.Combine(dir, fn + ext)
-
-        End If
-
-        Dim ext1 As String = Path.GetExtension(f1)
-
+        ' Rotate's form's image
+        PictureBox1.Image.RotateFlip(RotateFlipType.Rotate180FlipNone)
+        PictureBox1.Refresh()
 
         '
         If check_files_and_folders() = False Then
@@ -809,13 +775,13 @@ Public Class Form1
             Return
         End If
 
-        'Dim s As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\x.xlsx"
-        'Dim s As String = out_files_dir + "course_" + course_name + "out.xlsx"
-        'Dim s1 As String = s.Replace("\\", "^^")
-        'Dim s2 As String = s1.Replace("^^", "\")
-
-
         ReadPracticeFile() ' with dogs DOB but not age (depends on sessions day)
+        ProgressBar1.Value = 30
+        ReadSessionsHeader(in_files_dir) ' 13 Nov 2019 (parallel to prev run)
+        Find_matches() ' 13 Nov 2019 (parallel to prev run)
+        read_relevant_CSV_files()
+
+        ProgressBar1.Value = 40
         Read_session_files()
         check_sessions()
         Create_results()
@@ -823,6 +789,68 @@ Public Class Form1
         ProgressBar1.Value = 100
         Button3.BackColor = Color.Green
     End Sub
+
+    Private Sub read_relevant_CSV_files()
+        ' 13 Nov 2019 in parallel to previous working  - read CSV, only those who are in the matching list 
+        Print_to_log_file("in read_relevant_CSV_files, reading CSV files (onlt thowe who have a match")
+        For Each s In sessions.sessionsList
+            If s.csv_fname = Nothing Then
+                Continue For
+            End If
+            Print_to_log_file("working on file: " + s.csv_fname)
+        Next
+    End Sub
+
+
+
+    Private Sub Find_matches()
+        ' find if there are matches between list of practices (from practice file) and CSV files
+
+        Dim match_flag As Boolean
+
+        Dim session_cnt As Integer = 0
+        For Each s In sessions.sessionsList
+            session_cnt += 1
+            match_flag = False
+            Dim csv_files_cnt As Integer = 0
+            For Each p In CSV_files_headers
+                csv_files_cnt += 1
+                If s.practiceDate = p.start_day Then
+                    ' we have a match
+                    match_flag = True
+                    s.csv_fname = p.csv_fname
+                    Print_to_log_file("Match found for session " + session_cnt.ToString)
+                End If
+                If match_flag = False Then
+                    Print_to_log_file("*** Match was NOT found for session " + session_cnt.ToString)
+                End If
+
+
+            Next
+        Next
+    End Sub
+
+
+
+    Private Sub ReadSessionsHeader(_dir As String)
+        Dim csv_fname As String
+        Dim f_cnt As Integer = 0
+        Dim CSV_header_tmp As New CSV_file_header
+        'CSV_header_tmp = 
+
+        csv_fname = Dir(_dir & csv_pattern)
+
+        Do While csv_fname <> ""
+            f_cnt += 1
+            CSV_files_headers.Add(CSV_header_tmp.CSV_header_read(_dir + csv_fname))
+            Console.WriteLine(" finished CSV file: " + f_cnt.ToString() + ") " + csv_fname)
+            Print_to_log_file(" finished CSV file: " + f_cnt.ToString() + ") " + csv_fname)
+            csv_fname = Dir()
+        Loop ' go and read next CSV file
+        ' *** now alll headers of CSV files are inside CSV_files_headers
+        ' ** now let's see if there is  match for every entry in the practice file
+    End Sub
+
 
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles num_of_lines_TextBox.TextChanged
 
