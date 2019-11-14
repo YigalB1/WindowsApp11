@@ -42,8 +42,8 @@
             Console.WriteLine("Error E2 while checking CSV file date")
         End If
 
-
-
+        csv_Excel.Workbooks.Close()
+        csv_Excel = Nothing
 
 
         Return (cur_csv_header)
@@ -59,6 +59,8 @@ Public Class CSVclass
     ' this class should handle CSV reading
     ' for start: CSV fast read and analyse vs the required session list
     Public lines_read As New List(Of CSV_file_header)
+
+
 
 
 

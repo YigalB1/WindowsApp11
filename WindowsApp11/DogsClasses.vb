@@ -301,6 +301,14 @@ Class Session_CSV_file
     Public pet_breed As String
     Public pet_owner As String
     Public pet_weight As String
+    Public pet_DOB As Date
+    Public pet_age As Integer ' at the time of thet session
+    Public activity_start_time As Date
+    Public activity_end_time As Date
+    Public activity_pre_time As Integer
+    Public activity_post_time As Integer
+
+
     '    Public sessio_pre_start As DateTime
     '    Public session_post_end As DateTime
 

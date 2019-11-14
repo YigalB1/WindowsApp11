@@ -25,9 +25,7 @@ Public Class Form1
     Public LogFile ' 11 Nov 2019: folder is assigned according to course
 
     ' Public csv_pattern As String = "export-all-Bell-11302018_083229.csv" 10 Nov 19
-    Public csv_pattern As String = ""
-
-    ' *083229.csv
+    Public csv_pattern As String = ""   ' *083229.csv
 
     Public result_out_file_name As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
 
@@ -45,6 +43,8 @@ Public Class Form1
     Dim total_line_cnt As Integer
     Dim course_name As String = Nothing ' will hold the course name year 2016-17 or 2017-18
 
+    'Public pre_time As Integer
+    'Public post_time As Integer
 
 
     Dim MAX_NUM_OF_DOGS As Integer = 50
@@ -82,6 +82,33 @@ Public Class Form1
             Return False
         End If
         Print_to_log_file("Course name: " + course_name)
+        result_out_file_name = out_files_dir + "course_" + course_name + "out.xlsx"
+        result_out_file_name = result_out_file_name.Replace("\\", "\")
+
+        If File.Exists(result_out_file_name) Then
+            Print_to_log_file("outfile " + result_out_file_name + "renaming")
+            Dim fn As String = Path.GetFileNameWithoutExtension(result_out_file_name)
+            Dim ext As String = Path.GetExtension(result_out_file_name)
+            'Dim fn_with_ext As String = Path.GetFileName(f1)
+            'Dim fn_plus_path As String = Path.GetFullPath(f1)
+            Dim dir As String = Path.GetDirectoryName(result_out_file_name)
+            fn = fn + "_old"
+
+            Dim new_out_file_name As String = Path.Combine(dir, fn + ext)
+            If File.Exists(new_out_file_name) Then
+                File.Delete(new_out_file_name)
+            End If
+
+            File.Move(result_out_file_name, new_out_file_name)
+        End If
+
+
+
+
+
+
+
+
 
         PreChecks.BackColor = Color.Yellow
         Dim dir_bool1 As Boolean = IO.Directory.Exists(root_dir)
@@ -745,20 +772,11 @@ Public Class Form1
 
     End Sub
 
-
-
-
-
-
     Sub Print_to_log_file(_str As String, Optional _keep As Boolean = True)
-        '        Dim LogFile = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\logDog.txt"
-
         Dim file As System.IO.StreamWriter
-
         file = My.Computer.FileSystem.OpenTextFileWriter(LogFile, _keep)
         file.WriteLine(_str)
         file.Close()
-
     End Sub ' Print_to_log_file
 
     Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
@@ -769,7 +787,6 @@ Public Class Form1
         PictureBox1.Image.RotateFlip(RotateFlipType.Rotate180FlipNone)
         PictureBox1.Refresh()
 
-        '
         If check_files_and_folders() = False Then
             'MessageBox.Show("Missing files or folders. Look at LOG file")
             Return
@@ -779,8 +796,11 @@ Public Class Form1
         ProgressBar1.Value = 30
         ReadSessionsHeader(in_files_dir) ' 13 Nov 2019 (parallel to prev run)
         Find_matches() ' 13 Nov 2019 (parallel to prev run)
-        read_relevant_CSV_files()
+        Read_relevant_CSV_files()
+        Create_results_new(total_sessions, TxtPreTime.Value, TxtPostTime.Value, result_out_file_name)
+        create_statistics()
 
+        ' old flow
         ProgressBar1.Value = 40
         Read_session_files()
         check_sessions()
@@ -790,7 +810,7 @@ Public Class Form1
         Button3.BackColor = Color.Green
     End Sub
 
-    Private Sub read_relevant_CSV_files()
+    Private Sub Read_relevant_CSV_files()
         ' 13 Nov 2019 in parallel to previous working  - read CSV, only those who are in the matching list 
         Print_to_log_file("in read_relevant_CSV_files, reading CSV files (onlt thowe who have a match")
         For Each s In sessions.sessionsList
@@ -798,10 +818,10 @@ Public Class Form1
                 Continue For
             End If
             Print_to_log_file("working on file: " + s.csv_fname)
+            'TBD read the specific CSV file
+            total_sessions.Add(Read_CSV_file(s.csv_fname, s.dog_age, s.startTime, s.endTime, TxtPreTime.Value, TxtPostTime.Value))
         Next
     End Sub
-
-
 
     Private Sub Find_matches()
         ' find if there are matches between list of practices (from practice file) and CSV files
@@ -1123,7 +1143,7 @@ Public Class Form1
         'TBD
 
         Create_results_button.BackColor = Color.Green
-    End Sub
+    End Sub ' of Create_results
 
     Private Sub Create_stats_button_Click(sender As Object, e As EventArgs) Handles Create_stats_button.Click
         create_statistics()
