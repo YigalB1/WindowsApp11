@@ -67,7 +67,7 @@ Module Module1
         Dim activity_score_flag As Boolean = False
         Dim activity_score_cnt = 0
 
-        Dim tmp_value As Boolean = False  ' to indicate there was a value
+        'Dim tmp_value As Boolean = False  ' to indicate there was a value
 
         Do  ' assume line 3 has always data
             line_Cnt += 1
@@ -86,35 +86,35 @@ Module Module1
                     'line_data.activity = pract_Excel.Cells(line_Cnt, 7).value
                     activity_tmp = CSV_Excel.Cells(line_Cnt, 7).value
                     activity_flag = True
-                    tmp_value = True
+                    'tmp_value = True
                 Case "Pulse"
                     pulse_cnt += 1
                     'line_data.pulse = pract_Excel.Cells(line_Cnt, 9).value
                     pulse_tmp = CSV_Excel.Cells(line_Cnt, 9).value
                     pulse_flag = True
-                    tmp_value = True
+                    'tmp_value = True
                 Case "Respiration"
                     resp_cnt += 1
                     'line_data.respiration = pract_Excel.Cells(line_Cnt, 10).value
                     resp_tmp = CSV_Excel.Cells(line_Cnt, 10).value
                     resp_flag = True
-                    tmp_value = True
+                    'tmp_value = True
                 Case "VVTI"
                     vvti_cnt += 1
                     'line_data.vvti = pract_Excel.Cells(line_Cnt, 11).value
                     vvti_tmp = CSV_Excel.Cells(line_Cnt, 11).value
                     vvti_flag = True
-                    tmp_value = True
+                    'tmp_value = True
                 Case "Sleep"
                     sleep_score_cnt += 1
                     sleep_score_tmp = CSV_Excel.Cells(line_Cnt, 14).value
                     sleep_score_flag = True
-                    tmp_value = True
+                    'tmp_value = True
                 Case "Activity Score"
                     activity_score_cnt += 1
                     activity_score_tmp = CSV_Excel.Cells(line_Cnt, 15).value
                     activity_score_flag = True
-                    tmp_value = True
+                    'tmp_value = True
                 Case "Fever Indication"
                         ' do nothing
                 Case "Position"
@@ -126,29 +126,42 @@ Module Module1
                     Console.WriteLine("Wrong place in case of data type in CSV lines, line: " + line_Cnt.ToString())
             End Select
 
+            If Not (activity_flag Or pulse_flag Or resp_flag Or vvti_flag Or activity_score_tmp) Then
+                Continue Do
+            End If
+
+
             nxt_line_date = CSV_Excel.Cells(line_Cnt + 1, 2).value
-            If line_date <> nxt_line_date Then
+            If line_date.AddSeconds(-line_date.Second) <> nxt_line_date.AddSeconds(-nxt_line_date.Second
+                    ) Then
                 Dim line_data As New Session_CSV_file.Dog_data
                 line_data.pract_time = line_date
+
                 line_data.activity = activity_tmp
+                line_data.activity_flag = activity_flag
                 line_data.pulse = pulse_tmp
+                line_data.pulse_flag = pulse_flag
                 line_data.respiration = resp_tmp
+                line_data.resp_flag = resp_flag
                 line_data.vvti = vvti_tmp
+                line_data.vvti_flag = vvti_flag
                 line_data.sleep = sleep_score_tmp
                 line_data.activity_score = activity_score_tmp
+                line_data.activity_score_flag = activity_score_flag
 
                 curr_session.List_of_dog_data.Add(line_data)
 
-
-
+                activity_flag = False
+                pulse_flag = False
+                resp_flag = False
+                vvti_flag = False
+                sleep_score_flag = False
+                activity_score_flag = False
 
             End If
 
         Loop While (line_data_type <> "")
         Console.WriteLine("Num of lines read: " + (line_Cnt - 3).ToString)
-
-
-
 
         CSV_Excel.Workbooks.Close()
         CSV_Excel = Nothing

@@ -10,8 +10,6 @@
     Public Function CSV_header_read(_fname As String) As CSV_file_header
         Dim cur_csv_header As New CSV_file_header
         Dim csv_Excel As New Microsoft.Office.Interop.Excel.Application
-
-
         csv_Excel.Workbooks.Open(_fname)    '** Open CSV file
         ' ** Get pet & date info about this session
         cur_csv_header.csv_fname = _fname

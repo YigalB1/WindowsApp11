@@ -799,7 +799,7 @@ Public Class Form1
         Read_relevant_CSV_files()
         Create_results_new(total_sessions, TxtPreTime.Value, TxtPostTime.Value, result_out_file_name)
         create_statistics()
-
+        Return
         ' old flow
         ProgressBar1.Value = 40
         Read_session_files()
