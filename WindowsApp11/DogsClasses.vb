@@ -1,4 +1,14 @@
 ﻿Imports System.Collections.Specialized
+Public Class SleepClass
+    Public pet_id As String
+    Public session_day As DateTime
+    Public sleep_flag As Boolean
+    Public sleep_score As Double
+    Public acitivity_flag As Boolean
+    Public activity_score As Integer
+End Class
+
+
 
 Public Class DogClass
     Public Name As String

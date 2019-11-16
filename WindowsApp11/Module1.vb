@@ -4,7 +4,9 @@ Module Module1
 
 
 
-    Public Function Read_CSV_file(_fname As String, _dog_age As Integer, _activity_start As Date, _activity_end As Date, _pre_time As Integer, _post_time As Integer) As Session_CSV_file
+    Public Function Read_CSV_file(_fname As String, _dog_age As Integer, _activity_start As Date,
+                                  _activity_end As Date, _pre_time As Integer,
+                                  _post_time As Integer, ByRef _line_counter As Integer) As Session_CSV_file
         Dim CSV_Excel As New Microsoft.Office.Interop.Excel.Application
         Dim curr_session As New Session_CSV_file ' includes all data read from this excel
 
@@ -14,16 +16,12 @@ Module Module1
         curr_session.activity_post_time = _post_time
 
         Console.WriteLine("Start reading CSV file " + _fname)
-
         CSV_Excel.Workbooks.Open(_fname)    '** Open CSV file
 
         ' start reading data from the CSV file
         curr_session.pet_name = CSV_Excel.Cells(2, 1).text.Replace("Pet name: ", "").Replace(" ", "")
         curr_session.pet_ID = CSV_Excel.Cells(2, 2).text.Replace("Pet id: ", "").Replace(" ", "")
-
         curr_session.pet_age = _dog_age ' age at that session
-
-
 
         Dim csv_start_date As DateTime
         Dim s1 As String = CSV_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
@@ -36,12 +34,10 @@ Module Module1
             Console.WriteLine("Error E1 while checking CSV file date")
         End If
 
-
-
-
         ' ** finished reading CSV header
         ' start reading data lines, line after line
         Dim line_Cnt As Integer = 3 ' first line to read is 4, incremented soon
+        ' Dim total_line_cnt As Integer = 0 ' counts the total number of lines over all files
         Dim line_data_type As String
         Dim line_date As DateTime = Nothing
         Dim nxt_line_date As DateTime = Nothing ' to check if next cycle has same time as current
@@ -71,6 +67,8 @@ Module Module1
 
         Do  ' assume line 3 has always data
             line_Cnt += 1
+            'total_line_cnt += 1
+            '_line_counter = (total_line_cnt - 3).ToString()
             line_data_type = CSV_Excel.Cells(line_Cnt, 1).Text
             line_date = CSV_Excel.Cells(line_Cnt, 2).value
 
@@ -121,7 +119,6 @@ Module Module1
                         ' do nothing
                 Case "Position Score"
                     ' do nothing
-
                 Case Else
                     Console.WriteLine("Wrong place in case of data type in CSV lines, line: " + line_Cnt.ToString())
             End Select
@@ -130,13 +127,11 @@ Module Module1
                 Continue Do
             End If
 
-
             nxt_line_date = CSV_Excel.Cells(line_Cnt + 1, 2).value
             If line_date.AddSeconds(-line_date.Second) <> nxt_line_date.AddSeconds(-nxt_line_date.Second
                     ) Then
                 Dim line_data As New Session_CSV_file.Dog_data
                 line_data.pract_time = line_date
-
                 line_data.activity = activity_tmp
                 line_data.activity_flag = activity_flag
                 line_data.pulse = pulse_tmp
@@ -146,6 +141,7 @@ Module Module1
                 line_data.vvti = vvti_tmp
                 line_data.vvti_flag = vvti_flag
                 line_data.sleep = sleep_score_tmp
+                line_data.sleep_flag = sleep_score_flag
                 line_data.activity_score = activity_score_tmp
                 line_data.activity_score_flag = activity_score_flag
 
@@ -155,30 +151,44 @@ Module Module1
                 pulse_flag = False
                 resp_flag = False
                 vvti_flag = False
-                sleep_score_flag = False
-                activity_score_flag = False
+                'sleep_score_flag = False '****once per file, should remain true
+                'activity_score_flag = False  ' **** once per file, should remain true
 
             End If
 
         Loop While (line_data_type <> "")
         Console.WriteLine("Num of lines read: " + (line_Cnt - 3).ToString)
+        _line_counter = line_Cnt - 3
 
         CSV_Excel.Workbooks.Close()
+        CSV_Excel.Quit()
         CSV_Excel = Nothing
         'total_sessions.Add(curr_session)
+
+
+        ' num_of_lines_TextBox.value = total_line_cnt.ToString()
         Return curr_session
-
-
     End Function
 
 
     Public Sub Create_results_new(_tot_sessions As List(Of Session_CSV_file),
-                                  _pre_time As Integer, _post_time As Integer, _out_file As String)
+                                  _pre_time As Integer, _post_time As Integer,
+                                  _out_file As String, _sleep_out_file As String)
 
+        Dim Sleep_list As New List(Of SleepClass)
 
         Dim xlApp As New Excel.Application
         Dim xlWorkbook As Excel.Workbook = xlApp.Workbooks.Add()
         Dim xlWorksheet As Excel.Worksheet = CType(xlWorkbook.Sheets("sheet1"), Excel.Worksheet)
+
+        ' variables for the sleep report (second excel file)
+        Dim t_name As String = Nothing
+        Dim t_session_day As DateTime
+        Dim t_sleep_flag As Boolean
+        Dim t_sleep_score As Double
+        Dim t_activity_score As Integer
+        Dim t_activity_flag As Boolean
+
 
         xlWorksheet.Cells(1, 1) = "Dog"
         xlWorksheet.Cells(1, 2) = "Age"
@@ -299,53 +309,79 @@ Module Module1
                     xlWorksheet.Cells(out_line_cnt, 15) = line.vvti
                 End If
 
+                If line.sleep_flag Then
+                    xlWorksheet.Cells(out_line_cnt, 16) = line.sleep
+                End If
 
-                'If line.sleep_flag Then
-                xlWorksheet.Cells(out_line_cnt, 16) = line.sleep
-                'End If
+                If line.activity_score_flag Then
+                    xlWorksheet.Cells(out_line_cnt, 17) = line.activity_score
+                End If
 
-                'If line.activity_score_flag Then
-                xlWorksheet.Cells(out_line_cnt, 17) = line.activity_score
-                'End If
-
-
-
+                t_name = l.pet_ID
+                t_session_day = l.session_start_time
+                t_sleep_flag = line.sleep_flag
+                t_sleep_score = line.sleep
+                t_activity_flag = line.activity_score_flag
+                t_activity_score = line.activity_score
 
                 out_line_cnt += 1
+            Next ' of for each lines of that specific dog
+
+            Dim Sleep_list_tmp As New SleepClass
+            Sleep_list_tmp.pet_id = t_name
+            Sleep_list_tmp.session_day = t_session_day
+            Sleep_list_tmp.sleep_flag = t_sleep_flag
+            Sleep_list_tmp.sleep_score = t_sleep_score
+            Sleep_list_tmp.acitivity_flag = t_activity_flag
+            Sleep_list_tmp.activity_score = t_activity_score
+
+            ' TBD : to add a check - if same dog same day already in the sleep list -> dont add it
+            Dim exist_tmp As Boolean = False
+            For Each tmp_slp In Sleep_list
+                If tmp_slp.pet_id = Sleep_list_tmp.pet_id And tmp_slp.session_day = Sleep_list_tmp.session_day Then
+                    exist_tmp = True
+                End If
             Next
 
+            If exist_tmp = False Then
+                Sleep_list.Add(Sleep_list_tmp)
+            End If
 
-            'xlWorksheet.Cells(out_line_cnt, 4) = sessions.sessionsList(c).sessionOnAday
-            'xlWorksheet.Cells(out_line_cnt, 4) = sessions.Count_num_of_session
+        Next ' of for each sessions
 
+        xlWorksheet.SaveAs(_out_file)
+        xlWorkbook.Close()
+        xlApp.Quit()
+        ' ************************************
+        ' now open the 2nd output excel - just for sleep score and activity score
+        Dim xlApp1 As New Excel.Application
+        Dim xlWorkbook1 As Excel.Workbook = xlApp1.Workbooks.Add()
+        Dim xlWorksheet1 As Excel.Worksheet = CType(xlWorkbook1.Sheets("sheet1"), Excel.Worksheet)
 
-            '            Dim l_pet_dob As Date = l.pet_DOB
-            '            Dim ageindays As TimeSpan = l.session_start_time - l_pet_dob
-            '            Dim l_age = Int(ageindays.Days / 7)
+        out_line_cnt = 1
+        xlWorksheet1.Cells(out_line_cnt, 1) = "Session Date"
+        xlWorksheet1.Cells(out_line_cnt, 2) = "Dog"
+        xlWorksheet1.Cells(out_line_cnt, 3) = "Sleep Score"
+        xlWorksheet1.Cells(out_line_cnt, 4) = "Activity Score"
 
-
-
-
+        For Each line In Sleep_list
+            out_line_cnt += 1
+            xlWorksheet1.Cells(out_line_cnt, 1) = line.session_day
+            xlWorksheet1.Cells(out_line_cnt, 2) = line.pet_id
+            If line.sleep_flag Then
+                xlWorksheet1.Cells(out_line_cnt, 3) = line.sleep_score
+            End If
+            If line.acitivity_flag Then
+                xlWorksheet1.Cells(out_line_cnt, 4) = line.activity_score
+            End If
 
         Next
 
-        xlWorksheet.SaveAs(_out_file)
-        ' result_out_file_name
+        Console.WriteLine("Before saving output sleep excel")
+        xlWorksheet1.SaveAs(_sleep_out_file)
+        xlWorkbook1.Close()
+        xlApp1.Quit()
 
-        xlWorkbook.Close()
-        xlApp.Quit()
-
-
-        ' xlWorksheet.Workbooks.Close()
-        ' xlWorksheet = Nothing
     End Sub ' of Create_results_new
-
-
-
-
-
-
-
-
 
 End Module

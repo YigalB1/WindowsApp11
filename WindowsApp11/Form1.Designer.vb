@@ -272,9 +272,9 @@ Partial Class Form1
         Me.Label4.Location = New System.Drawing.Point(531, 188)
         Me.Label4.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(99, 13)
+        Me.Label4.Size = New System.Drawing.Size(102, 13)
         Me.Label4.TabIndex = 22
-        Me.Label4.Text = "Number of pracices"
+        Me.Label4.Text = "Number of practices"
         '
         'TxtPracticesNum
         '

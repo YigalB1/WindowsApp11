@@ -22,12 +22,14 @@ Public Class Form1
     Public default_sessions_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\" + "SessionsFiles\\"
     Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list1.xlsx"
     'Public LogFile = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\logDog.txt"
-    Public LogFile ' 11 Nov 2019: folder is assigned according to course
+    Public LogFile As String ' 11 Nov 2019: folder is assigned according to course
+    Public SessionsFile As String
 
     ' Public csv_pattern As String = "export-all-Bell-11302018_083229.csv" 10 Nov 19
     Public csv_pattern As String = ""   ' *083229.csv
 
     Public result_out_file_name As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
+    Public sleep_out_file_name As String
 
     Dim DogsList As New DogsListClass
     Dim practiceList As New PracticesList
@@ -40,7 +42,7 @@ Public Class Form1
     Dim Stage_Read_Practice_Table As Boolean = False
     Dim Stage_Read_Session_Files As Boolean = False
 
-    Dim total_line_cnt As Integer
+    Public total_line_cnt As Integer
     Dim course_name As String = Nothing ' will hold the course name year 2016-17 or 2017-18
 
     'Public pre_time As Integer
@@ -70,10 +72,28 @@ Public Class Form1
         out_files_dir = course_dir + "out_files\\"
         practice_file = course_dir + "practice_list_" + course_name + ".xlsx"
         LogFile = course_dir + "logDog.txt"
+        SessionsFile = course_dir + "Sessions_list.txt"
 
         Return ret
     End Function
 
+
+    Private Sub Rename_file_name_to_old(_fname)
+        If File.Exists(_fname) Then
+            Print_to_log_file("renaming " + "outfile " + _fname)
+            Dim fn As String = Path.GetFileNameWithoutExtension(_fname)
+            Dim ext As String = Path.GetExtension(_fname)
+            Dim dir As String = Path.GetDirectoryName(_fname)
+            fn = fn + "_old"
+
+            Dim new_out_file_name As String = Path.Combine(dir, fn + ext)
+            If File.Exists(new_out_file_name) Then
+                File.Delete(new_out_file_name)
+            End If
+
+            File.Move(_fname, new_out_file_name)
+        End If
+    End Sub
 
     Private Function check_files_and_folders()
 
@@ -82,26 +102,29 @@ Public Class Form1
             Return False
         End If
         Print_to_log_file("Course name: " + course_name)
-        result_out_file_name = out_files_dir + "course_" + course_name + "out.xlsx"
+        result_out_file_name = out_files_dir + "course_" + course_name + "_out.xlsx"
         result_out_file_name = result_out_file_name.Replace("\\", "\")
+        sleep_out_file_name = result_out_file_name.Replace("_out.", "_sleep_out.")
 
-        If File.Exists(result_out_file_name) Then
-            Print_to_log_file("outfile " + result_out_file_name + "renaming")
-            Dim fn As String = Path.GetFileNameWithoutExtension(result_out_file_name)
-            Dim ext As String = Path.GetExtension(result_out_file_name)
-            'Dim fn_with_ext As String = Path.GetFileName(f1)
-            'Dim fn_plus_path As String = Path.GetFullPath(f1)
-            Dim dir As String = Path.GetDirectoryName(result_out_file_name)
-            fn = fn + "_old"
+        'If File.Exists(result_out_file_name) Then
+        '    Print_to_log_file("outfile " + result_out_file_name + "renaming")
+        '    Dim fn As String = Path.GetFileNameWithoutExtension(result_out_file_name)
+        '    Dim ext As String = Path.GetExtension(result_out_file_name)
+        '    'Dim fn_with_ext As String = Path.GetFileName(f1)
+        '    'Dim fn_plus_path As String = Path.GetFullPath(f1)
+        '    Dim dir As String = Path.GetDirectoryName(result_out_file_name)
+        '    fn = fn + "_old"
 
-            Dim new_out_file_name As String = Path.Combine(dir, fn + ext)
-            If File.Exists(new_out_file_name) Then
-                File.Delete(new_out_file_name)
-            End If
+        '    Dim new_out_file_name As String = Path.Combine(dir, fn + ext)
+        '    If File.Exists(new_out_file_name) Then
+        '        File.Delete(new_out_file_name)
+        '    End If
 
-            File.Move(result_out_file_name, new_out_file_name)
-        End If
-
+        '    File.Move(result_out_file_name, new_out_file_name)
+        'End If
+        Rename_file_name_to_old(result_out_file_name)
+        Rename_file_name_to_old(sleep_out_file_name)
+        Rename_file_name_to_old(SessionsFile)
 
 
 
@@ -772,6 +795,14 @@ Public Class Form1
 
     End Sub
 
+    Sub Print_sessions_log(_str As String, Optional _keep As Boolean = True)
+        Dim file As System.IO.StreamWriter
+        file = My.Computer.FileSystem.OpenTextFileWriter(SessionsFile, _keep)
+        file.WriteLine(_str)
+        file.Close()
+    End Sub ' Print_to_log_file
+
+
     Sub Print_to_log_file(_str As String, Optional _keep As Boolean = True)
         Dim file As System.IO.StreamWriter
         file = My.Computer.FileSystem.OpenTextFileWriter(LogFile, _keep)
@@ -781,24 +812,39 @@ Public Class Form1
 
     Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
         ' Run ALL stages 
+        ProgressBar1.Value = 1
         Button3.BackColor = Color.GreenYellow
 
         ' Rotate's form's image
         PictureBox1.Image.RotateFlip(RotateFlipType.Rotate180FlipNone)
         PictureBox1.Refresh()
+        ProgressBar1.Value = 5
 
         If check_files_and_folders() = False Then
             'MessageBox.Show("Missing files or folders. Look at LOG file")
             Return
         End If
 
+        ProgressBar1.Value = 10
         ReadPracticeFile() ' with dogs DOB but not age (depends on sessions day)
         ProgressBar1.Value = 30
+
         ReadSessionsHeader(in_files_dir) ' 13 Nov 2019 (parallel to prev run)
+
         Find_matches() ' 13 Nov 2019 (parallel to prev run)
+        ProgressBar1.Value = 50
+        RdSessionFiles.BackColor = Color.GreenYellow
+        num_of_lines_TextBox.BackColor = Color.Yellow
+        num_of_lines_TextBox.Text = "starting"
+
         Read_relevant_CSV_files()
-        Create_results_new(total_sessions, TxtPreTime.Value, TxtPostTime.Value, result_out_file_name)
+        num_of_lines_TextBox.BackColor = Color.Green
+        ProgressBar1.Value = 75
+        Create_results_new(total_sessions, TxtPreTime.Value, TxtPostTime.Value,
+                           result_out_file_name, sleep_out_file_name)
+        ProgressBar1.Value = 90
         create_statistics()
+        ProgressBar1.Value = 100
         Return
         ' old flow
         ProgressBar1.Value = 40
@@ -812,14 +858,22 @@ Public Class Form1
 
     Private Sub Read_relevant_CSV_files()
         ' 13 Nov 2019 in parallel to previous working  - read CSV, only those who are in the matching list 
+
         Print_to_log_file("in read_relevant_CSV_files, reading CSV files (onlt thowe who have a match")
+
+        Dim total_lines_cnt As Integer = 0
+        Dim current_lines_cnt As Integer
+
         For Each s In sessions.sessionsList
             If s.csv_fname = Nothing Then
                 Continue For
             End If
             Print_to_log_file("working on file: " + s.csv_fname)
             'TBD read the specific CSV file
-            total_sessions.Add(Read_CSV_file(s.csv_fname, s.dog_age, s.startTime, s.endTime, TxtPreTime.Value, TxtPostTime.Value))
+            total_sessions.Add(Read_CSV_file(s.csv_fname, s.dog_age, s.startTime, s.endTime,
+                                             TxtPreTime.Value, TxtPostTime.Value, current_lines_cnt))
+            total_lines_cnt += current_lines_cnt
+            num_of_lines_TextBox.Text = total_lines_cnt
         Next
     End Sub
 
@@ -835,7 +889,7 @@ Public Class Form1
             Dim csv_files_cnt As Integer = 0
             For Each p In CSV_files_headers
                 csv_files_cnt += 1
-                If s.practiceDate = p.start_day Then
+                If s.dogName = p.dog_name And s.practiceDate = p.start_day Then
                     ' we have a match
                     match_flag = True
                     s.csv_fname = p.csv_fname
@@ -844,10 +898,32 @@ Public Class Form1
                 If match_flag = False Then
                     Print_to_log_file("*** Match was NOT found for session " + session_cnt.ToString)
                 End If
-
-
             Next
         Next
+
+        Dim line_str_tmp As String
+        Dim tmp_csv_name As String ' sometimes CSV file name can be nothing, so prevent run time error
+
+        ' printe header to file, before pronting all lines
+        line_str_tmp = "Dog Name".PadRight(10) + " , " + "CSV file name".PadRight(10) + " , " +
+                "practice Type".PadRight(10) + " , " + "Practice Date"
+        Print_sessions_log(line_str_tmp)
+
+        For Each s In sessions.sessionsList
+            If s.csv_fname = Nothing Then
+                tmp_csv_name = " "
+            Else
+                ' print only sessions that have CSV files assigned
+                tmp_csv_name = s.csv_fname
+                line_str_tmp = s.dogName.PadRight(10) + "," + tmp_csv_name.PadRight(10) + "," +
+    s.practiceType.PadRight(10) + "," + s.practiceDate.ToString()
+                Print_sessions_log(line_str_tmp)
+            End If
+
+
+        Next
+
+
     End Sub
 
 
@@ -1081,10 +1157,6 @@ Public Class Form1
                         xlWorksheet.Cells(out_line_cnt, 17) = total_sessions(c).List_of_dog_data(dog_data_cnt).activity_score
                     End If
 
-
-
-
-
                     output_lines_textbox.Text = (out_line_cnt - 1).ToString()
 
                     If (prev_date <> total_sessions(c).session_start_time) Or (prev_pract_time <> l.pract_time) Then
@@ -1167,6 +1239,10 @@ Public Class Form1
     End Sub
 
     Private Sub TxtBoxPracticeFile_TextChanged(sender As Object, e As EventArgs) Handles TxtBoxPracticeFile.TextChanged
+
+    End Sub
+
+    Private Sub Label4_Click(sender As Object, e As EventArgs) Handles Label4.Click
 
     End Sub
 End Class

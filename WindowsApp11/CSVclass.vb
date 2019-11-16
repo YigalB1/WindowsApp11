@@ -11,6 +11,7 @@
         Dim cur_csv_header As New CSV_file_header
         Dim csv_Excel As New Microsoft.Office.Interop.Excel.Application
         csv_Excel.Workbooks.Open(_fname)    '** Open CSV file
+
         ' ** Get pet & date info about this session
         cur_csv_header.csv_fname = _fname
         cur_csv_header.dog_name = csv_Excel.Cells(2, 1).text.Replace("Pet name: ", "").Replace(" ", "")
@@ -41,8 +42,8 @@
         End If
 
         csv_Excel.Workbooks.Close()
+        csv_Excel.Quit()
         csv_Excel = Nothing
-
 
         Return (cur_csv_header)
     End Function
