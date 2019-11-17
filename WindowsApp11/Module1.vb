@@ -128,8 +128,18 @@ Module Module1
             End If
 
             nxt_line_date = CSV_Excel.Cells(line_Cnt + 1, 2).value
-            If line_date.AddSeconds(-line_date.Second) <> nxt_line_date.AddSeconds(-nxt_line_date.Second
-                    ) Then
+
+
+            ' **** try combing lines that differ in less than 10 seconds
+            Dim seconds As Long = DateDiff(DateInterval.Second, line_date, nxt_line_date)
+            Console.WriteLine("delta in seconds: " + seconds.ToString())
+
+            If seconds > 10 Then
+
+                'End If
+
+                'If line_date.AddSeconds(-line_date.Second) <> nxt_line_date.AddSeconds(-nxt_line_date.Second
+                '       ) Then
                 Dim line_data As New Session_CSV_file.Dog_data
                 line_data.pract_time = line_date
                 line_data.activity = activity_tmp
