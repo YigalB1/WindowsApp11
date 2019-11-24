@@ -47,7 +47,6 @@ Partial Class Form1
         Me.BoxDogsList = New System.Windows.Forms.ListBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TxtPracticesNum = New System.Windows.Forms.TextBox()
-        Me.BoxPracticeList = New System.Windows.Forms.ListBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.TxtPracticeTypes = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -67,6 +66,8 @@ Partial Class Form1
         Me.RadioButton2 = New System.Windows.Forms.RadioButton()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
         Me.PreChecks = New System.Windows.Forms.Button()
+        Me.Num_Of_files_read = New System.Windows.Forms.TextBox()
+        Me.Status_Box = New System.Windows.Forms.TextBox()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -283,14 +284,6 @@ Partial Class Form1
         Me.TxtPracticesNum.Size = New System.Drawing.Size(68, 20)
         Me.TxtPracticesNum.TabIndex = 23
         '
-        'BoxPracticeList
-        '
-        Me.BoxPracticeList.FormattingEnabled = True
-        Me.BoxPracticeList.Location = New System.Drawing.Point(568, 313)
-        Me.BoxPracticeList.Name = "BoxPracticeList"
-        Me.BoxPracticeList.Size = New System.Drawing.Size(348, 56)
-        Me.BoxPracticeList.TabIndex = 24
-        '
         'Label6
         '
         Me.Label6.AutoSize = True
@@ -324,7 +317,7 @@ Partial Class Form1
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(60, 13)
         Me.Label8.TabIndex = 29
-        Me.Label8.Text = "Practices list"
+        Me.Label8.Text = "Status"
         '
         'DataGridView1
         '
@@ -466,11 +459,27 @@ Partial Class Form1
         Me.PreChecks.Text = "Check Files and Folders"
         Me.PreChecks.UseVisualStyleBackColor = True
         '
+        'Num_Of_files_read
+        '
+        Me.Num_Of_files_read.Location = New System.Drawing.Point(723, 99)
+        Me.Num_Of_files_read.Name = "Num_Of_files_read"
+        Me.Num_Of_files_read.Size = New System.Drawing.Size(41, 20)
+        Me.Num_Of_files_read.TabIndex = 46
+        '
+        'Status_Box
+        '
+        Me.Status_Box.Location = New System.Drawing.Point(573, 317)
+        Me.Status_Box.Name = "Status_Box"
+        Me.Status_Box.Size = New System.Drawing.Size(253, 20)
+        Me.Status_Box.TabIndex = 47
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1189, 556)
+        Me.Controls.Add(Me.Status_Box)
+        Me.Controls.Add(Me.Num_Of_files_read)
         Me.Controls.Add(Me.PreChecks)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.output_lines_textbox)
@@ -488,7 +497,6 @@ Partial Class Form1
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.TxtPracticeTypes)
         Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.BoxPracticeList)
         Me.Controls.Add(Me.TxtPracticesNum)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.BoxDogsList)
@@ -552,7 +560,6 @@ Partial Class Form1
     Friend WithEvents BoxDogsList As ListBox
     Friend WithEvents Label4 As Label
     Friend WithEvents TxtPracticesNum As TextBox
-    Friend WithEvents BoxPracticeList As ListBox
     Friend WithEvents Label6 As Label
     Friend WithEvents TxtPracticeTypes As TextBox
     Friend WithEvents Label7 As Label
@@ -572,4 +579,6 @@ Partial Class Form1
     Friend WithEvents RadioButton2 As RadioButton
     Friend WithEvents RadioButton1 As RadioButton
     Friend WithEvents PreChecks As Button
+    Friend WithEvents Num_Of_files_read As TextBox
+    Friend WithEvents Status_Box As TextBox
 End Class

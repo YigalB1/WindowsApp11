@@ -132,7 +132,7 @@ Module Module1
 
             ' **** try combing lines that differ in less than 10 seconds
             Dim seconds As Long = DateDiff(DateInterval.Second, line_date, nxt_line_date)
-            Console.WriteLine("delta in seconds: " + seconds.ToString())
+            'Console.WriteLine("delta in seconds: " + seconds.ToString())
 
             If seconds > 10 Then
 

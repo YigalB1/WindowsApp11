@@ -26,7 +26,7 @@ Public Class Form1
     Public SessionsFile As String
 
     ' Public csv_pattern As String = "export-all-Bell-11302018_083229.csv" 10 Nov 19
-    Public csv_pattern As String = ""   ' *083229.csv
+    Public csv_pattern As String = "*.csv"   ' *083229.csv
 
     Public result_out_file_name As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
     Public sleep_out_file_name As String
@@ -814,46 +814,63 @@ Public Class Form1
         ' Run ALL stages 
         ProgressBar1.Value = 1
         Button3.BackColor = Color.GreenYellow
+        Status_Box.Text = "Starting"
+        Status_Box.BackColor = Color.Yellow
 
         ' Rotate's form's image
         PictureBox1.Image.RotateFlip(RotateFlipType.Rotate180FlipNone)
         PictureBox1.Refresh()
         ProgressBar1.Value = 5
 
+        Status_Box.Text = "Checking files and folders"
         If check_files_and_folders() = False Then
             'MessageBox.Show("Missing files or folders. Look at LOG file")
             Return
         End If
 
         ProgressBar1.Value = 10
+        Status_Box.Text = "Reading practice file"
         ReadPracticeFile() ' with dogs DOB but not age (depends on sessions day)
         ProgressBar1.Value = 30
 
+        Status_Box.Text = "Reading Session files headers"
         ReadSessionsHeader(in_files_dir) ' 13 Nov 2019 (parallel to prev run)
 
+        Status_Box.Text = "Locating matches"
         Find_matches() ' 13 Nov 2019 (parallel to prev run)
         ProgressBar1.Value = 50
         RdSessionFiles.BackColor = Color.GreenYellow
         num_of_lines_TextBox.BackColor = Color.Yellow
         num_of_lines_TextBox.Text = "starting"
 
+        Status_Box.Text = "Reading relevant CSV files"
+        'Return
+
         Read_relevant_CSV_files()
         num_of_lines_TextBox.BackColor = Color.Green
         ProgressBar1.Value = 75
+        Status_Box.Text = "Creating results files"
         Create_results_new(total_sessions, TxtPreTime.Value, TxtPostTime.Value,
                            result_out_file_name, sleep_out_file_name)
         ProgressBar1.Value = 90
+
+        Status_Box.Text = "Creating statistics"
         create_statistics()
-        ProgressBar1.Value = 100
-        Return
-        ' old flow
-        ProgressBar1.Value = 40
-        Read_session_files()
-        check_sessions()
-        Create_results()
-        create_statistics()
+
+        Status_Box.Text = "Finished"
+        Status_Box.BackColor = Color.Green
         ProgressBar1.Value = 100
         Button3.BackColor = Color.Green
+
+        'Return
+        ' old flow
+        'ProgressBar1.Value = 40
+        'Read_session_files()
+        'check_sessions()
+        'Create_results()
+        'create_statistics()
+        'ProgressBar1.Value = 100
+        'Button3.BackColor = Color.Green
     End Sub
 
     Private Sub Read_relevant_CSV_files()
@@ -863,6 +880,9 @@ Public Class Form1
 
         Dim total_lines_cnt As Integer = 0
         Dim current_lines_cnt As Integer
+        Dim num_of_file_read As Integer = 0
+
+        num_of_lines_TextBox.BackColor = Color.Yellow
 
         For Each s In sessions.sessionsList
             If s.csv_fname = Nothing Then
@@ -874,7 +894,12 @@ Public Class Form1
                                              TxtPreTime.Value, TxtPostTime.Value, current_lines_cnt))
             total_lines_cnt += current_lines_cnt
             num_of_lines_TextBox.Text = total_lines_cnt
+            num_of_file_read += 1
+            Num_Of_files_read.Text = num_of_file_read.ToString()
+            Num_Of_files_read.BackColor = Color.Yellow
+
         Next
+        Num_Of_files_read.BackColor = Color.Green
     End Sub
 
     Private Sub Find_matches()
@@ -916,13 +941,10 @@ Public Class Form1
                 ' print only sessions that have CSV files assigned
                 tmp_csv_name = s.csv_fname
                 line_str_tmp = s.dogName.PadRight(10) + "," + tmp_csv_name.PadRight(10) + "," +
-    s.practiceType.PadRight(10) + "," + s.practiceDate.ToString()
+                            s.practiceType.PadRight(10) + "," + s.practiceDate.ToString()
                 Print_sessions_log(line_str_tmp)
             End If
-
-
         Next
-
 
     End Sub
 
@@ -939,8 +961,8 @@ Public Class Form1
         Do While csv_fname <> ""
             f_cnt += 1
             CSV_files_headers.Add(CSV_header_tmp.CSV_header_read(_dir + csv_fname))
-            Console.WriteLine(" finished CSV file: " + f_cnt.ToString() + ") " + csv_fname)
-            Print_to_log_file(" finished CSV file: " + f_cnt.ToString() + ") " + csv_fname)
+            Console.WriteLine(" finished reading CSV file header: " + f_cnt.ToString() + ") " + csv_fname)
+            Print_to_log_file(" finished reading CSV file header: " + f_cnt.ToString() + ") " + csv_fname)
             csv_fname = Dir()
         Loop ' go and read next CSV file
         ' *** now alll headers of CSV files are inside CSV_files_headers
