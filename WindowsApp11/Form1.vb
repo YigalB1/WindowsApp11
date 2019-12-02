@@ -64,9 +64,19 @@ Public Class Form1
         ElseIf RadioButton2.Checked Then
             course_name = "2017_18"
             ret = True
+        ElseIf RadioButton3.Checked Then
+            course_name = "Bakara_16_17"
+            ret = True
+        ElseIf RadioButton4.Checked Then
+            course_name = "Bakara_17_18"
+            ret = True
         Else
             ' MessageBox.Show("No project was selected")
         End If
+
+        ' MessageBox.Show("project: " + course_name)
+
+
         course_dir = root_dir + "Course" + course_name + "\\"
         in_files_dir = course_dir + "in_files\\"
         out_files_dir = course_dir + "out_files\\"
@@ -1265,6 +1275,10 @@ Public Class Form1
     End Sub
 
     Private Sub Label4_Click(sender As Object, e As EventArgs) Handles Label4.Click
+
+    End Sub
+
+    Private Sub GroupBox1_Enter(sender As Object, e As EventArgs) Handles GroupBox1.Enter
 
     End Sub
 End Class
