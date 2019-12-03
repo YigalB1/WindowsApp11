@@ -63,13 +63,15 @@ Partial Class Form1
         Me.Label10 = New System.Windows.Forms.Label()
         Me.output_lines_textbox = New System.Windows.Forms.TextBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.RadioButton4 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton3 = New System.Windows.Forms.RadioButton()
         Me.RadioButton2 = New System.Windows.Forms.RadioButton()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
         Me.PreChecks = New System.Windows.Forms.Button()
         Me.Num_Of_files_read = New System.Windows.Forms.TextBox()
         Me.Status_Box = New System.Windows.Forms.TextBox()
-        Me.RadioButton3 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton4 = New System.Windows.Forms.RadioButton()
+        Me.Matches_box = New System.Windows.Forms.TextBox()
+        Me.Label11 = New System.Windows.Forms.Label()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -389,7 +391,7 @@ Partial Class Form1
         '
         'num_of_lines_TextBox
         '
-        Me.num_of_lines_TextBox.Location = New System.Drawing.Point(639, 208)
+        Me.num_of_lines_TextBox.Location = New System.Drawing.Point(639, 235)
         Me.num_of_lines_TextBox.Name = "num_of_lines_TextBox"
         Me.num_of_lines_TextBox.Size = New System.Drawing.Size(68, 20)
         Me.num_of_lines_TextBox.TabIndex = 39
@@ -397,7 +399,7 @@ Partial Class Form1
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(534, 208)
+        Me.Label9.Location = New System.Drawing.Point(534, 235)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(104, 13)
         Me.Label9.TabIndex = 40
@@ -406,7 +408,7 @@ Partial Class Form1
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(534, 239)
+        Me.Label10.Location = New System.Drawing.Point(534, 266)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(98, 13)
         Me.Label10.TabIndex = 41
@@ -414,7 +416,7 @@ Partial Class Form1
         '
         'output_lines_textbox
         '
-        Me.output_lines_textbox.Location = New System.Drawing.Point(639, 235)
+        Me.output_lines_textbox.Location = New System.Drawing.Point(639, 262)
         Me.output_lines_textbox.Name = "output_lines_textbox"
         Me.output_lines_textbox.Size = New System.Drawing.Size(100, 20)
         Me.output_lines_textbox.TabIndex = 42
@@ -431,6 +433,28 @@ Partial Class Form1
         Me.GroupBox1.TabIndex = 43
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Select projects"
+        '
+        'RadioButton4
+        '
+        Me.RadioButton4.AutoSize = True
+        Me.RadioButton4.Location = New System.Drawing.Point(7, 87)
+        Me.RadioButton4.Name = "RadioButton4"
+        Me.RadioButton4.Size = New System.Drawing.Size(89, 17)
+        Me.RadioButton4.TabIndex = 3
+        Me.RadioButton4.TabStop = True
+        Me.RadioButton4.Text = "Bakara 17-18"
+        Me.RadioButton4.UseVisualStyleBackColor = True
+        '
+        'RadioButton3
+        '
+        Me.RadioButton3.AutoSize = True
+        Me.RadioButton3.Location = New System.Drawing.Point(7, 64)
+        Me.RadioButton3.Name = "RadioButton3"
+        Me.RadioButton3.Size = New System.Drawing.Size(89, 17)
+        Me.RadioButton3.TabIndex = 2
+        Me.RadioButton3.TabStop = True
+        Me.RadioButton3.Text = "Bakara 16-17"
+        Me.RadioButton3.UseVisualStyleBackColor = True
         '
         'RadioButton2
         '
@@ -477,33 +501,30 @@ Partial Class Form1
         Me.Status_Box.Size = New System.Drawing.Size(253, 20)
         Me.Status_Box.TabIndex = 47
         '
-        'RadioButton3
+        'Matches_box
         '
-        Me.RadioButton3.AutoSize = True
-        Me.RadioButton3.Location = New System.Drawing.Point(7, 64)
-        Me.RadioButton3.Name = "RadioButton3"
-        Me.RadioButton3.Size = New System.Drawing.Size(89, 17)
-        Me.RadioButton3.TabIndex = 2
-        Me.RadioButton3.TabStop = True
-        Me.RadioButton3.Text = "Bakara 16-17"
-        Me.RadioButton3.UseVisualStyleBackColor = True
+        Me.Matches_box.Location = New System.Drawing.Point(639, 210)
+        Me.Matches_box.Name = "Matches_box"
+        Me.Matches_box.Size = New System.Drawing.Size(86, 20)
+        Me.Matches_box.TabIndex = 48
+        Me.Matches_box.Text = " "
         '
-        'RadioButton4
+        'Label11
         '
-        Me.RadioButton4.AutoSize = True
-        Me.RadioButton4.Location = New System.Drawing.Point(7, 87)
-        Me.RadioButton4.Name = "RadioButton4"
-        Me.RadioButton4.Size = New System.Drawing.Size(89, 17)
-        Me.RadioButton4.TabIndex = 3
-        Me.RadioButton4.TabStop = True
-        Me.RadioButton4.Text = "Bakara 17-18"
-        Me.RadioButton4.UseVisualStyleBackColor = True
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(537, 210)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(85, 13)
+        Me.Label11.TabIndex = 49
+        Me.Label11.Text = "Num of Matches"
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1189, 556)
+        Me.Controls.Add(Me.Label11)
+        Me.Controls.Add(Me.Matches_box)
         Me.Controls.Add(Me.Status_Box)
         Me.Controls.Add(Me.Num_Of_files_read)
         Me.Controls.Add(Me.PreChecks)
@@ -609,4 +630,6 @@ Partial Class Form1
     Friend WithEvents Status_Box As TextBox
     Friend WithEvents RadioButton4 As RadioButton
     Friend WithEvents RadioButton3 As RadioButton
+    Friend WithEvents Matches_box As TextBox
+    Friend WithEvents Label11 As Label
 End Class

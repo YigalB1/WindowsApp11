@@ -847,7 +847,13 @@ Public Class Form1
         ReadSessionsHeader(in_files_dir) ' 13 Nov 2019 (parallel to prev run)
 
         Status_Box.Text = "Locating matches"
-        Find_matches() ' 13 Nov 2019 (parallel to prev run)
+        Dim num_of_matches As Integer
+        num_of_matches = Find_matches() ' 13 Nov 2019 (parallel to prev run)
+        If num_of_matches = 0 Then
+            MessageBox.Show("No Matches found")
+            Return
+        End If
+
         ProgressBar1.Value = 50
         RdSessionFiles.BackColor = Color.GreenYellow
         num_of_lines_TextBox.BackColor = Color.Yellow
@@ -912,10 +918,12 @@ Public Class Form1
         Num_Of_files_read.BackColor = Color.Green
     End Sub
 
-    Private Sub Find_matches()
+    Private Function Find_matches() As Integer
         ' find if there are matches between list of practices (from practice file) and CSV files
 
         Dim match_flag As Boolean
+        Dim match_cnt As Integer = 0
+        Dim stmp As String
 
         Dim session_cnt As Integer = 0
         For Each s In sessions.sessionsList
@@ -927,14 +935,26 @@ Public Class Form1
                 If s.dogName = p.dog_name And s.practiceDate = p.start_day Then
                     ' we have a match
                     match_flag = True
+                    match_cnt += 1
+
                     s.csv_fname = p.csv_fname
-                    Print_to_log_file("Match found for session " + session_cnt.ToString)
+                    stmp = "Match found for session " + session_cnt.ToString
+                    stmp += " >> s.dogName: " + s.dogName + " s.practiceDate: " + s.practiceDate
+                    'Print_to_log_file("Match found for session " + session_cnt.ToString)
+                    Print_to_log_file(stmp)
                 End If
-                If match_flag = False Then
-                    Print_to_log_file("*** Match was NOT found for session " + session_cnt.ToString)
-                End If
-            Next
-        Next
+                Matches_box.Text = match_cnt.ToString()
+            Next ' of foreach p
+
+            If match_flag = False Then
+                stmp = "--------*** Match was NOT found for session " + session_cnt.ToString
+                stmp += " >> s.dogName: " + s.dogName + " s.practiceDate: " + s.practiceDate
+                'Print_to_log_file("*** Match was NOT found for session " + session_cnt.ToString)
+                'Print_to_log_file("s.dogName: " + s.dogName + "s.practiceDate: " + s.practiceDate)
+                Print_to_log_file(stmp)
+            End If
+
+        Next ' of foreach s
 
         Dim line_str_tmp As String
         Dim tmp_csv_name As String ' sometimes CSV file name can be nothing, so prevent run time error
@@ -955,8 +975,8 @@ Public Class Form1
                 Print_sessions_log(line_str_tmp)
             End If
         Next
-
-    End Sub
+        Return match_cnt
+    End Function
 
 
 
