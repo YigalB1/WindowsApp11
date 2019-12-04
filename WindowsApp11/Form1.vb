@@ -340,16 +340,13 @@ Public Class Form1
 
         Read_Dog_List() ' into DogList list (name and dob)
         DogsList.Print_dogs_list(course_dir) ' create text file with list of dogs
-        'ProgressBar1.Value = 40
-        '  Dim tmp As Integer = DogsList.GetDogAge("Bell")
 
         Read_Pracice_Types_List() ' into practiceList (pract name & pract number)
         practiceList.Print_practices_list(course_dir) ' the class way
-        'ProgressBar1.Value = 50
 
         Read_sessions_list()
         sessions.Print_sessions_list() ' into sessions pract name, pract type, start time, end time, video num )
-        'ProgressBar1.Value = 60
+
 
         RdPracticeFile.BackColor = Color.Green
         Stage_Read_Practice_Table = True
@@ -465,7 +462,7 @@ Public Class Form1
             s.SetDogsAge(pract_date, dog_dob)
             s.SetDogsDOB(dog_dob)
 
-            s.SetpracticeType(MyExcel.Cells(row_cnt, col_cnt + 2).text)
+            s.SetpracticeType(MyExcel.Cells(row_cnt, col_cnt + 2).text, practiceList)
             s.SetstartTime(MyExcel.Cells(row_cnt, col_cnt + 3).text)
             s.SetendTime(MyExcel.Cells(row_cnt, col_cnt + 4).text)
             s.SetvideoNum(MyExcel.Cells(row_cnt, col_cnt + 5).text)
@@ -906,7 +903,8 @@ Public Class Form1
             End If
             Print_to_log_file("working on file: " + s.csv_fname)
             'TBD read the specific CSV file
-            total_sessions.Add(Read_CSV_file(s.csv_fname, s.dog_age, s.startTime, s.endTime,
+            total_sessions.Add(Read_CSV_file(s.csv_fname, s.dog_age, s.practiceType, s.practiceNum,
+                                             s.startTime, s.endTime,
                                              TxtPreTime.Value, TxtPostTime.Value, current_lines_cnt))
             total_lines_cnt += current_lines_cnt
             num_of_lines_TextBox.Text = total_lines_cnt

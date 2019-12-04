@@ -4,7 +4,8 @@ Module Module1
 
 
 
-    Public Function Read_CSV_file(_fname As String, _dog_age As Integer, _activity_start As Date,
+    Public Function Read_CSV_file(_fname As String, _dog_age As Integer, _pract_type As String,
+                                  _pract_num As Integer, _activity_start As Date,
                                   _activity_end As Date, _pre_time As Integer,
                                   _post_time As Integer, ByRef _line_counter As Integer) As Session_CSV_file
         Dim CSV_Excel As New Microsoft.Office.Interop.Excel.Application
@@ -22,6 +23,8 @@ Module Module1
         curr_session.pet_name = CSV_Excel.Cells(2, 1).text.Replace("Pet name: ", "").Replace(" ", "")
         curr_session.pet_ID = CSV_Excel.Cells(2, 2).text.Replace("Pet id: ", "").Replace(" ", "")
         curr_session.pet_age = _dog_age ' age at that session
+        curr_session.practice_type = _pract_type
+        curr_session.Practice_num = _pract_num
 
         Dim csv_start_date As DateTime
         Dim s1 As String = CSV_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
@@ -271,7 +274,8 @@ Module Module1
                 xlWorksheet.Cells(out_line_cnt, 2) = l.pet_age
                 xlWorksheet.Cells(out_line_cnt, 3) = l.session_start_time
                 'xlWorksheet.Cells(out_line_cnt, 4) = 
-                xlWorksheet.Cells(out_line_cnt, 5) = line.pract_type
+                ' xlWorksheet.Cells(out_line_cnt, 5) = l.practice_type
+                xlWorksheet.Cells(out_line_cnt, 5) = l.Practice_num
                 'xlWorksheet.Cells(out_line_cnt, 6) = sessions.sessionsList(c).predictability.ToString()
                 'xlWorksheet.Cells(out_line_cnt, 7) = sessions.sessionsList(c).videoNum
                 xlWorksheet.Cells(out_line_cnt, 8) = l_time_zone

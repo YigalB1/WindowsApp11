@@ -201,10 +201,23 @@ Class Session
     End Sub
 
 
-    Public Sub SetpracticeType(ByVal _ptype As String)
+    Public Sub SetpracticeType(ByVal _ptype As String, _pract_list As PracticesList)
         practiceType = _ptype
-        ' search in practice table
-        practiceNum = 77 ' will be done in main? not here ....
+        ' TBD search in practice table
+        Dim match As Boolean = False
+        practiceNum = 77 ' flag in case not found
+
+        For Each p In _pract_list.practicesList
+            If _ptype = p.praticeName Then
+                match = True
+                practiceNum = p.practiceNum
+            End If
+        Next
+
+        If match = False Then
+            MessageBox.Show("match not found with practice " + _ptype)
+        End If
+
     End Sub
 
     Public Sub SetstartTime(ByVal _start_time As Date)
@@ -302,6 +315,8 @@ End Class   ' List_of_Sessions
 
 Class Session_CSV_file
     Public session_file_name As String
+    Public practice_type As String
+    Public Practice_num As Integer
     Public session_start_time As DateTime
     Public session_end_time As DateTime
     Public pet_name As String

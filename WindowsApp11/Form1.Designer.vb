@@ -58,8 +58,6 @@ Partial Class Form1
         Me.Create_results_button = New System.Windows.Forms.Button()
         Me.Create_stats_button = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
-        Me.num_of_lines_TextBox = New System.Windows.Forms.TextBox()
-        Me.Label9 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.output_lines_textbox = New System.Windows.Forms.TextBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -72,6 +70,8 @@ Partial Class Form1
         Me.Status_Box = New System.Windows.Forms.TextBox()
         Me.Matches_box = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
+        Me.num_of_lines_TextBox = New System.Windows.Forms.TextBox()
+        Me.Label9 = New System.Windows.Forms.Label()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -389,26 +389,10 @@ Partial Class Form1
         Me.Button3.Text = "Run ALL"
         Me.Button3.UseVisualStyleBackColor = True
         '
-        'num_of_lines_TextBox
-        '
-        Me.num_of_lines_TextBox.Location = New System.Drawing.Point(639, 235)
-        Me.num_of_lines_TextBox.Name = "num_of_lines_TextBox"
-        Me.num_of_lines_TextBox.Size = New System.Drawing.Size(68, 20)
-        Me.num_of_lines_TextBox.TabIndex = 39
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(534, 235)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(104, 13)
-        Me.Label9.TabIndex = 40
-        Me.Label9.Text = "Number of lines read"
-        '
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(534, 266)
+        Me.Label10.Location = New System.Drawing.Point(534, 298)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(98, 13)
         Me.Label10.TabIndex = 41
@@ -416,7 +400,7 @@ Partial Class Form1
         '
         'output_lines_textbox
         '
-        Me.output_lines_textbox.Location = New System.Drawing.Point(639, 262)
+        Me.output_lines_textbox.Location = New System.Drawing.Point(639, 294)
         Me.output_lines_textbox.Name = "output_lines_textbox"
         Me.output_lines_textbox.Size = New System.Drawing.Size(100, 20)
         Me.output_lines_textbox.TabIndex = 42
@@ -496,7 +480,7 @@ Partial Class Form1
         '
         'Status_Box
         '
-        Me.Status_Box.Location = New System.Drawing.Point(573, 317)
+        Me.Status_Box.Location = New System.Drawing.Point(573, 349)
         Me.Status_Box.Name = "Status_Box"
         Me.Status_Box.Size = New System.Drawing.Size(253, 20)
         Me.Status_Box.TabIndex = 47
@@ -505,7 +489,7 @@ Partial Class Form1
         '
         Me.Matches_box.Location = New System.Drawing.Point(639, 210)
         Me.Matches_box.Name = "Matches_box"
-        Me.Matches_box.Size = New System.Drawing.Size(86, 20)
+        Me.Matches_box.Size = New System.Drawing.Size(68, 20)
         Me.Matches_box.TabIndex = 48
         Me.Matches_box.Text = " "
         '
@@ -517,6 +501,22 @@ Partial Class Form1
         Me.Label11.Size = New System.Drawing.Size(85, 13)
         Me.Label11.TabIndex = 49
         Me.Label11.Text = "Num of Matches"
+        '
+        'num_of_lines_TextBox
+        '
+        Me.num_of_lines_TextBox.Location = New System.Drawing.Point(639, 267)
+        Me.num_of_lines_TextBox.Name = "num_of_lines_TextBox"
+        Me.num_of_lines_TextBox.Size = New System.Drawing.Size(68, 20)
+        Me.num_of_lines_TextBox.TabIndex = 39
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(534, 267)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(104, 13)
+        Me.Label9.TabIndex = 40
+        Me.Label9.Text = "Number of lines read"
         '
         'Form1
         '
@@ -618,8 +618,6 @@ Partial Class Form1
     Friend WithEvents Create_results_button As Button
     Friend WithEvents Create_stats_button As Button
     Friend WithEvents Button3 As Button
-    Friend WithEvents num_of_lines_TextBox As TextBox
-    Friend WithEvents Label9 As Label
     Friend WithEvents Label10 As Label
     Friend WithEvents output_lines_textbox As TextBox
     Friend WithEvents GroupBox1 As GroupBox
@@ -632,4 +630,6 @@ Partial Class Form1
     Friend WithEvents RadioButton3 As RadioButton
     Friend WithEvents Matches_box As TextBox
     Friend WithEvents Label11 As Label
+    Friend WithEvents num_of_lines_TextBox As TextBox
+    Friend WithEvents Label9 As Label
 End Class
