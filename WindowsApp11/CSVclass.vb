@@ -5,6 +5,7 @@
     Public dog_id As String
     Public start_day As Date
     Public end_day As Date
+    Public has_a_match As Boolean   ' 20 Feb 20 in order to see which file has a match
     'Public match_csv_file_name As String
 
     Public Function CSV_header_read(_fname As String) As CSV_file_header

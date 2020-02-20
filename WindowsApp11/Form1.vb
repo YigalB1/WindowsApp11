@@ -70,6 +70,11 @@ Public Class Form1
         ElseIf RadioButton4.Checked Then
             course_name = "Bakara_17_18"
             ret = True
+        ElseIf RadioButton5.Checked Then
+            course_name = "Trials"
+            ret = True
+
+
         Else
             ' MessageBox.Show("No project was selected")
         End If
@@ -507,6 +512,12 @@ Public Class Form1
             MessageBox.Show("Must read practice file BEFORE reading sessions list")
             Exit Sub
         End If
+
+        ' if we want a quick run for analysis without the long CSV files read
+        If skip_CSV_RadioButton.Checked Then
+            Exit Sub
+        End If
+
         Read_CSV_Session_files(in_files_dir)
     End Sub
 
@@ -861,6 +872,9 @@ Public Class Form1
         Status_Box.Text = "Reading relevant CSV files"
         'Return
 
+        If skip_CSV_RadioButton.Checked Then
+            Return
+        End If
         Read_relevant_CSV_files()
         num_of_lines_TextBox.BackColor = Color.Green
         ProgressBar1.Value = 75
@@ -926,11 +940,20 @@ Public Class Form1
         Dim stmp As String
 
         Dim session_cnt As Integer = 0
+
+        Print_to_log_file("In Find matches, searching for matches ")
+        ' mark all files as "have no match". Later in the loop, matches will be marked
+        For Each p In CSV_files_headers
+            p.has_a_match = False
+        Next
+
+
         For Each s In sessions.sessionsList
             session_cnt += 1
             match_flag = False
             Dim csv_files_cnt As Integer = 0
             For Each p In CSV_files_headers
+                ' p.has_a_match = False
                 csv_files_cnt += 1
                 If s.dogName = p.dog_name And s.practiceDate = p.start_day Then
                     ' we have a match
@@ -938,6 +961,8 @@ Public Class Form1
                     match_cnt += 1
 
                     s.csv_fname = p.csv_fname
+                    p.has_a_match = True
+
                     stmp = "Match found for session " + session_cnt.ToString
                     stmp += " >> s.dogName: " + s.dogName + " s.practiceDate: " + s.practiceDate
                     'Print_to_log_file("Match found for session " + session_cnt.ToString)
@@ -955,6 +980,18 @@ Public Class Form1
             End If
 
         Next ' of foreach s
+
+        ' 20 Feb 20 look to print all files that have no match 
+        Print_to_log_file("Files that had no match - not used")
+        For Each p In CSV_files_headers
+            If p.has_a_match = False Then
+                Print_to_log_file("No match for file: " + p.csv_fname)
+            End If
+
+        Next
+
+
+
 
         Dim line_str_tmp As String
         Dim tmp_csv_name As String ' sometimes CSV file name can be nothing, so prevent run time error

@@ -72,6 +72,8 @@ Partial Class Form1
         Me.Label11 = New System.Windows.Forms.Label()
         Me.num_of_lines_TextBox = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
+        Me.RadioButton5 = New System.Windows.Forms.RadioButton()
+        Me.skip_CSV_RadioButton = New System.Windows.Forms.RadioButton()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -407,6 +409,7 @@ Partial Class Form1
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.RadioButton5)
         Me.GroupBox1.Controls.Add(Me.RadioButton4)
         Me.GroupBox1.Controls.Add(Me.RadioButton3)
         Me.GroupBox1.Controls.Add(Me.RadioButton2)
@@ -518,11 +521,34 @@ Partial Class Form1
         Me.Label9.TabIndex = 40
         Me.Label9.Text = "Number of lines read"
         '
+        'RadioButton5
+        '
+        Me.RadioButton5.AutoSize = True
+        Me.RadioButton5.Location = New System.Drawing.Point(7, 111)
+        Me.RadioButton5.Name = "RadioButton5"
+        Me.RadioButton5.Size = New System.Drawing.Size(50, 17)
+        Me.RadioButton5.TabIndex = 4
+        Me.RadioButton5.TabStop = True
+        Me.RadioButton5.Text = "Trials"
+        Me.RadioButton5.UseVisualStyleBackColor = True
+        '
+        'skip_CSV_RadioButton
+        '
+        Me.skip_CSV_RadioButton.AutoSize = True
+        Me.skip_CSV_RadioButton.Location = New System.Drawing.Point(34, 380)
+        Me.skip_CSV_RadioButton.Name = "skip_CSV_RadioButton"
+        Me.skip_CSV_RadioButton.Size = New System.Drawing.Size(98, 17)
+        Me.skip_CSV_RadioButton.TabIndex = 50
+        Me.skip_CSV_RadioButton.TabStop = True
+        Me.skip_CSV_RadioButton.Text = "skip_CSV_read"
+        Me.skip_CSV_RadioButton.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1189, 556)
+        Me.Controls.Add(Me.skip_CSV_RadioButton)
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.Matches_box)
         Me.Controls.Add(Me.Status_Box)
@@ -632,4 +658,6 @@ Partial Class Form1
     Friend WithEvents Label11 As Label
     Friend WithEvents num_of_lines_TextBox As TextBox
     Friend WithEvents Label9 As Label
+    Friend WithEvents RadioButton5 As RadioButton
+    Friend WithEvents skip_CSV_RadioButton As RadioButton
 End Class
