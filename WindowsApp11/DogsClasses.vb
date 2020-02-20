@@ -167,7 +167,7 @@ Class Session
     Public predictability As Boolean ' if video exists: it was a planned session and recorded
     Public sessionOnAday As Integer ' 
     Public csv_fname As String
-
+    Public _logfile As String
 
     Public list_of_CSV_matches As New List(Of Integer) ' to be filled after reading CSV files
     ' with CSVs that match this session
@@ -201,7 +201,7 @@ Class Session
     End Sub
 
 
-    Public Sub SetpracticeType(_cnt As Integer, ByVal _ptype As String, _pract_list As PracticesList)
+    Public Sub SetpracticeType(_cnt As Integer, ByVal _ptype As String, _pract_list As PracticesList, Optional _keep As Boolean = True)
         practiceType = _ptype
         ' TBD search in practice table
         Dim match As Boolean = False
@@ -214,9 +214,21 @@ Class Session
             End If
         Next
 
+        Dim file As System.IO.StreamWriter
+        Dim msg_str As String
+
         If match = False Then
-            MessageBox.Show("Line: " + _cnt.ToString() + "match not found with practice " + _ptype)
-            ' Print_to_log_file("Error in getting DOB, dog name: " + dog_name)  - FAILED - no access to rutine
+            msg_str = " Line: " + _cnt.ToString() + " match not found with practice " + _ptype
+            'MessageBox.Show("Line: " + _cnt.ToString() + " match not found with practice " + _ptype)
+            'Print_to_log_file("Error in getting DOB, dog name: " + dog_name)  - FAILED - no access To rutine
+
+
+            file = My.Computer.FileSystem.OpenTextFileWriter(_logfile, _keep)
+            file.Write("ERROR in SetpracticeType:  ")
+            file.WriteLine(msg_str)
+            file.Close()
+
+
 
         End If
 
@@ -280,8 +292,10 @@ Class List_of_Sessions
     End Function
 
 
-    Public Sub Print_sessions_list()
+    Public Sub Print_sessions_list(_dir As String)
         Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\sessions_list.txt"
+        Dim tmp_dir As String = _dir & "sessions_list.txt"
+        docPath = tmp_dir
 
         Dim file As System.IO.StreamWriter
 

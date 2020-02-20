@@ -10,7 +10,8 @@ Imports System.IO
 Public Class Form1
 
     ' 10 Nov 2019: making directories according to courses
-    Public root_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
+    'Public root_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
+    Public root_dir As String
     Public course_dir As String ' will be assigned according to selected course
     Public in_files_dir As String
     Public out_files_dir As String
@@ -80,6 +81,15 @@ Public Class Form1
         End If
 
         ' MessageBox.Show("project: " + course_name)
+
+        'Public root_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
+
+        Dim Path_tmp As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+        Path_tmp = Path_tmp & "\" & "Yigal\" & "DogsProj\"
+        root_dir = Path_tmp.Replace("\", "\\")
+
+
+        ' Return False
 
 
         course_dir = root_dir + "Course" + course_name + "\\"
@@ -350,7 +360,7 @@ Public Class Form1
         practiceList.Print_practices_list(course_dir) ' the class way
 
         Read_sessions_list()
-        sessions.Print_sessions_list() ' into sessions pract name, pract type, start time, end time, video num )
+        sessions.Print_sessions_list(root_dir) ' into sessions pract name, pract type, start time, end time, video num )
 
 
         RdPracticeFile.BackColor = Color.Green
@@ -444,6 +454,7 @@ Public Class Form1
 
         Do
             Dim s As New Session
+            s._logfile = LogFile
 
             TxtPracticesNum.Text = counter
 
