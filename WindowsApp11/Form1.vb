@@ -403,6 +403,7 @@ Public Class Form1
         Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
         'MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
         MyExcel.Workbooks.Open(practice_file)
+        MyExcel.Workbooks.Open(practice_file)
 
         Do
             stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get Practice name
@@ -462,7 +463,8 @@ Public Class Form1
             s.SetDogsAge(pract_date, dog_dob)
             s.SetDogsDOB(dog_dob)
 
-            s.SetpracticeType(MyExcel.Cells(row_cnt, col_cnt + 2).text, practiceList)
+            ' 19 Feb 2020 adding counter to allow debug messages, And abort the message box in SetpracticeType
+            s.SetpracticeType(counter, MyExcel.Cells(row_cnt, col_cnt + 2).text, practiceList)
             s.SetstartTime(MyExcel.Cells(row_cnt, col_cnt + 3).text)
             s.SetendTime(MyExcel.Cells(row_cnt, col_cnt + 4).text)
             s.SetvideoNum(MyExcel.Cells(row_cnt, col_cnt + 5).text)
@@ -958,8 +960,8 @@ Public Class Form1
         Dim tmp_csv_name As String ' sometimes CSV file name can be nothing, so prevent run time error
 
         ' printe header to file, before pronting all lines
-        line_str_tmp = "Dog Name".PadRight(10) + " , " + "CSV file name".PadRight(10) + " , " +
-                "practice Type".PadRight(10) + " , " + "Practice Date"
+        line_str_tmp = "Dog Name".PadRight(10) + " , " +
+                "practice Type".PadRight(10) + " , " + "Practice Date" + "CSV file name".PadRight(10) + " , "
         Print_sessions_log(line_str_tmp)
 
         For Each s In sessions.sessionsList
@@ -968,8 +970,8 @@ Public Class Form1
             Else
                 ' print only sessions that have CSV files assigned
                 tmp_csv_name = s.csv_fname
-                line_str_tmp = s.dogName.PadRight(10) + "," + tmp_csv_name.PadRight(10) + "," +
-                            s.practiceType.PadRight(10) + "," + s.practiceDate.ToString()
+                line_str_tmp = s.dogName.PadRight(10) + "," +
+                            s.practiceType.PadRight(10) + "," + s.practiceDate.ToString().PadRight(10) + "," + tmp_csv_name.PadRight(10)
                 Print_sessions_log(line_str_tmp)
             End If
         Next

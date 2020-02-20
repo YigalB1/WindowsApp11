@@ -201,7 +201,7 @@ Class Session
     End Sub
 
 
-    Public Sub SetpracticeType(ByVal _ptype As String, _pract_list As PracticesList)
+    Public Sub SetpracticeType(_cnt As Integer, ByVal _ptype As String, _pract_list As PracticesList)
         practiceType = _ptype
         ' TBD search in practice table
         Dim match As Boolean = False
@@ -215,7 +215,9 @@ Class Session
         Next
 
         If match = False Then
-            MessageBox.Show("match not found with practice " + _ptype)
+            MessageBox.Show("Line: " + _cnt.ToString() + "match not found with practice " + _ptype)
+            ' Print_to_log_file("Error in getting DOB, dog name: " + dog_name)  - FAILED - no access to rutine
+
         End If
 
     End Sub
