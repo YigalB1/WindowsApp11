@@ -75,7 +75,6 @@ Public Class Form1
             course_name = "Trials"
             ret = True
 
-
         Else
             MessageBox.Show("No project was selected")
             Return False
@@ -104,14 +103,11 @@ Public Class Form1
             Return False
         End If
 
-
-
         Dim dir1 As New IO.DirectoryInfo(in_files_dir)
         If Not dir1.Exists Then
             MsgBox("Missing In files folder")
             Return False
         End If
-
 
         Dim dir2 As New IO.DirectoryInfo(out_files_dir)
         If Not dir2.Exists Then
@@ -380,7 +376,8 @@ Public Class Form1
         practiceList.Print_practices_list(course_dir) ' the class way
 
         Read_sessions_list()
-        sessions.Print_sessions_list(root_dir) ' into sessions pract name, pract type, start time, end time, video num )
+        ' sessions.Print_sessions_list(root_dir)
+        sessions.Print_sessions_list(course_dir) ' into sessions pract name, pract type, start time, end time, video num )
 
 
         RdPracticeFile.BackColor = Color.Green
