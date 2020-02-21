@@ -438,10 +438,10 @@ Partial Class Form1
         Me.RadioButton4.AutoSize = True
         Me.RadioButton4.Location = New System.Drawing.Point(7, 87)
         Me.RadioButton4.Name = "RadioButton4"
-        Me.RadioButton4.Size = New System.Drawing.Size(89, 17)
+        Me.RadioButton4.Size = New System.Drawing.Size(66, 17)
         Me.RadioButton4.TabIndex = 3
         Me.RadioButton4.TabStop = True
-        Me.RadioButton4.Text = "Bakara 17-18"
+        Me.RadioButton4.Text = "not used"
         Me.RadioButton4.UseVisualStyleBackColor = True
         '
         'RadioButton3
@@ -449,10 +449,10 @@ Partial Class Form1
         Me.RadioButton3.AutoSize = True
         Me.RadioButton3.Location = New System.Drawing.Point(7, 64)
         Me.RadioButton3.Name = "RadioButton3"
-        Me.RadioButton3.Size = New System.Drawing.Size(89, 17)
+        Me.RadioButton3.Size = New System.Drawing.Size(64, 17)
         Me.RadioButton3.TabIndex = 2
         Me.RadioButton3.TabStop = True
-        Me.RadioButton3.Text = "Bakara 16-17"
+        Me.RadioButton3.Text = "2018-19"
         Me.RadioButton3.UseVisualStyleBackColor = True
         '
         'RadioButton2

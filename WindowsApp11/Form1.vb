@@ -66,10 +66,10 @@ Public Class Form1
             course_name = "2017_18"
             ret = True
         ElseIf RadioButton3.Checked Then
-            course_name = "Bakara_16_17"
+            course_name = "2018_19"
             ret = True
         ElseIf RadioButton4.Checked Then
-            course_name = "Bakara_17_18"
+            course_name = "TBD_not_used"
             ret = True
         ElseIf RadioButton5.Checked Then
             course_name = "Trials"
