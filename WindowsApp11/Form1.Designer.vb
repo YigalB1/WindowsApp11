@@ -61,6 +61,7 @@ Partial Class Form1
         Me.Label10 = New System.Windows.Forms.Label()
         Me.output_lines_textbox = New System.Windows.Forms.TextBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.RadioButton5 = New System.Windows.Forms.RadioButton()
         Me.RadioButton4 = New System.Windows.Forms.RadioButton()
         Me.RadioButton3 = New System.Windows.Forms.RadioButton()
         Me.RadioButton2 = New System.Windows.Forms.RadioButton()
@@ -72,8 +73,8 @@ Partial Class Form1
         Me.Label11 = New System.Windows.Forms.Label()
         Me.num_of_lines_TextBox = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.RadioButton5 = New System.Windows.Forms.RadioButton()
         Me.skip_CSV_RadioButton = New System.Windows.Forms.RadioButton()
+        Me.numOfPratices_read = New System.Windows.Forms.TextBox()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -421,6 +422,17 @@ Partial Class Form1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Select projects"
         '
+        'RadioButton5
+        '
+        Me.RadioButton5.AutoSize = True
+        Me.RadioButton5.Location = New System.Drawing.Point(7, 111)
+        Me.RadioButton5.Name = "RadioButton5"
+        Me.RadioButton5.Size = New System.Drawing.Size(50, 17)
+        Me.RadioButton5.TabIndex = 4
+        Me.RadioButton5.TabStop = True
+        Me.RadioButton5.Text = "Trials"
+        Me.RadioButton5.UseVisualStyleBackColor = True
+        '
         'RadioButton4
         '
         Me.RadioButton4.AutoSize = True
@@ -521,17 +533,6 @@ Partial Class Form1
         Me.Label9.TabIndex = 40
         Me.Label9.Text = "Number of lines read"
         '
-        'RadioButton5
-        '
-        Me.RadioButton5.AutoSize = True
-        Me.RadioButton5.Location = New System.Drawing.Point(7, 111)
-        Me.RadioButton5.Name = "RadioButton5"
-        Me.RadioButton5.Size = New System.Drawing.Size(50, 17)
-        Me.RadioButton5.TabIndex = 4
-        Me.RadioButton5.TabStop = True
-        Me.RadioButton5.Text = "Trials"
-        Me.RadioButton5.UseVisualStyleBackColor = True
-        '
         'skip_CSV_RadioButton
         '
         Me.skip_CSV_RadioButton.AutoSize = True
@@ -543,11 +544,19 @@ Partial Class Form1
         Me.skip_CSV_RadioButton.Text = "skip_CSV_read"
         Me.skip_CSV_RadioButton.UseVisualStyleBackColor = True
         '
+        'numOfPratices_read
+        '
+        Me.numOfPratices_read.Location = New System.Drawing.Point(723, 185)
+        Me.numOfPratices_read.Name = "numOfPratices_read"
+        Me.numOfPratices_read.Size = New System.Drawing.Size(41, 20)
+        Me.numOfPratices_read.TabIndex = 51
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1189, 556)
+        Me.Controls.Add(Me.numOfPratices_read)
         Me.Controls.Add(Me.skip_CSV_RadioButton)
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.Matches_box)
@@ -660,4 +669,5 @@ Partial Class Form1
     Friend WithEvents Label9 As Label
     Friend WithEvents RadioButton5 As RadioButton
     Friend WithEvents skip_CSV_RadioButton As RadioButton
+    Friend WithEvents numOfPratices_read As TextBox
 End Class

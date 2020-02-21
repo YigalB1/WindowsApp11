@@ -77,7 +77,8 @@ Public Class Form1
 
 
         Else
-            ' MessageBox.Show("No project was selected")
+            MessageBox.Show("No project was selected")
+            Return False
         End If
 
         ' MessageBox.Show("project: " + course_name)
@@ -89,8 +90,6 @@ Public Class Form1
         root_dir = Path_tmp.Replace("\", "\\")
 
 
-        ' Return False
-
 
         course_dir = root_dir + "Course" + course_name + "\\"
         in_files_dir = course_dir + "in_files\\"
@@ -99,7 +98,35 @@ Public Class Form1
         LogFile = course_dir + "logDog.txt"
         SessionsFile = course_dir + "Sessions_list.txt"
 
-        Return ret
+        Dim dir As New IO.DirectoryInfo(course_dir)
+        If Not dir.Exists Then
+            MsgBox("Missing Course folder")
+            Return False
+        End If
+
+
+
+        Dim dir1 As New IO.DirectoryInfo(in_files_dir)
+        If Not dir1.Exists Then
+            MsgBox("Missing In files folder")
+            Return False
+        End If
+
+
+        Dim dir2 As New IO.DirectoryInfo(out_files_dir)
+        If Not dir2.Exists Then
+            MsgBox("Missing Out files folder")
+            Return False
+        End If
+
+        ' check if folders and required files exixt
+        If Not My.Computer.FileSystem.FileExists(practice_file) Then
+            MsgBox("Missing prctice file")
+            Return False
+        End If
+
+
+        Return True
     End Function
 
 
@@ -123,7 +150,7 @@ Public Class Form1
     Private Function check_files_and_folders()
 
         If check_course() = False Then
-            MessageBox.Show("Select a project")
+            'MessageBox.Show("Select a project")
             Return False
         End If
         Print_to_log_file("Course name: " + course_name)
@@ -150,13 +177,6 @@ Public Class Form1
         Rename_file_name_to_old(result_out_file_name)
         Rename_file_name_to_old(sleep_out_file_name)
         Rename_file_name_to_old(SessionsFile)
-
-
-
-
-
-
-
 
         PreChecks.BackColor = Color.Yellow
         Dim dir_bool1 As Boolean = IO.Directory.Exists(root_dir)
@@ -961,6 +981,7 @@ Public Class Form1
 
         For Each s In sessions.sessionsList
             session_cnt += 1
+            numOfPratices_read.Text = session_cnt.ToString() ' 20 Feb 2020
             match_flag = False
             Dim csv_files_cnt As Integer = 0
             For Each p In CSV_files_headers
