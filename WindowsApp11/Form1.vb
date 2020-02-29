@@ -54,6 +54,15 @@ Public Class Form1
     Dim MAX_NUM_OF_PRACTICES As Integer = 500
     Dim MAX_NUM_OF_PRACTICES_TYPES As Integer = 50
 
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' Rotate's form's image
+        PictureBox1.Image.RotateFlip(RotateFlipType.Rotate180FlipNone)
+        PictureBox1.Refresh()
+
+        Header_label.BackColor = Color.Yellow
+    End Sub
+
+
 
     Private Function check_course()
         Dim ret As Boolean
@@ -372,8 +381,10 @@ Public Class Form1
         Read_Dog_List() ' into DogList list (name and dob)
         DogsList.Print_dogs_list(course_dir) ' create text file with list of dogs
 
+
         Read_Pracice_Types_List() ' into practiceList (pract name & pract number)
         practiceList.Print_practices_list(course_dir) ' the class way
+
 
         Read_sessions_list()
         ' sessions.Print_sessions_list(root_dir)
@@ -517,15 +528,13 @@ Public Class Form1
         Me.Close()
     End Sub
 
-    Private Sub Button1_Click_2(sender As Object, e As EventArgs)
-        BoxDogsList.Items.Add("xxx".PadRight(10, " ") + CStr(17))
-    End Sub
+
 
     Private Sub TxtBoxWorkDir_TextChanged(sender As Object, e As EventArgs) Handles TxtBoxWorkDir.TextChanged
 
     End Sub
 
-    Private Sub Button1_Click_3(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub Button1_Click_3(sender As Object, e As EventArgs)
     End Sub
 
     Private Sub try3()
@@ -549,7 +558,7 @@ Public Class Form1
         Read_CSV_Session_files(in_files_dir)
     End Sub
 
-    Private Sub TxtBoxHeader_TextChanged(sender As Object, e As EventArgs) Handles TxtBoxHeader.TextChanged
+    Private Sub TxtBoxHeader_TextChanged(sender As Object, e As EventArgs)
     End Sub
 
     '  ***** reading CSV session files ********************
@@ -859,22 +868,20 @@ Public Class Form1
     End Sub ' Print_to_log_file
 
     Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
+        Time_from_start.Text = Date.Now.ToString()
         ' Run ALL stages 
         ProgressBar1.Value = 1
-        Button3.BackColor = Color.GreenYellow
-        Status_Box.Text = "Starting"
-        Status_Box.BackColor = Color.Yellow
 
-        ' Rotate's form's image
-        PictureBox1.Image.RotateFlip(RotateFlipType.Rotate180FlipNone)
-        PictureBox1.Refresh()
-        ProgressBar1.Value = 5
-
-        Status_Box.Text = "Checking files and folders"
         If check_files_and_folders() = False Then
             'MessageBox.Show("Missing files or folders. Look at LOG file")
             Return
         End If
+
+        Button3.BackColor = Color.GreenYellow
+        Status_Box.Text = "Starting"
+        Status_Box.BackColor = Color.Yellow
+
+        Status_Box.Text = "Checking files and folders"
 
         ProgressBar1.Value = 10
         Status_Box.Text = "Reading practice file"
@@ -965,6 +972,7 @@ Public Class Form1
 
         Dim match_flag As Boolean
         Dim match_cnt As Integer = 0
+        Dim no_match_cnt As Integer = 0
         Dim stmp As String
 
         Dim session_cnt As Integer = 0
@@ -992,7 +1000,8 @@ Public Class Form1
                     s.csv_fname = p.csv_fname
                     p.has_a_match = True
 
-                    stmp = "Match found for session " + session_cnt.ToString
+                    stmp = match_cnt.ToString() + " ) "
+                    stmp += "Match found for session " + session_cnt.ToString
                     stmp += " >> s.dogName: " + s.dogName + " s.practiceDate: " + s.practiceDate
                     'Print_to_log_file("Match found for session " + session_cnt.ToString)
                     Print_to_log_file(stmp)
@@ -1001,7 +1010,9 @@ Public Class Form1
             Next ' of foreach p
 
             If match_flag = False Then
-                stmp = "--------*** Match was NOT found for session " + session_cnt.ToString
+                no_match_cnt += 1
+                stmp = no_match_cnt.ToString() + " ) "
+                stmp += "--------*** NO Match of for session " + session_cnt.ToString
                 stmp += " >> s.dogName: " + s.dogName + " s.practiceDate: " + s.practiceDate
                 'Print_to_log_file("*** Match was NOT found for session " + session_cnt.ToString)
                 'Print_to_log_file("s.dogName: " + s.dogName + "s.practiceDate: " + s.practiceDate)
@@ -1367,5 +1378,11 @@ Public Class Form1
     Private Sub GroupBox1_Enter(sender As Object, e As EventArgs) Handles GroupBox1.Enter
 
     End Sub
+
+    Private Sub Header_label_Click(sender As Object, e As EventArgs) Handles Header_label.Click
+
+    End Sub
+
+
 End Class
 

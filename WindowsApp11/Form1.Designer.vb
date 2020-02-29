@@ -22,7 +22,6 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.TxtBoxHeader = New System.Windows.Forms.TextBox()
         Me.TxtBoxWorkDir = New System.Windows.Forms.TextBox()
         Me.TxtBoxSessionDir = New System.Windows.Forms.TextBox()
         Me.TxtBoxNumOfFiles = New System.Windows.Forms.TextBox()
@@ -44,15 +43,11 @@ Partial Class Form1
         Me.TxtNumOfDogs = New System.Windows.Forms.TextBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.ButCLose = New System.Windows.Forms.Button()
-        Me.BoxDogsList = New System.Windows.Forms.ListBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TxtPracticesNum = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.TxtPracticeTypes = New System.Windows.Forms.TextBox()
-        Me.Label7 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.RdSessionFiles = New System.Windows.Forms.Button()
         Me.chk_sessions_button = New System.Windows.Forms.Button()
         Me.Create_results_button = New System.Windows.Forms.Button()
@@ -75,26 +70,18 @@ Partial Class Form1
         Me.Label9 = New System.Windows.Forms.Label()
         Me.skip_CSV_RadioButton = New System.Windows.Forms.RadioButton()
         Me.numOfPratices_read = New System.Windows.Forms.TextBox()
+        Me.Time_from_start = New System.Windows.Forms.TextBox()
+        Me.Header_label = New System.Windows.Forms.Label()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
-        'TxtBoxHeader
-        '
-        Me.TxtBoxHeader.Location = New System.Drawing.Point(155, 8)
-        Me.TxtBoxHeader.Margin = New System.Windows.Forms.Padding(2)
-        Me.TxtBoxHeader.Name = "TxtBoxHeader"
-        Me.TxtBoxHeader.Size = New System.Drawing.Size(153, 20)
-        Me.TxtBoxHeader.TabIndex = 0
-        Me.TxtBoxHeader.Text = "Dogs Project"
-        '
         'TxtBoxWorkDir
         '
-        Me.TxtBoxWorkDir.Location = New System.Drawing.Point(20, 49)
+        Me.TxtBoxWorkDir.Location = New System.Drawing.Point(20, 73)
         Me.TxtBoxWorkDir.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtBoxWorkDir.Name = "TxtBoxWorkDir"
         Me.TxtBoxWorkDir.Size = New System.Drawing.Size(321, 20)
@@ -103,7 +90,7 @@ Partial Class Form1
         '
         'TxtBoxSessionDir
         '
-        Me.TxtBoxSessionDir.Location = New System.Drawing.Point(20, 89)
+        Me.TxtBoxSessionDir.Location = New System.Drawing.Point(20, 100)
         Me.TxtBoxSessionDir.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtBoxSessionDir.Name = "TxtBoxSessionDir"
         Me.TxtBoxSessionDir.Size = New System.Drawing.Size(321, 20)
@@ -266,14 +253,6 @@ Partial Class Form1
         Me.ButCLose.Text = "Close"
         Me.ButCLose.UseVisualStyleBackColor = True
         '
-        'BoxDogsList
-        '
-        Me.BoxDogsList.FormattingEnabled = True
-        Me.BoxDogsList.Location = New System.Drawing.Point(215, 471)
-        Me.BoxDogsList.Name = "BoxDogsList"
-        Me.BoxDogsList.Size = New System.Drawing.Size(162, 56)
-        Me.BoxDogsList.TabIndex = 21
-        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -308,15 +287,6 @@ Partial Class Form1
         Me.TxtPracticeTypes.Size = New System.Drawing.Size(68, 20)
         Me.TxtPracticeTypes.TabIndex = 27
         '
-        'Label7
-        '
-        Me.Label7.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.Label7.Location = New System.Drawing.Point(212, 455)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(60, 13)
-        Me.Label7.TabIndex = 28
-        Me.Label7.Text = "Dogs list"
-        '
         'Label8
         '
         Me.Label8.ImageAlign = System.Drawing.ContentAlignment.TopCenter
@@ -325,26 +295,6 @@ Partial Class Form1
         Me.Label8.Size = New System.Drawing.Size(60, 13)
         Me.Label8.TabIndex = 29
         Me.Label8.Text = "Status"
-        '
-        'DataGridView1
-        '
-        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Location = New System.Drawing.Point(754, 471)
-        Me.DataGridView1.Margin = New System.Windows.Forms.Padding(2)
-        Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.RowTemplate.Height = 28
-        Me.DataGridView1.Size = New System.Drawing.Size(160, 97)
-        Me.DataGridView1.TabIndex = 32
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(227, 393)
-        Me.Button1.Margin = New System.Windows.Forms.Padding(2)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(81, 40)
-        Me.Button1.TabIndex = 33
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
         '
         'RdSessionFiles
         '
@@ -551,11 +501,30 @@ Partial Class Form1
         Me.numOfPratices_read.Size = New System.Drawing.Size(41, 20)
         Me.numOfPratices_read.TabIndex = 51
         '
+        'Time_from_start
+        '
+        Me.Time_from_start.Location = New System.Drawing.Point(20, 13)
+        Me.Time_from_start.Name = "Time_from_start"
+        Me.Time_from_start.Size = New System.Drawing.Size(146, 20)
+        Me.Time_from_start.TabIndex = 52
+        '
+        'Header_label
+        '
+        Me.Header_label.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.Header_label.Font = New System.Drawing.Font("Microsoft Sans Serif", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(177, Byte))
+        Me.Header_label.Location = New System.Drawing.Point(186, 13)
+        Me.Header_label.Name = "Header_label"
+        Me.Header_label.Size = New System.Drawing.Size(155, 30)
+        Me.Header_label.TabIndex = 53
+        Me.Header_label.Text = "Amit's dogs"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1189, 556)
+        Me.Controls.Add(Me.Header_label)
+        Me.Controls.Add(Me.Time_from_start)
         Me.Controls.Add(Me.numOfPratices_read)
         Me.Controls.Add(Me.skip_CSV_RadioButton)
         Me.Controls.Add(Me.Label11)
@@ -573,15 +542,11 @@ Partial Class Form1
         Me.Controls.Add(Me.Create_results_button)
         Me.Controls.Add(Me.chk_sessions_button)
         Me.Controls.Add(Me.RdSessionFiles)
-        Me.Controls.Add(Me.Button1)
-        Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.Label8)
-        Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.TxtPracticeTypes)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.TxtPracticesNum)
         Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.BoxDogsList)
         Me.Controls.Add(Me.ButCLose)
         Me.Controls.Add(Me.TxtNumOfDogs)
         Me.Controls.Add(Me.Label5)
@@ -601,7 +566,6 @@ Partial Class Form1
         Me.Controls.Add(Me.TxtBoxNumOfFiles)
         Me.Controls.Add(Me.TxtBoxSessionDir)
         Me.Controls.Add(Me.TxtBoxWorkDir)
-        Me.Controls.Add(Me.TxtBoxHeader)
         Me.Margin = New System.Windows.Forms.Padding(2)
         Me.Name = "Form1"
         Me.Text = "Form1"
@@ -609,15 +573,12 @@ Partial Class Form1
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents TxtBoxHeader As TextBox
     Friend WithEvents TxtBoxWorkDir As TextBox
     Friend WithEvents TxtBoxSessionDir As TextBox
     Friend WithEvents TxtBoxNumOfFiles As TextBox
@@ -639,15 +600,11 @@ Partial Class Form1
     Friend WithEvents Label5 As Label
     Friend WithEvents TxtNumOfDogs As TextBox
     Friend WithEvents ButCLose As Button
-    Friend WithEvents BoxDogsList As ListBox
     Friend WithEvents Label4 As Label
     Friend WithEvents TxtPracticesNum As TextBox
     Friend WithEvents Label6 As Label
     Friend WithEvents TxtPracticeTypes As TextBox
-    Friend WithEvents Label7 As Label
     Friend WithEvents Label8 As Label
-    Friend WithEvents DataGridView1 As DataGridView
-    Friend WithEvents Button1 As Button
     Friend WithEvents RdSessionFiles As Button
     Friend WithEvents chk_sessions_button As Button
     Friend WithEvents Create_results_button As Button
@@ -670,4 +627,6 @@ Partial Class Form1
     Friend WithEvents RadioButton5 As RadioButton
     Friend WithEvents skip_CSV_RadioButton As RadioButton
     Friend WithEvents numOfPratices_read As TextBox
+    Friend WithEvents Time_from_start As TextBox
+    Friend WithEvents Header_label As Label
 End Class
