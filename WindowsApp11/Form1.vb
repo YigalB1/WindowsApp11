@@ -940,7 +940,7 @@ Public Class Form1
     Private Sub Read_relevant_CSV_files()
         ' 13 Nov 2019 in parallel to previous working  - read CSV, only those who are in the matching list 
 
-        Print_to_log_file("in read_relevant_CSV_files, reading CSV files (onlt thowe who have a match")
+        Print_to_log_file("in read_relevant_CSV_files, reading CSV files (onlt those who have a match")
 
         Dim total_lines_cnt As Integer = 0
         Dim current_lines_cnt As Integer
@@ -1020,6 +1020,13 @@ Public Class Form1
             End If
 
         Next ' of foreach s
+
+        Print_to_log_file("**********************************")
+        Print_to_log_file("Total    matches: " + match_cnt.ToString())
+        Print_to_log_file("Total NO matches: " + no_match_cnt.ToString())
+        Print_to_log_file("**********************************")
+        Print_to_log_file("")
+
 
         ' 20 Feb 20 look to print all files that have no match 
         Print_to_log_file("Files that had no match - not used")

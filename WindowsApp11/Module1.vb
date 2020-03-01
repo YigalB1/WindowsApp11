@@ -123,7 +123,11 @@ Module Module1
                 Case "Position Score"
                     ' do nothing
                 Case Else
-                    Console.WriteLine("Wrong place in case of data type in CSV lines, line: " + line_Cnt.ToString())
+                    ' If it is null, we reached end of file
+                    If line_data_type <> "" Then
+                        Console.WriteLine("Wrong place in case of data type in CSV lines, line: " + line_Cnt.ToString())
+                    End If
+
             End Select
 
             If Not (activity_flag Or pulse_flag Or resp_flag Or vvti_flag Or activity_score_tmp) Then
@@ -170,6 +174,8 @@ Module Module1
             End If
 
         Loop While (line_data_type <> "")
+
+        ' finished reading the linces of the CSV
         Console.WriteLine("Num of lines read: " + (line_Cnt - 3).ToString)
         _line_counter = line_Cnt - 3
 
@@ -220,6 +226,8 @@ Module Module1
         xlWorksheet.Cells(1, 15) = "HRV"
         xlWorksheet.Cells(1, 16) = "Sleep score"
         xlWorksheet.Cells(1, 17) = "Activity Score"
+        xlWorksheet.Cells(1, 20) = "Total Activity count"
+        xlWorksheet.Cells(1, 17) = "Zeros count"
 
         Dim out_line_cnt As Integer = 2
 
@@ -232,9 +240,17 @@ Module Module1
         Dim l_end_post_time As DateTime
 
 
+        ' for activity quality analysis
+        Dim quality_activity_cnt As Integer = 0
+        Dim quality_activity_smpl As Integer
+        Dim zero_acitivty_cnt As Integer = 0
+        Dim zero_acitivty_smpl As Integer
+        Dim time_zone_change As Boolean = False ' indicates moving from pre->act->post
+
+
         For Each l In _tot_sessions
 
-            Console.WriteLine("here")
+            'Console.WriteLine("here")
 
             l_start = l.activity_start_time + l.session_start_time
             l_end = l.activity_end_time + l.session_start_time
@@ -253,7 +269,12 @@ Module Module1
             ' l_end_post_time As DateTime = l_end.AddMinutes(TxtPreTime.Value)
 
 
+
+            Dim line_cnt As Integer = 0 ' need for debug 
+
             For Each line In l.List_of_dog_data
+                line_cnt += 1
+
                 If line.pract_time < l_start_pre_time Then
                     Continue For
                 End If
@@ -263,12 +284,37 @@ Module Module1
                 Dim l_time_zone As Integer
 
                 If line.pract_time < l_start Then
+                    If l_time_zone = 3 Then
+                        time_zone_change = True
+                    End If
                     l_time_zone = 1
+
                 ElseIf line.pract_time <= l_end Then
+                    If l_time_zone = 1 Then
+                        time_zone_change = True
+                    End If
                     l_time_zone = 2
                 Else
+                    If l_time_zone = 2 Then
+                        time_zone_change = True
+                    End If
                     l_time_zone = 3
                 End If
+
+                If time_zone_change Then ' sample the counters of activity quality and zeros
+
+                    quality_activity_smpl = quality_activity_cnt
+                    zero_acitivty_smpl = zero_acitivty_cnt
+
+                    xlWorksheet.Cells(out_line_cnt - 1, 20) = quality_activity_smpl
+                    xlWorksheet.Cells(out_line_cnt - 1, 21) = zero_acitivty_smpl
+                    time_zone_change = False
+                    quality_activity_cnt = 0
+                    zero_acitivty_cnt = 0
+
+                End If
+
+
 
                 xlWorksheet.Cells(out_line_cnt, 1) = l.pet_ID
                 xlWorksheet.Cells(out_line_cnt, 2) = l.pet_age
@@ -309,6 +355,18 @@ Module Module1
 
                 If line.activity_flag Then
                     xlWorksheet.Cells(out_line_cnt, 12) = line.activity
+
+                    quality_activity_cnt += 1
+
+                    If (line.activity = 0) Then
+                        zero_acitivty_cnt += 1
+                    End If
+
+                    Debug.Write("Line_cnt: " + line_cnt.ToString() + "// l_time_zone: " + l_time_zone.ToString)
+                    Debug.Write("// time_zone_change: " + time_zone_change.ToString())
+                    Debug.Write("// quality_activity_cnt: " + quality_activity_cnt.ToString())
+                    Debug.WriteLine("// zero_acitivty: " + zero_acitivty_cnt.ToString())
+
                 End If
 
                 If line.pulse_flag Then
@@ -329,6 +387,15 @@ Module Module1
 
                 If line.activity_score_flag Then
                     xlWorksheet.Cells(out_line_cnt, 17) = line.activity_score
+                End If
+
+                ' 1 march 2020 print activity quality results
+                If time_zone_change Then
+                    '                   xlWorksheet.Cells(out_line_cnt, 20) = quality_activity_smpl
+                    '                   xlWorksheet.Cells(out_line_cnt, 21) = zero_acitivty_smpl
+                    '                   time_zone_change = False
+                    '                   quality_activity_cnt = 0
+                    '                   zero_acitivty_cnt = 0
                 End If
 
                 t_name = l.pet_ID
