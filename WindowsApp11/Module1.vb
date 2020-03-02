@@ -227,7 +227,7 @@ Module Module1
         xlWorksheet.Cells(1, 16) = "Sleep score"
         xlWorksheet.Cells(1, 17) = "Activity Score"
         xlWorksheet.Cells(1, 20) = "Total Activity count"
-        xlWorksheet.Cells(1, 17) = "Zeros count"
+        xlWorksheet.Cells(1, 21) = "Zeros count"
 
         Dim out_line_cnt As Integer = 2
 
@@ -362,10 +362,10 @@ Module Module1
                         zero_acitivty_cnt += 1
                     End If
 
-                    Debug.Write("Line_cnt: " + line_cnt.ToString() + "// l_time_zone: " + l_time_zone.ToString)
-                    Debug.Write("// time_zone_change: " + time_zone_change.ToString())
-                    Debug.Write("// quality_activity_cnt: " + quality_activity_cnt.ToString())
-                    Debug.WriteLine("// zero_acitivty: " + zero_acitivty_cnt.ToString())
+                    'Debug.Write("Line_cnt: " + line_cnt.ToString() + "// l_time_zone: " + l_time_zone.ToString)
+                    'Debug.Write("// time_zone_change: " + time_zone_change.ToString())
+                    'Debug.Write("// quality_activity_cnt: " + quality_activity_cnt.ToString())
+                    'Debug.WriteLine("// zero_acitivty: " + zero_acitivty_cnt.ToString())
 
                 End If
 

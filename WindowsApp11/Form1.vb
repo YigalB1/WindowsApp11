@@ -868,7 +868,16 @@ Public Class Form1
     End Sub ' Print_to_log_file
 
     Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
-        Time_from_start.Text = Date.Now.ToString()
+        Dim tmp_date_str As String = Date.Now.ToString()
+        'tmp_date_str = Format(tmp_date_str, "Short date h:m:s")
+        'Dim t1_str As String = Format(Now, "Short date") + " " + Format(Now, "h:m:s")
+
+        Dim start_time As DateTime = Now
+
+        Time_from_start.Text = Format(Now, "Short date") + " " + Format(Now, "h:m:s")
+
+        'Time_from_start.Text = Date.Now.ToString()
+
         ' Run ALL stages 
         ProgressBar1.Value = 1
 
@@ -926,6 +935,13 @@ Public Class Form1
         ProgressBar1.Value = 100
         Button3.BackColor = Color.Green
 
+
+        Dim end_time As DateTime = Now
+        Dim last_CSV_run_time As TimeSpan = end_time - start_time
+        Dim temp_run_time = Int(last_CSV_run_time.TotalHours * 100) / 100
+
+        Total_run_Box.Text = temp_run_time.ToString() + "hours"
+
         'Return
         ' old flow
         'ProgressBar1.Value = 40
@@ -948,15 +964,30 @@ Public Class Form1
 
         num_of_lines_TextBox.BackColor = Color.Yellow
 
+        Dim span_total As Integer = 0 ' collect run time on CSVs
+        Dim csv_cnt As Integer = 0
+
         For Each s In sessions.sessionsList
             If s.csv_fname = Nothing Then
                 Continue For
             End If
             Print_to_log_file("working on file: " + s.csv_fname)
-            'TBD read the specific CSV file
+
+            ' March 2, 2020 measureing last CSV's run time
+            Dim CSV_start_time As DateTime = Now
             total_sessions.Add(Read_CSV_file(s.csv_fname, s.dog_age, s.practiceType, s.practiceNum,
                                              s.startTime, s.endTime,
                                              TxtPreTime.Value, TxtPostTime.Value, current_lines_cnt))
+            Dim CSV_end_time As DateTime = Now
+            Dim last_CSV_run_time As TimeSpan = CSV_end_time - CSV_start_time
+            CSV_run_time_textBox.Text = Int(last_CSV_run_time.TotalSeconds).ToString() + " seconds"
+
+            csv_cnt += 1
+            span_total += last_CSV_run_time.TotalSeconds
+            Dim CSV_avr_tmp As Integer = span_total / csv_cnt
+            CSV_avr_Box.Text = CSV_avr_tmp.ToString()
+
+
             total_lines_cnt += current_lines_cnt
             num_of_lines_TextBox.Text = total_lines_cnt
             num_of_file_read += 1

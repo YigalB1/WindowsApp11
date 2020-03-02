@@ -72,6 +72,13 @@ Partial Class Form1
         Me.numOfPratices_read = New System.Windows.Forms.TextBox()
         Me.Time_from_start = New System.Windows.Forms.TextBox()
         Me.Header_label = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.CSV_run_time_textBox = New System.Windows.Forms.TextBox()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.CSV_avr_Box = New System.Windows.Forms.TextBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.Total_run_Box = New System.Windows.Forms.TextBox()
+        Me.Label14 = New System.Windows.Forms.Label()
         CType(Me.TxtPreTime, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TxtPostTime, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -81,7 +88,7 @@ Partial Class Form1
         '
         'TxtBoxWorkDir
         '
-        Me.TxtBoxWorkDir.Location = New System.Drawing.Point(20, 73)
+        Me.TxtBoxWorkDir.Location = New System.Drawing.Point(20, 90)
         Me.TxtBoxWorkDir.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtBoxWorkDir.Name = "TxtBoxWorkDir"
         Me.TxtBoxWorkDir.Size = New System.Drawing.Size(321, 20)
@@ -90,7 +97,7 @@ Partial Class Form1
         '
         'TxtBoxSessionDir
         '
-        Me.TxtBoxSessionDir.Location = New System.Drawing.Point(20, 100)
+        Me.TxtBoxSessionDir.Location = New System.Drawing.Point(20, 117)
         Me.TxtBoxSessionDir.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtBoxSessionDir.Name = "TxtBoxSessionDir"
         Me.TxtBoxSessionDir.Size = New System.Drawing.Size(321, 20)
@@ -196,7 +203,7 @@ Partial Class Form1
         '
         'TxtBoxPracticeFile
         '
-        Me.TxtBoxPracticeFile.Location = New System.Drawing.Point(20, 128)
+        Me.TxtBoxPracticeFile.Location = New System.Drawing.Point(20, 145)
         Me.TxtBoxPracticeFile.Name = "TxtBoxPracticeFile"
         Me.TxtBoxPracticeFile.Size = New System.Drawing.Size(321, 20)
         Me.TxtBoxPracticeFile.TabIndex = 13
@@ -503,9 +510,9 @@ Partial Class Form1
         '
         'Time_from_start
         '
-        Me.Time_from_start.Location = New System.Drawing.Point(20, 13)
+        Me.Time_from_start.Location = New System.Drawing.Point(1054, 416)
         Me.Time_from_start.Name = "Time_from_start"
-        Me.Time_from_start.Size = New System.Drawing.Size(146, 20)
+        Me.Time_from_start.Size = New System.Drawing.Size(100, 20)
         Me.Time_from_start.TabIndex = 52
         '
         'Header_label
@@ -518,11 +525,75 @@ Partial Class Form1
         Me.Header_label.TabIndex = 53
         Me.Header_label.Text = "Amit's dogs"
         '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(983, 419)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(55, 13)
+        Me.Label7.TabIndex = 54
+        Me.Label7.Text = "Start Time"
+        '
+        'CSV_run_time_textBox
+        '
+        Me.CSV_run_time_textBox.Location = New System.Drawing.Point(1054, 439)
+        Me.CSV_run_time_textBox.Name = "CSV_run_time_textBox"
+        Me.CSV_run_time_textBox.Size = New System.Drawing.Size(100, 20)
+        Me.CSV_run_time_textBox.TabIndex = 55
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(983, 442)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(68, 13)
+        Me.Label12.TabIndex = 56
+        Me.Label12.Text = "CSV run time"
+        '
+        'CSV_avr_Box
+        '
+        Me.CSV_avr_Box.Location = New System.Drawing.Point(1054, 466)
+        Me.CSV_avr_Box.Name = "CSV_avr_Box"
+        Me.CSV_avr_Box.Size = New System.Drawing.Size(100, 20)
+        Me.CSV_avr_Box.TabIndex = 57
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(986, 469)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(65, 13)
+        Me.Label13.TabIndex = 58
+        Me.Label13.Text = "Avr per CSV"
+        '
+        'Total_run_Box
+        '
+        Me.Total_run_Box.Location = New System.Drawing.Point(1054, 493)
+        Me.Total_run_Box.Name = "Total_run_Box"
+        Me.Total_run_Box.Size = New System.Drawing.Size(100, 20)
+        Me.Total_run_Box.TabIndex = 59
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(989, 499)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(49, 13)
+        Me.Label14.TabIndex = 60
+        Me.Label14.Text = "Total run"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1189, 556)
+        Me.Controls.Add(Me.Label14)
+        Me.Controls.Add(Me.Total_run_Box)
+        Me.Controls.Add(Me.Label13)
+        Me.Controls.Add(Me.CSV_avr_Box)
+        Me.Controls.Add(Me.Label12)
+        Me.Controls.Add(Me.CSV_run_time_textBox)
+        Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.Header_label)
         Me.Controls.Add(Me.Time_from_start)
         Me.Controls.Add(Me.numOfPratices_read)
@@ -629,4 +700,11 @@ Partial Class Form1
     Friend WithEvents numOfPratices_read As TextBox
     Friend WithEvents Time_from_start As TextBox
     Friend WithEvents Header_label As Label
+    Friend WithEvents Label7 As Label
+    Friend WithEvents CSV_run_time_textBox As TextBox
+    Friend WithEvents Label12 As Label
+    Friend WithEvents CSV_avr_Box As TextBox
+    Friend WithEvents Label13 As Label
+    Friend WithEvents Total_run_Box As TextBox
+    Friend WithEvents Label14 As Label
 End Class
