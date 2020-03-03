@@ -148,7 +148,24 @@ Public Class Form1
                 File.Delete(new_out_file_name)
             End If
 
-            File.Move(_fname, new_out_file_name)
+            Dim file_in_use As Boolean = True   ' assume it is used for a monent
+
+            While (file_in_use)
+                file_in_use = False
+
+                Try
+                    File.Move(_fname, new_out_file_name)
+                Catch ex As Exception
+                    file_in_use = True
+                End Try
+
+                If (file_in_use = True) Then
+                    MsgBox("Out file is probably open. Close it")
+                End If
+            End While
+
+
+            '            File.Move(_fname, new_out_file_name)
         End If
     End Sub
 
@@ -937,10 +954,23 @@ Public Class Form1
 
 
         Dim end_time As DateTime = Now
-        Dim last_CSV_run_time As TimeSpan = end_time - start_time
-        Dim temp_run_time = Int(last_CSV_run_time.TotalHours * 100) / 100
+        Dim run_time As TimeSpan = end_time - start_time
+        Dim temp_run_time = Int(run_time.TotalHours * 100) / 100
 
-        Total_run_Box.Text = temp_run_time.ToString() + "hours"
+        'Print_to_log_file("total hours: " + run_time.TotalHours.ToString())
+        'Print_to_log_file("total mins : " + run_time.TotalMinutes.ToString())
+        'Print_to_log_file("total secs : " + run_time.TotalSeconds.ToString())
+
+        Dim tot_hours As String = Int(run_time.TotalHours)
+        Dim tot_minutes As String = Int(run_time.TotalMinutes)
+        Total_run_Box.Text = tot_hours + " hours, " + tot_minutes + " minutes"
+
+        ' Total_run_Box.Text = temp_run_time.ToString() + " hours"
+
+        Print_to_log_file("")
+        Print_to_log_file("Start time:     " + start_time.ToString())
+        Print_to_log_file("End   time:     " + end_time.ToString())
+        Print_to_log_file("Total run time: " + tot_hours + " hours, " + tot_minutes + " minutes")
 
         'Return
         ' old flow
@@ -956,6 +986,7 @@ Public Class Form1
     Private Sub Read_relevant_CSV_files()
         ' 13 Nov 2019 in parallel to previous working  - read CSV, only those who are in the matching list 
 
+        Print_to_log_file("")
         Print_to_log_file("in read_relevant_CSV_files, reading CSV files (onlt those who have a match")
 
         Dim total_lines_cnt As Integer = 0
@@ -1008,6 +1039,7 @@ Public Class Form1
 
         Dim session_cnt As Integer = 0
 
+        Print_to_log_file("")
         Print_to_log_file("In Find matches, searching for matches ")
         ' mark all files as "have no match". Later in the loop, matches will be marked
         For Each p In CSV_files_headers
