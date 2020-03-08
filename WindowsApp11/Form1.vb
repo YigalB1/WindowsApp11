@@ -961,16 +961,17 @@ Public Class Form1
         'Print_to_log_file("total mins : " + run_time.TotalMinutes.ToString())
         'Print_to_log_file("total secs : " + run_time.TotalSeconds.ToString())
 
-        Dim tot_hours As String = Int(run_time.TotalHours)
-        Dim tot_minutes As String = Int(run_time.TotalMinutes)
-        Total_run_Box.Text = tot_hours + " hours, " + tot_minutes + " minutes"
+        Dim tot_hours As Integer = Int(run_time.TotalHours)
+        Dim tot_minutes As Integer = Int(run_time.TotalMinutes) - tot_hours * 60
+
+        Total_run_Box.Text = tot_hours.ToString() + " hours, " + tot_minutes.ToString() + " minutes"
 
         ' Total_run_Box.Text = temp_run_time.ToString() + " hours"
 
         Print_to_log_file("")
         Print_to_log_file("Start time:     " + start_time.ToString())
         Print_to_log_file("End   time:     " + end_time.ToString())
-        Print_to_log_file("Total run time: " + tot_hours + " hours, " + tot_minutes + " minutes")
+        Print_to_log_file("Total run time: " + tot_hours.ToString() + " hours, " + tot_minutes.ToString() + " minutes")
 
         'Return
         ' old flow
@@ -1007,7 +1008,7 @@ Public Class Form1
             ' March 2, 2020 measureing last CSV's run time
             Dim CSV_start_time As DateTime = Now
             total_sessions.Add(Read_CSV_file(s.csv_fname, s.dog_age, s.practiceType, s.practiceNum,
-                                             s.startTime, s.endTime,
+                                             s.practiceDate, s.startTime, s.endTime,
                                              TxtPreTime.Value, TxtPostTime.Value, current_lines_cnt))
             Dim CSV_end_time As DateTime = Now
             Dim last_CSV_run_time As TimeSpan = CSV_end_time - CSV_start_time
@@ -1055,7 +1056,16 @@ Public Class Form1
             For Each p In CSV_files_headers
                 ' p.has_a_match = False
                 csv_files_cnt += 1
-                If s.dogName = p.dog_name And s.practiceDate = p.start_day Then
+
+
+                ' 6 March 2020 in case of multi days file
+                Dim date_in_range As Boolean = False
+                If s.practiceDate >= p.start_day And s.practiceDate <= p.end_day Then
+                    date_in_range = True
+                End If
+
+                ' If s.dogName = p.dog_name And s.practiceDate = p.start_day Then
+                If s.dogName = p.dog_name And date_in_range Then
                     ' we have a match
                     match_flag = True
                     match_cnt += 1

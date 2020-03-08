@@ -5,7 +5,7 @@ Module Module1
 
 
     Public Function Read_CSV_file(_fname As String, _dog_age As Integer, _pract_type As String,
-                                  _pract_num As Integer, _activity_start As Date,
+                                  _pract_num As Integer, _pract_date As Date, _activity_start As Date,
                                   _activity_end As Date, _pre_time As Integer,
                                   _post_time As Integer, ByRef _line_counter As Integer) As Session_CSV_file
         Dim CSV_Excel As New Microsoft.Office.Interop.Excel.Application
@@ -31,7 +31,10 @@ Module Module1
         Dim t_bool As Boolean = Date.TryParseExact(s1, "MM/dd/yyyy",
                                Globalization.CultureInfo.InvariantCulture,
                                Globalization.DateTimeStyles.None, csv_start_date)
-        curr_session.session_start_time = csv_start_date ' Oct 23, 2019
+
+
+        ' curr_session.session_start_time = csv_start_date ' 6 March 2020: use parameter inside because training can be on 2 days
+        curr_session.session_start_time = _pract_date ' Oct 23, 2019
         If (t_bool = False) Then
             MessageBox.Show("Error E1 while checking CSV file date")
             Console.WriteLine("Error E1 while checking CSV file date")
@@ -254,6 +257,13 @@ Module Module1
 
             l_start = l.activity_start_time + l.session_start_time
             l_end = l.activity_end_time + l.session_start_time
+
+            If (l.activity_start_time > l.activity_end_time) Then
+                l_end = l_end.AddDays(1)
+            End If
+
+            'If (l.activity_start_time < l.activity_end_time) Then
+            'End If
 
             'l_start = l.activity_start_time.Add(l.session_start_time)
             'l_end = l.activity_end_time.Add(l.session_start_time.TimeOfDay)
