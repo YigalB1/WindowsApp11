@@ -60,6 +60,10 @@ Public Class Form1
         PictureBox1.Refresh()
 
         Header_label.BackColor = Color.Yellow
+        TxtPreTime.Value = 30
+        TxtPostTime.Value = 30
+
+
     End Sub
 
 
