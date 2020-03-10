@@ -901,6 +901,7 @@ Public Class Form1
 
         ' Run ALL stages 
         ProgressBar1.Value = 1
+        Application.DoEvents()
 
         If check_files_and_folders() = False Then
             'MessageBox.Show("Missing files or folders. Look at LOG file")
@@ -915,14 +916,20 @@ Public Class Form1
 
         ProgressBar1.Value = 10
         Status_Box.Text = "Reading practice file"
-        ReadPracticeFile() ' with dogs DOB but not age (depends on sessions day)
-        ProgressBar1.Value = 30
+        Application.DoEvents()
 
+        ReadPracticeFile() ' with dogs DOB but not age (depends on sessions day)
+
+        ProgressBar1.Value = 30
         Status_Box.Text = "Reading Session files headers"
+        Application.DoEvents()
+
         ReadSessionsHeader(in_files_dir) ' 13 Nov 2019 (parallel to prev run)
 
         Status_Box.Text = "Locating matches"
         Dim num_of_matches As Integer
+        Application.DoEvents()
+
         num_of_matches = Find_matches() ' 13 Nov 2019 (parallel to prev run)
         If num_of_matches = 0 Then
             MessageBox.Show("No Matches found")
@@ -940,22 +947,29 @@ Public Class Form1
         If skip_CSV_RadioButton.Checked Then
             Return
         End If
+        Application.DoEvents()
+
         Read_relevant_CSV_files()
+
         num_of_lines_TextBox.BackColor = Color.Green
         ProgressBar1.Value = 75
         Status_Box.Text = "Creating results files"
+        Application.DoEvents()
+
         Create_results_new(total_sessions, TxtPreTime.Value, TxtPostTime.Value,
                            result_out_file_name, sleep_out_file_name)
-        ProgressBar1.Value = 90
 
+        ProgressBar1.Value = 90
         Status_Box.Text = "Creating statistics"
+        Application.DoEvents()
+
         create_statistics()
 
         Status_Box.Text = "Finished"
         Status_Box.BackColor = Color.Green
         ProgressBar1.Value = 100
         Button3.BackColor = Color.Green
-
+        Application.DoEvents()
 
         Dim end_time As DateTime = Now
         Dim run_time As TimeSpan = end_time - start_time
@@ -1088,11 +1102,11 @@ Public Class Form1
 
             If match_flag = False Then
                 no_match_cnt += 1
-                stmp = no_match_cnt.ToString() + " ) "
+                stmp = ">>> " + no_match_cnt.ToString() + " ) "
                 stmp += "--------*** NO Match of for session " + session_cnt.ToString
                 stmp += " >> s.dogName: " + s.dogName + " s.practiceDate: " + s.practiceDate
                 'Print_to_log_file("*** Match was NOT found for session " + session_cnt.ToString)
-                'Print_to_log_file("s.dogName: " + s.dogName + "s.practiceDate: " + s.practiceDate)
+                'Print_to_log_file("dog: " + s.dogName + "practice Date: " + s.practiceDate)
                 Print_to_log_file(stmp)
             End If
 

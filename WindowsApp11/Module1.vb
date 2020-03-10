@@ -231,6 +231,7 @@ Module Module1
         xlWorksheet.Cells(1, 17) = "Activity Score"
         xlWorksheet.Cells(1, 20) = "Total Activity count"
         xlWorksheet.Cells(1, 21) = "Zeros count"
+        xlWorksheet.Cells(1, 22) = "max zeros is a row"
 
         Dim out_line_cnt As Integer = 2
 
@@ -248,10 +249,15 @@ Module Module1
         Dim quality_activity_smpl As Integer
         Dim zero_acitivty_cnt As Integer = 0
         Dim zero_acitivty_smpl As Integer
+        Dim zero_acitivty_in_a_row_cnt As Integer = 0
+        Dim max_acitivty_in_a_row = 0
         Dim time_zone_change As Boolean = False ' indicates moving from pre->act->post
 
 
         For Each l In _tot_sessions
+
+            max_acitivty_in_a_row = 0
+            zero_acitivty_in_a_row_cnt = 0
 
             'Console.WriteLine("here")
 
@@ -318,9 +324,13 @@ Module Module1
 
                     xlWorksheet.Cells(out_line_cnt - 1, 20) = quality_activity_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 21) = zero_acitivty_smpl
+                    xlWorksheet.Cells(out_line_cnt - 1, 22) = max_acitivty_in_a_row
                     time_zone_change = False
                     quality_activity_cnt = 0
                     zero_acitivty_cnt = 0
+
+                    zero_acitivty_in_a_row_cnt = 0
+                    max_acitivty_in_a_row = 0
 
                 End If
 
@@ -370,6 +380,13 @@ Module Module1
 
                     If (line.activity = 0) Then
                         zero_acitivty_cnt += 1
+                        zero_acitivty_in_a_row_cnt += 1
+                        If zero_acitivty_in_a_row_cnt > max_acitivty_in_a_row Then
+                            max_acitivty_in_a_row = zero_acitivty_in_a_row_cnt
+                        End If
+
+                    Else
+                        zero_acitivty_in_a_row_cnt = 0
                     End If
 
                     'Debug.Write("Line_cnt: " + line_cnt.ToString() + "// l_time_zone: " + l_time_zone.ToString)
