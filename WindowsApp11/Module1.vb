@@ -193,9 +193,9 @@ Module Module1
     End Function
 
 
-    Public Sub Create_results_new(_tot_sessions As List(Of Session_CSV_file),
+    Public Function Create_results_new(_tot_sessions As List(Of Session_CSV_file),
                                   _pre_time As Integer, _post_time As Integer,
-                                  _out_file As String, _sleep_out_file As String)
+                                  _out_file As String, _sleep_out_file As String) As List(Of String)
 
         Dim Sleep_list As New List(Of SleepClass)
 
@@ -210,6 +210,8 @@ Module Module1
         Dim t_sleep_score As Double
         Dim t_activity_score As Integer
         Dim t_activity_flag As Boolean
+
+        Dim log_out_lst As New List(Of String) ' to return to log file
 
 
         xlWorksheet.Cells(1, 1) = "Dog"
@@ -325,6 +327,16 @@ Module Module1
                     xlWorksheet.Cells(out_line_cnt - 1, 20) = quality_activity_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 21) = zero_acitivty_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 22) = max_acitivty_in_a_row
+
+                    If max_acitivty_in_a_row >= 4 Then
+                        Dim tmp_str As String
+                        tmp_str = "Num zeros in a row is: " + max_acitivty_in_a_row.ToString()
+                        tmp_str += " Dog: " + l.pet_name
+                        tmp_str += " Time: " + line.pract_time
+                        log_out_lst.Add(tmp_str)
+                    End If
+
+
                     time_zone_change = False
                     quality_activity_cnt = 0
                     zero_acitivty_cnt = 0
@@ -333,6 +345,7 @@ Module Module1
                     max_acitivty_in_a_row = 0
 
                 End If
+
 
 
 
@@ -490,6 +503,7 @@ Module Module1
         xlWorkbook1.Close()
         xlApp1.Quit()
 
-    End Sub ' of Create_results_new
+        Return log_out_lst
+    End Function ' of Create_results_new
 
 End Module

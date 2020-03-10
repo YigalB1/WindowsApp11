@@ -881,7 +881,7 @@ Public Class Form1
     End Sub ' Print_to_log_file
 
 
-    Sub Print_to_log_file(_str As String, Optional _keep As Boolean = True)
+    Public Sub Print_to_log_file(_str As String, Optional _keep As Boolean = True)
         Dim file As System.IO.StreamWriter
         file = My.Computer.FileSystem.OpenTextFileWriter(LogFile, _keep)
         file.WriteLine(_str)
@@ -956,8 +956,17 @@ Public Class Form1
         Status_Box.Text = "Creating results files"
         Application.DoEvents()
 
-        Create_results_new(total_sessions, TxtPreTime.Value, TxtPostTime.Value,
+        Dim ret_list As List(Of String)
+        ret_list = Create_results_new(total_sessions, TxtPreTime.Value, TxtPostTime.Value,
                            result_out_file_name, sleep_out_file_name)
+
+        Print_to_log_file("-----------------------------------------------------")
+        Print_to_log_file("Large number of consecutive Zeros")
+        For Each s In ret_list
+            Print_to_log_file(s)
+        Next
+        Print_to_log_file("-----------------------------------------------------")
+
 
         ProgressBar1.Value = 90
         Status_Box.Text = "Creating statistics"
