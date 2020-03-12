@@ -1,4 +1,6 @@
 ﻿Imports System.Collections.Specialized
+Imports System.IO
+
 Public Class SleepClass
     Public pet_id As String
     Public session_day As DateTime
@@ -7,6 +9,15 @@ Public Class SleepClass
     Public acitivity_flag As Boolean
     Public activity_score As Integer
 End Class
+
+
+
+
+Public Class DogsProjFolders
+
+End Class
+
+
 
 
 
@@ -383,7 +394,7 @@ Class Session_CSV_file
     End Class
 
 
-    Public List_of_dog_data As New List(Of dog_data)
+    Public List_of_dog_data As New List(Of Dog_data)
 
 
 

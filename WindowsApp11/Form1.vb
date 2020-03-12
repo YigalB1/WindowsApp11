@@ -11,17 +11,33 @@ Public Class Form1
 
     ' 10 Nov 2019: making directories according to courses
     'Public root_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
-    Public root_dir As String
+    'Public root_dir As String
     Public course_dir As String ' will be assigned according to selected course
     Public in_files_dir As String
     Public out_files_dir As String
     Public practice_file As String
 
 
-    Public in_PathName As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\SessionsFiles\\"
-    Public default_work_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
-    Public default_sessions_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\" + "SessionsFiles\\"
-    Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list1.xlsx"
+    Dim myDocs As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+    Dim s1 As String = myDocs.Replace("\", "\\")
+    'Dim dogsproj_path As String = Check_dogs_proj_path()
+
+
+    'Dim tmp_path As String = myDocs + "\\yigal2\\"
+    'Dim work_path As New DogsProjFolders
+    Dim yigal_path As String = Check_path(myDocs + "\\yigal\\")
+    Dim default_work_dir As String = Check_path(yigal_path + "DogsProj\\")
+    'Dim in_PathName As String = work_path.Check_path(yigal_path + "SessionsFiles\\")
+    Dim default_sessions_dir As String = Check_path(default_work_dir + "SessionsFiles\\")
+    'Public default_pratice_file_name As String = default_work_dir + "practice_list1.xlsx"
+
+
+
+    'Public default_work_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
+    'Public in_PathName As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\SessionsFiles\\"
+    'Public default_sessions_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\" + "SessionsFiles\\"
+
+    'Public default_pratice_file_name As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\practice_list1.xlsx"
     'Public LogFile = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\logDog.txt"
     Public LogFile As String ' 11 Nov 2019: folder is assigned according to course
     Public SessionsFile As String
@@ -66,6 +82,31 @@ Public Class Form1
 
     End Sub
 
+    Private Function Check_dogs_proj_path() As String
+        Dim tmp_path As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        tmp_path = tmp_path.Replace("\", "\\")
+        tmp_path += "\\yigal1\\"
+        If Directory.Exists(tmp_path) Then
+            Debug.Print(tmp_path + " exists")
+        Else
+            Debug.Print(tmp_path + " does NOT exists")
+            Directory.CreateDirectory(tmp_path)
+        End If
+
+        tmp_path += "DogsProj\\"
+        If Directory.Exists(tmp_path) Then
+            Debug.Print(tmp_path + " exists")
+        Else
+            Debug.Print(tmp_path + " does NOT exists")
+            Directory.CreateDirectory(tmp_path)
+        End If
+
+
+        '\Yigal\\DogsProj\\SessionsFiles\\"
+
+
+        Return tmp_path
+    End Function
 
 
     Private Function check_course()
@@ -97,17 +138,30 @@ Public Class Form1
 
         'Public root_dir As String = "C:\\Users\\yigal\\Documents\\Yigal\\DogsProj\\"
 
-        Dim Path_tmp As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments
-        Path_tmp = Path_tmp & "\" & "Yigal\" & "DogsProj\"
-        root_dir = Path_tmp.Replace("\", "\\")
+        'Dim path_tmp As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+        Dim path_tmp As String = myDocs
+        path_tmp = path_tmp.Replace("\", "\\")
+
+        path_tmp = path_tmp & "\\" & "Yigal\\" & "DogsProj\\"
+        'root_dir = Path_tmp.Replace("\", "\\")
 
 
 
-        course_dir = root_dir + "Course" + course_name + "\\"
-        in_files_dir = course_dir + "in_files\\"
-        out_files_dir = course_dir + "out_files\\"
+
+        'course_dir = root_dir + "Course" + course_name + "\\"
+        'course_dir = default_work_dir + "Course" + course_name + "\\"
+        course_dir = Check_path(default_work_dir + "Course" + course_name + "\\")
+
+        'in_files_dir = course_dir + "in_files\\"
+        in_files_dir = Check_path(course_dir + "in_files\\")
+
+        'out_files_dir = course_dir + "out_files\\"
+        out_files_dir = Check_path(course_dir + "out_files\\")
+
         practice_file = course_dir + "practice_list_" + course_name + ".xlsx"
-        LogFile = course_dir + "logDog.txt"
+
+
+        LogFile = course_dir + course_name + "_logDog.txt"
         SessionsFile = course_dir + "Sessions_list.txt"
 
         Dim dir As New IO.DirectoryInfo(course_dir)
@@ -137,6 +191,20 @@ Public Class Form1
 
         Return True
     End Function
+
+
+    Public Function Check_path(_path As String) As String
+
+        If Directory.Exists(_path) Then
+            Debug.Print(_path + " exists")
+        Else
+            Debug.Print(_path + " does NOT exists")
+            Directory.CreateDirectory(_path)
+        End If
+
+        Return _path
+    End Function
+
 
 
     Private Sub Rename_file_name_to_old(_fname)
@@ -205,7 +273,7 @@ Public Class Form1
         Rename_file_name_to_old(SessionsFile)
 
         PreChecks.BackColor = Color.Yellow
-        Dim dir_bool1 As Boolean = IO.Directory.Exists(root_dir)
+        Dim dir_bool1 As Boolean = IO.Directory.Exists(default_work_dir) ' was work_dir
         Dim dir_bool2 As Boolean = IO.Directory.Exists(course_dir)
         Dim dir_bool3 As Boolean = IO.Directory.Exists(in_files_dir)
         Dim dir_bool4 As Boolean = IO.Directory.Exists(out_files_dir)
@@ -878,14 +946,15 @@ Public Class Form1
         file = My.Computer.FileSystem.OpenTextFileWriter(SessionsFile, _keep)
         file.WriteLine(_str)
         file.Close()
+        Application.DoEvents()
     End Sub ' Print_to_log_file
-
 
     Public Sub Print_to_log_file(_str As String, Optional _keep As Boolean = True)
         Dim file As System.IO.StreamWriter
         file = My.Computer.FileSystem.OpenTextFileWriter(LogFile, _keep)
         file.WriteLine(_str)
         file.Close()
+        Application.DoEvents()
     End Sub ' Print_to_log_file
 
     Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
@@ -902,6 +971,11 @@ Public Class Form1
         ' Run ALL stages 
         ProgressBar1.Value = 1
         Application.DoEvents()
+
+
+
+
+
 
         If check_files_and_folders() = False Then
             'MessageBox.Show("Missing files or folders. Look at LOG file")
