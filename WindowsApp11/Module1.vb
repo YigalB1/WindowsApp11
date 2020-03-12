@@ -331,8 +331,8 @@ Module Module1
                     If max_acitivty_in_a_row >= 4 Then
                         Dim tmp_str As String
                         tmp_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
-                        tmp_str += " Dog: " + l.pet_name
-                        tmp_str += " Time: " + line.pract_time
+                        tmp_str += ". Dog: " + l.pet_name
+                        tmp_str += ". Time: " + line.pract_time
                         log_out_lst.Add(tmp_str)
                     End If
 
