@@ -304,9 +304,9 @@ Class List_of_Sessions
 
 
     Public Sub Print_sessions_list(_dir As String)
-        Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\sessions_list.txt"
+        'Dim docPath = "C:\\Users\\yigal\\Documents\\Yigal\DogsProj\\sessions_list.txt"
         Dim tmp_dir As String = _dir & "sessions_list.txt"
-        docPath = tmp_dir
+        Dim docPath = tmp_dir
 
         Dim file As System.IO.StreamWriter
 
