@@ -18,8 +18,8 @@ Public Class Form1
     Public practice_file As String
 
 
-    Dim myDocs As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-    Dim s1 As String = myDocs.Replace("\", "\\")
+    Dim tmp_str As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+    Dim myDocs = tmp_str.Replace("\", "\\")
     'Dim dogsproj_path As String = Check_dogs_proj_path()
 
 
@@ -45,7 +45,8 @@ Public Class Form1
     ' Public csv_pattern As String = "export-all-Bell-11302018_083229.csv" 10 Nov 19
     Public csv_pattern As String = "*.csv"   ' *083229.csv
 
-    Public result_out_file_name As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
+    'Public result_out_file_name As String = "C:\Users\yigal\Documents\Yigal\DogsProj\result_output1.xlsx"
+    Public result_out_file_name As String = default_work_dir + "DogsProj\result_output1.xlsx"
     Public sleep_out_file_name As String
 
     Dim DogsList As New DogsListClass
