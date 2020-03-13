@@ -1,4 +1,6 @@
-﻿'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
+﻿' 13 March 2020 18:00
+
+'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
 'On the Project menu, click Add Reference.
 'On the COM tab, locate Microsoft Excel Object Library, And then click Select. 
 'Imports System.Data.OleDb
@@ -670,6 +672,7 @@ Public Class Form1
         RdSessionFiles.BackColor = Color.GreenYellow
         num_of_lines_TextBox.BackColor = Color.Yellow
         num_of_lines_TextBox.Text = "starting"
+        Application.DoEvents()
 
         Print_to_log_file("Start reading CSV files")
         Print_to_log_file("Dir is: " + _dir)
@@ -898,6 +901,7 @@ Public Class Form1
             total_sessions.Add(curr_session)
 
             num_of_lines_TextBox.Text = total_line_cnt.ToString()
+            Application.DoEvents()
 
             fileName = Dir()
             Console.WriteLine(" finished file number " + file_count.ToString())
@@ -912,33 +916,17 @@ Public Class Form1
         'MyExcel.Workbooks.Close(Me.TxtBoxPracticeFile.Text)
         ProgressBar1.Value = 75
         RdSessionFiles.BackColor = Color.Green
-
         num_of_lines_TextBox.BackColor = Color.Green
-
         RdSessionFiles.BackColor = Color.Green
+        Application.DoEvents()
 
     End Sub ' of Read_Session_files
 
 
 
-    ' Control k c - to comment all ines, Control k u - to uncomment
+
     Public Sub ReadFromExcel()
-        'Dim dt As DataTable = New DataTable("table")
-        'Dim csBuilder As OleDbConnectionStringBuilder = New OleDbConnectionStringBuilder
-        'csBuilder.Provider = "Microsoft.ACE.OLEDB.12.0"
-        'csBuilder.DataSource = "..\..\Table.xlsx"
-        'csBuilder.Add("Extended Properties", "Excel 12.0 Xml;HDR=YES")
-        'Dim connection As OleDbConnection = New OleDbConnection(csBuilder.ConnectionString)
-        'connection.Open
-        'Dim query As String = "SELECT * FROM Sample"
-        'Dim adapter As OleDbDataAdapter = New OleDbDataAdapter(query, connection)
-        'adapter.FillSchema(dt, SchemaType.Source)
-        'adapter.Fill(dt)
-        'For Each row As DataRow In dt.Rows
-        '    For Each item In row.ItemArray
-        '        Console.WriteLine(item)
-        '    Next
-        'Next
+
 
     End Sub
 
@@ -1015,6 +1003,7 @@ Public Class Form1
         RdSessionFiles.BackColor = Color.GreenYellow
         num_of_lines_TextBox.BackColor = Color.Yellow
         num_of_lines_TextBox.Text = "starting"
+        Application.DoEvents()
 
         Status_Box.Text = "Reading relevant CSV files"
         'Return
@@ -1097,6 +1086,7 @@ Public Class Form1
         Dim num_of_file_read As Integer = 0
 
         num_of_lines_TextBox.BackColor = Color.Yellow
+        Application.DoEvents()
 
         Dim span_total As Integer = 0 ' collect run time on CSVs
         Dim csv_cnt As Integer = 0
@@ -1127,9 +1117,11 @@ Public Class Form1
             num_of_file_read += 1
             Num_Of_files_read.Text = num_of_file_read.ToString()
             Num_Of_files_read.BackColor = Color.Yellow
+            Application.DoEvents()
 
         Next
         Num_Of_files_read.BackColor = Color.Green
+        Application.DoEvents()
     End Sub
 
     Private Function Find_matches() As Integer
