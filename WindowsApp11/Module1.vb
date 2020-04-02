@@ -195,7 +195,7 @@ Module Module1
 
     Public Function Create_results_new(_tot_sessions As List(Of Session_CSV_file),
                                   _pre_time As Integer, _post_time As Integer,
-                                  _out_file As String, _sleep_out_file As String) As List(Of String)
+                                  _out_file As String, _sleep_out_file As String, _cnt_txt_box As TextBox) As List(Of String)
 
         Dim Sleep_list As New List(Of SleepClass)
 
@@ -255,10 +255,18 @@ Module Module1
         Dim max_acitivty_in_a_row = 0
         Dim time_zone_change As Boolean = False ' indicates moving from pre->act->post
 
+        ' 2 Apr 2020 bug fix below 
+        Dim pet_name_smpl As String = "xxx777"
+        Dim pract_time_smpl As DateTime
+
 
         For Each l In _tot_sessions
 
-            max_acitivty_in_a_row = 0
+            ' 29 March 2020 bug fix: should be zeroed only when changing time zoned
+            '   not when new dog or training starts
+            ' max_acitivty_in_a_row = 0
+
+
             zero_acitivty_in_a_row_cnt = 0
 
             'Console.WriteLine("here")
@@ -321,8 +329,11 @@ Module Module1
 
                 If time_zone_change Then ' sample the counters of activity quality and zeros
 
+
                     quality_activity_smpl = quality_activity_cnt
                     zero_acitivty_smpl = zero_acitivty_cnt
+
+
 
                     xlWorksheet.Cells(out_line_cnt - 1, 20) = quality_activity_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 21) = zero_acitivty_smpl
@@ -331,8 +342,12 @@ Module Module1
                     If max_acitivty_in_a_row >= 4 Then
                         Dim tmp_str As String
                         tmp_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
-                        tmp_str += ". Dog: " + l.pet_name
-                        tmp_str += ". Time: " + line.pract_time
+                        'tmp_str += ". Dog: " + l.pet_name
+                        tmp_str += ". Dog: " + pet_name_smpl   ' 2 April 2020
+                        'tmp_str += ". Time: " + line.pract_time
+                        tmp_str += ". Time: " + pract_time_smpl
+
+                        tmp_str += ". Line in output excel file: " + (out_line_cnt - 1).ToString   ' this data is relevant for previous line !!
                         log_out_lst.Add(tmp_str)
                     End If
 
@@ -343,6 +358,10 @@ Module Module1
 
                     zero_acitivty_in_a_row_cnt = 0
                     max_acitivty_in_a_row = 0
+
+                    ' 2 April 2020 bug fix: log file should keep prev line info
+                    pet_name_smpl = l.pet_name
+                    pract_time_smpl = line.pract_time
 
                 End If
 
@@ -468,13 +487,18 @@ Module Module1
                 Sleep_list.Add(Sleep_list_tmp)
             End If
 
+            _cnt_txt_box.Text = out_line_cnt.ToString()
+            Application.DoEvents()
+
+
         Next ' of for each sessions
 
         xlWorksheet.SaveAs(_out_file)
         xlWorkbook.Close()
         xlApp.Quit()
-        ' ************************************
-        ' now open the 2nd output excel - just for sleep score and activity score
+        ' ****************************************************************************
+        ' now open the 2nd output excel - this time for sleep score and activity score
+        ' ****************************************************************************
         Dim xlApp1 As New Excel.Application
         Dim xlWorkbook1 As Excel.Workbook = xlApp1.Workbooks.Add()
         Dim xlWorksheet1 As Excel.Worksheet = CType(xlWorkbook1.Sheets("sheet1"), Excel.Worksheet)

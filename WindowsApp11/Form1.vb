@@ -1,4 +1,5 @@
 ﻿' 13 March 2020 18:00
+' 2 April 2020, changes in Module 1, fixing errors in log file, conseq zeros, should be reported to prev line
 
 'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
 'On the Project menu, click Add Reference.
@@ -292,6 +293,7 @@ Public Class Form1
             Dim intFiles As Integer
             intFiles = d.GetFiles.GetUpperBound(0) + 1
             TxtBoxNumOfFiles.Text = intFiles.ToString
+            Application.DoEvents()
 
 
             PreChecks.BackColor = Color.Green
@@ -1022,7 +1024,7 @@ Public Class Form1
 
         Dim ret_list As List(Of String)
         ret_list = Create_results_new(total_sessions, TxtPreTime.Value, TxtPostTime.Value,
-                           result_out_file_name, sleep_out_file_name)
+                           result_out_file_name, sleep_out_file_name, output_lines_textbox)
 
         Print_to_log_file("-----------------------------------------------------")
         Print_to_log_file("Large number of consecutive Zeros")
@@ -1307,6 +1309,7 @@ Public Class Form1
     Private Sub Create_results()
         Create_results_button.BackColor = Color.GreenYellow
         output_lines_textbox.Text = "starting"
+        Application.DoEvents()
 
         Dim xlApp As New Excel.Application
         Dim xlWorkbook As Excel.Workbook = xlApp.Workbooks.Add()
@@ -1460,7 +1463,9 @@ Public Class Form1
                         xlWorksheet.Cells(out_line_cnt, 17) = total_sessions(c).List_of_dog_data(dog_data_cnt).activity_score
                     End If
 
-                    output_lines_textbox.Text = (out_line_cnt - 1).ToString()
+                    Dim tmp_cnt As Integer = out_line_cnt - 1
+                    output_lines_textbox.Text = tmp_cnt.ToString()
+                    Application.DoEvents()
 
                     If (prev_date <> total_sessions(c).session_start_time) Or (prev_pract_time <> l.pract_time) Then
                         'out_line_cnt += 1
