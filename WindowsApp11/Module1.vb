@@ -339,7 +339,7 @@ Module Module1
                     xlWorksheet.Cells(out_line_cnt - 1, 21) = zero_acitivty_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 22) = max_acitivty_in_a_row
 
-                    If max_acitivty_in_a_row >= 4 Then
+                    If max_acitivty_in_a_row >= 4 Or zero_acitivty_smpl >= 4 Then       ' 2 Apr 2020 Added
                         Dim tmp_str As String
                         tmp_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
                         'tmp_str += ". Dog: " + l.pet_name
@@ -347,7 +347,7 @@ Module Module1
                         'tmp_str += ". Time: " + line.pract_time
                         tmp_str += ". Time: " + pract_time_smpl
 
-                        tmp_str += ". Line in output excel file: " + (out_line_cnt - 1).ToString   ' this data is relevant for previous line !!
+                        tmp_str += ". Line in output excel file: " + (out_line_cnt - 1).ToString()   ' this data is relevant for previous line !!
                         log_out_lst.Add(tmp_str)
                     End If
 

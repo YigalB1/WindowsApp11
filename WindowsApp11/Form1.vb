@@ -1,5 +1,6 @@
 ﻿' 13 March 2020 18:00
 ' 2 April 2020, changes in Module 1, fixing errors in log file, conseq zeros, should be reported to prev line
+' 2 April 2020 in module 1 - added to log file also total zeros in time zone >=4 (in addition to in a row)
 
 'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
 'On the Project menu, click Add Reference.
