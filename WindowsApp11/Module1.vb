@@ -258,6 +258,7 @@ Module Module1
         ' 2 Apr 2020 bug fix below 
         Dim pet_name_smpl As String = "xxx777"
         Dim pract_time_smpl As DateTime
+        Dim many_zeros_cnt As Integer = 0
 
 
         For Each l In _tot_sessions
@@ -328,7 +329,6 @@ Module Module1
                 End If
 
                 If time_zone_change Then ' sample the counters of activity quality and zeros
-
                     quality_activity_smpl = quality_activity_cnt
                     zero_acitivty_smpl = zero_acitivty_cnt
 
@@ -337,23 +337,35 @@ Module Module1
                     xlWorksheet.Cells(out_line_cnt - 1, 22) = max_acitivty_in_a_row
 
                     If max_acitivty_in_a_row >= 4 Or zero_acitivty_smpl >= 4 Then       ' 2 Apr 2020 Added
+                        many_zeros_cnt += 1
                         Dim msg_str As String
                         Dim t_str As String
 
+                        ' for debug
+                        If many_zeros_cnt = 67 Then
+                            Dim xxx0 As Integer = 17
+                        End If
+
+                        If out_line_cnt = 3453 Then
+                            Dim xxx1 As Integer = 20
+                        End If
+
                         ' msg_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
+                        msg_str = many_zeros_cnt.ToString().PadRight(3)
+
                         t_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
-                        msg_str = t_str.PadRight(34)
+                        msg_str += t_str.PadRight(34)
 
                         t_str = "Tot Num of zeros is: " + zero_acitivty_smpl.ToString()
-                        msg_str = t_str.PadRight(25)
+                        msg_str += t_str.PadRight(25)
 
                         'msg_str += ". Dog: " + l.pet_name
                         ' msg_str += ". Dog: " + pet_name_smpl   ' 2 April 2020
                         t_str = " Dog: " + pet_name_smpl   ' 2 April 2020
-                        msg_str += t_str.PadRight(15)
+                        msg_str += t_str.PadRight(15)       ' 3 April Bug was missing +=
 
                         'msg_str += ". Time: " + line.pract_time
-                        t_str = " Time: " + pract_time_smpl
+                        t_str = " Time: " + pract_time_smpl.ToString() ' 3 April 2020 added tostring()
                         msg_str += t_str.PadRight(29)
 
                         msg_str += " Line in output excel file: "
