@@ -3,7 +3,7 @@
 ' 2 April 2020 in module 1 - added to log file also total zeros in time zone >=4 (in addition to in a row)
 ' 3 April 2020 formatting log file, adding tot number of zeros (in addiiton to consequtive)
 ' 3 April 2020 add ZIP file, currently only with log (from dedicated directory)
-' 3 April 2020 add more files to FinalResults dir
+' 3 April 2020 fix adding more & more files to FinalResults dir' removing zip as for now
 
 
 'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
@@ -173,7 +173,7 @@ Public Class Form1
 
         practice_file = course_dir + "practice_list_" + course_name + ".xlsx"
         LogFile = course_dir + course_name + "_logDog.txt"
-        SessionsFile = course_dir + "Sessions_list.txt"
+        SessionsFile = course_dir + course_name + "_Sessions_list.txt" ' 3 April 2020
 
         Dim dir As New IO.DirectoryInfo(course_dir)
         If Not dir.Exists Then
@@ -1080,24 +1080,34 @@ Public Class Form1
         ' Copy the file to a new folder, overwriting existing file.
 
         Dim LogFile_copy As String = final_results_dir + course_name + "_logDog.txt"
+        Dim practice_file_copy As String = final_results_dir + "practice_list_" + course_name + ".xlsx"
+        Dim SessionsFile_copy As String = final_results_dir + course_name + "_Sessions_list.txt" ' 3 April 2020
 
 
 
-
-        My.Computer.FileSystem.CopyFile(LogFile, LogFile_copy,
-                                        Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
-        My.Computer.FileSystem.CopyFile(practice_file, LogFile_copy,
-                                        Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
-        My.Computer.FileSystem.CopyFile(SessionsFile, LogFile_copy,
-                                        Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
-        My.Computer.FileSystem.CopyFile(result_out_file_name, LogFile_copy,
-                                        Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
-        My.Computer.FileSystem.CopyFile(sleep_out_file_name, LogFile_copy,
-                                        Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+        Dim result_out_file_name_copy As String = final_results_dir + "course_" + course_name + "_out.xlsx"
+        result_out_file_name_copy = result_out_file_name_copy.Replace("\\", "\")
+        Dim sleep_out_file_name_copy As String = result_out_file_name_copy.Replace("_out.", "_sleep_out.")
 
 
 
-        ZipFile.CreateFromDirectory(final_results_dir, final_results_dir, CompressionLevel.Optimal, False)
+        My.Computer.FileSystem.CopyFile(LogFile, LogFile_copy, overwrite:=True)
+        My.Computer.FileSystem.CopyFile(practice_file, practice_file_copy, overwrite:=True)
+        My.Computer.FileSystem.CopyFile(SessionsFile, SessionsFile_copy, overwrite:=True)
+        My.Computer.FileSystem.CopyFile(result_out_file_name, result_out_file_name_copy, overwrite:=True)
+        My.Computer.FileSystem.CopyFile(sleep_out_file_name, sleep_out_file_name_copy, overwrite:=True)
+
+
+
+        ' My.Computer.FileSystem.CopyFile(LogFile, LogFile_copy, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+        ' My.Computer.FileSystem.CopyFile(practice_file, practice_file_copy,Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+        ' My.Computer.FileSystem.CopyFile(SessionsFile, LogFile_copy,Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+        ' My.Computer.FileSystem.CopyFile(result_out_file_name, LogFile_copy,Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+        ' My.Computer.FileSystem.CopyFile(sleep_out_file_name, LogFile_copy, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+
+
+
+        ' ZipFile.CreateFromDirectory(final_results_dir, final_results_dir, CompressionLevel.Optimal, False)
 
 
 
