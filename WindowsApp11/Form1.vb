@@ -3,6 +3,8 @@
 ' 2 April 2020 in module 1 - added to log file also total zeros in time zone >=4 (in addition to in a row)
 ' 3 April 2020 formatting log file, adding tot number of zeros (in addiiton to consequtive)
 ' 3 April 2020 add ZIP file, currently only with log (from dedicated directory)
+' 3 April 2020 add more files to FinalResults dir
+
 
 'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
 'On the Project menu, click Add Reference.
@@ -25,7 +27,7 @@ Public Class Form1
     Public in_files_dir As String
     Public out_files_dir As String
     Public practice_file As String
-
+    Public final_results_dir As String
 
 
     Dim tmp_str As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
@@ -40,7 +42,7 @@ Public Class Form1
     'Dim in_PathName As String = work_path.Check_path(yigal_path + "SessionsFiles\\")
     Dim default_sessions_dir As String = Check_path(default_work_dir + "SessionsFiles\\")
     'Public default_pratice_file_name As String = default_work_dir + "practice_list1.xlsx"
-    Dim final_results_dir As String = Check_path(default_work_dir + "FinalResults\\")
+
 
 
 
@@ -157,9 +159,6 @@ Public Class Form1
         path_tmp = path_tmp & "\\" & "Yigal\\" & "DogsProj\\"
         'root_dir = Path_tmp.Replace("\", "\\")
 
-
-
-
         'course_dir = root_dir + "Course" + course_name + "\\"
         'course_dir = default_work_dir + "Course" + course_name + "\\"
         course_dir = Check_path(default_work_dir + "Course" + course_name + "\\")
@@ -170,9 +169,9 @@ Public Class Form1
         'out_files_dir = course_dir + "out_files\\"
         out_files_dir = Check_path(course_dir + "out_files\\")
 
+        final_results_dir = Check_path(course_dir + "FinalResults\\")
+
         practice_file = course_dir + "practice_list_" + course_name + ".xlsx"
-
-
         LogFile = course_dir + course_name + "_logDog.txt"
         SessionsFile = course_dir + "Sessions_list.txt"
 
@@ -1087,6 +1086,16 @@ Public Class Form1
 
         My.Computer.FileSystem.CopyFile(LogFile, LogFile_copy,
                                         Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+        My.Computer.FileSystem.CopyFile(practice_file, LogFile_copy,
+                                        Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+        My.Computer.FileSystem.CopyFile(SessionsFile, LogFile_copy,
+                                        Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+        My.Computer.FileSystem.CopyFile(result_out_file_name, LogFile_copy,
+                                        Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+        My.Computer.FileSystem.CopyFile(sleep_out_file_name, LogFile_copy,
+                                        Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+
+
 
         ZipFile.CreateFromDirectory(final_results_dir, final_results_dir, CompressionLevel.Optimal, False)
 
