@@ -2,6 +2,7 @@
 ' 2 April 2020, changes in Module 1, fixing errors in log file, conseq zeros, should be reported to prev line
 ' 2 April 2020 in module 1 - added to log file also total zeros in time zone >=4 (in addition to in a row)
 ' 3 April 2020 formatting log file, adding tot number of zeros (in addiiton to consequtive)
+' 3 April 2020 add ZIP file, currently only with log (from dedicated directory)
 
 'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
 'On the Project menu, click Add Reference.
@@ -11,6 +12,9 @@
 Imports System.Data.OleDb
 Imports Microsoft.Office.Interop
 Imports System.IO
+Imports System.IO.Compression
+' Imports DevExpress.Compression
+
 
 Public Class Form1
 
@@ -21,6 +25,7 @@ Public Class Form1
     Public in_files_dir As String
     Public out_files_dir As String
     Public practice_file As String
+
 
 
     Dim tmp_str As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
@@ -35,6 +40,7 @@ Public Class Form1
     'Dim in_PathName As String = work_path.Check_path(yigal_path + "SessionsFiles\\")
     Dim default_sessions_dir As String = Check_path(default_work_dir + "SessionsFiles\\")
     'Public default_pratice_file_name As String = default_work_dir + "practice_list1.xlsx"
+    Dim final_results_dir As String = Check_path(default_work_dir + "FinalResults\\")
 
 
 
@@ -965,11 +971,6 @@ Public Class Form1
         ProgressBar1.Value = 1
         Application.DoEvents()
 
-
-
-
-
-
         If check_files_and_folders() = False Then
             'MessageBox.Show("Missing files or folders. Look at LOG file")
             Return
@@ -1067,6 +1068,29 @@ Public Class Form1
         Print_to_log_file("Start time:     " + start_time.ToString())
         Print_to_log_file("End   time:     " + end_time.ToString())
         Print_to_log_file("Total run time: " + tot_hours.ToString() + " hours, " + tot_minutes.ToString() + " minutes")
+
+
+        ' 3 April 2020 : create zip file with results and mail it
+
+
+        'Dim ZipFile As New GZipStream
+        ' add a reference in Visual Studio before you begin. Go to Add Reference and select System.IO.Compression.FileSystem. ZipFile was not in the older versions of the .NET Framework.
+        ' example from https://www.dotnetperls.com/zipfile-vbnet
+
+        ' Copy iles into final_results_dir
+        ' Copy the file to a new folder, overwriting existing file.
+
+        Dim LogFile_copy As String = final_results_dir + course_name + "_logDog.txt"
+
+
+
+
+        My.Computer.FileSystem.CopyFile(LogFile, LogFile_copy,
+                                        Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing)
+
+        ZipFile.CreateFromDirectory(final_results_dir, final_results_dir, CompressionLevel.Optimal, False)
+
+
 
         'Return
         ' old flow

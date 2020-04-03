@@ -329,11 +329,8 @@ Module Module1
 
                 If time_zone_change Then ' sample the counters of activity quality and zeros
 
-
                     quality_activity_smpl = quality_activity_cnt
                     zero_acitivty_smpl = zero_acitivty_cnt
-
-
 
                     xlWorksheet.Cells(out_line_cnt - 1, 20) = quality_activity_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 21) = zero_acitivty_smpl
@@ -352,15 +349,16 @@ Module Module1
 
                         'msg_str += ". Dog: " + l.pet_name
                         ' msg_str += ". Dog: " + pet_name_smpl   ' 2 April 2020
-                        t_str = ". Dog: " + pet_name_smpl   ' 2 April 2020
+                        t_str = " Dog: " + pet_name_smpl   ' 2 April 2020
                         msg_str += t_str.PadRight(15)
 
                         'msg_str += ". Time: " + line.pract_time
-                        t_str = ". Time: " + pract_time_smpl
+                        t_str = " Time: " + pract_time_smpl
                         msg_str += t_str.PadRight(29)
 
-                        t_str = ". Line in output excel file: " + (out_line_cnt - 1).ToString()   ' this data is relevant for previous line !!
-                        msg_str += t_str.PadRight(36)
+                        msg_str += " Line in output excel file: "
+                        t_str = (out_line_cnt - 1).ToString()   ' this data is relevant for previous line !!
+                        msg_str += t_str.PadLeft(5)
 
                         log_out_lst.Add(msg_str)
                     End If
@@ -479,6 +477,8 @@ Module Module1
                 t_activity_score = line.activity_score
 
                 out_line_cnt += 1
+
+                Application.DoEvents() ' 3 april 2020
             Next ' of for each lines of that specific dog
 
             Dim Sleep_list_tmp As New SleepClass
