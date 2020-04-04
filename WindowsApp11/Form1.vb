@@ -4,6 +4,7 @@
 ' 3 April 2020 formatting log file, adding tot number of zeros (in addiiton to consequtive)
 ' 3 April 2020 add ZIP file, currently only with log (from dedicated directory)
 ' 3 April 2020 fix adding more & more files to FinalResults dir' removing zip as for now
+' 4 April log format
 
 
 'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
@@ -481,16 +482,16 @@ Public Class Form1
 
         Read_Dog_List() ' into DogList list (name and dob)
         DogsList.Print_dogs_list(course_dir) ' create text file with list of dogs
-
+        Application.DoEvents()
 
         Read_Pracice_Types_List() ' into practiceList (pract name & pract number)
         practiceList.Print_practices_list(course_dir) ' the class way
-
+        Application.DoEvents()
 
         Read_sessions_list()
         ' sessions.Print_sessions_list(root_dir)
         sessions.Print_sessions_list(course_dir) ' into sessions pract name, pract type, start time, end time, video num )
-
+        Application.DoEvents()
 
         RdPracticeFile.BackColor = Color.Green
         Stage_Read_Practice_Table = True
@@ -531,6 +532,7 @@ Public Class Form1
 
         MyExcel.Workbooks.Close()
         MyExcel = Nothing
+        Application.DoEvents()
 
     End Sub ' of Read_Dog_List 
 
@@ -567,6 +569,7 @@ Public Class Form1
 
         MyExcel.Workbooks.Close()
         MyExcel = Nothing
+        Application.DoEvents()
 
     End Sub ' of Read_Pracice_Types_List
 
@@ -622,6 +625,7 @@ Public Class Form1
 
         MyExcel.Workbooks.Close()
         MyExcel = Nothing
+        Application.DoEvents()
 
     End Sub ' of Read_sessions_list
 
@@ -907,12 +911,13 @@ Public Class Form1
             Print_to_log_file("Lines with Activity score : " + activity_score_cnt.ToString())
 
             pract_Excel.Workbooks.Close()
+            Application.DoEvents()
             total_sessions.Add(curr_session)
 
             num_of_lines_TextBox.Text = total_line_cnt.ToString()
-            Application.DoEvents()
 
             fileName = Dir()
+            Application.DoEvents()
             Console.WriteLine(" finished file number " + file_count.ToString())
             Console.WriteLine("Pet name & ID: {0} {1} ", dog_session.pet_name, dog_session.pet_ID)
         Loop ' go and read next CSV file
@@ -974,6 +979,7 @@ Public Class Form1
             'MessageBox.Show("Missing files or folders. Look at LOG file")
             Return
         End If
+        Application.DoEvents()
 
         Button3.BackColor = Color.GreenYellow
         Status_Box.Text = "Starting"

@@ -340,12 +340,10 @@ Module Module1
                     If max_acitivty_in_a_row >= 4 Or zero_acitivty_smpl >= 4 Then       ' 2 Apr 2020 Added
                         many_zeros_cnt += 1
                         Dim msg_str As String
-                        Dim t_str As String
-
-
+                        'Dim t_str As String
 
                         ' msg_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
-                        msg_str = many_zeros_cnt.ToString().PadRight(3)
+                        msg_str = many_zeros_cnt.ToString().PadRight(4)
 
                         't_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
                         'msg_str += t_str.PadRight(34)
