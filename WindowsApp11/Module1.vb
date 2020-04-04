@@ -340,27 +340,27 @@ Module Module1
                     l_time_zone = 3
                 End If
 
-
                 ' check if there was illegal move between time zones
                 Dim str_error As String = Nothing
-                If l_time_zone = 1 And prev_l_time_zone <> 3 Then
-                    str_error = " >>>> Error with time zone change. now 1, was " + prev_l_time_zone.ToString()
-                    str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
-                    xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
-                End If
-                If l_time_zone = 2 And prev_l_time_zone <> 1 Then
-                    str_error = " >>>> Error with time zone change. now 2, was " + prev_l_time_zone.ToString()
-                    str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
-                    xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
-                End If
-                If l_time_zone = 3 And prev_l_time_zone <> 2 Then
-                    str_error = " >>>> Error with time zone change. now 3, was " + prev_l_time_zone.ToString()
-                    str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
-                    xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
-                End If
 
-
-
+                ' skup line 2 (always "different" and all cases when we are still in same time zone, step after step
+                If out_line_cnt <> 2 And l_time_zone <> prev_l_time_zone Then
+                    If l_time_zone = 1 And prev_l_time_zone <> 3 Then
+                        str_error = " >>>> Error with time zone change. now 1, was " + prev_l_time_zone.ToString()
+                        str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+                        xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                    End If
+                    If l_time_zone = 2 And prev_l_time_zone <> 1 Then
+                        str_error = " >>>> Error with time zone change. now 2, was " + prev_l_time_zone.ToString()
+                        str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+                        xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                    End If
+                    If l_time_zone = 3 And prev_l_time_zone <> 2 Then
+                        str_error = " >>>> Error with time zone change. now 3, was " + prev_l_time_zone.ToString()
+                        str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+                        xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                    End If
+                End If
 
                 If time_zone_change Then ' sample the counters of activity quality and zeros
 

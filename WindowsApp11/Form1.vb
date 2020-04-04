@@ -6,6 +6,7 @@
 ' 3 April 2020 fix adding more & more files to FinalResults dir' removing zip as for now
 ' 4 April log format log
 ' 4 April 2020 find error of wrong time zones change, mpve out of the loop
+' 4 April 2020 fix was not good, now fixing the fix
 
 
 'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
