@@ -262,6 +262,11 @@ Module Module1
         Dim pract_time_smpl As DateTime
         Dim many_zeros_cnt As Integer = 0
 
+        'Dim line_cnt As Integer = 0 ' need for debug 
+
+        Dim l_time_zone As Integer = 777 ' 4 April 2020 moved before the Loop
+        Dim prev_l_time_zone As Integer = 777  ' 4 April 2020
+
 
         For Each l In _tot_sessions
 
@@ -300,8 +305,8 @@ Module Module1
 
 
             'Dim line_cnt As Integer = 0 ' need for debug 
-            Dim l_time_zone As Integer = 777 ' 4 April 2020 moved before the Loop
-            Dim prev_l_time_zone As Integer = 777  ' 4 April 2020
+            'Dim l_time_zone As Integer = 777 ' 4 April 2020 moved before the Loop
+            'Dim prev_l_time_zone As Integer = 777  ' 4 April 2020
 
 
             For Each line In l.List_of_dog_data
@@ -344,21 +349,24 @@ Module Module1
                 Dim str_error As String = Nothing
 
                 ' skup line 2 (always "different" and all cases when we are still in same time zone, step after step
-                If out_line_cnt <> 2 And l_time_zone <> prev_l_time_zone Then
+                If out_line_cnt <> 2 And l_time_zone <> prev_l_time_zone And prev_l_time_zone <> 777 Then
                     If l_time_zone = 1 And prev_l_time_zone <> 3 Then
                         str_error = " >>>> Error with time zone change. now 1, was " + prev_l_time_zone.ToString()
-                        str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+                        str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
                         xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                        log_out_lst.Add(str_error)
                     End If
                     If l_time_zone = 2 And prev_l_time_zone <> 1 Then
                         str_error = " >>>> Error with time zone change. now 2, was " + prev_l_time_zone.ToString()
-                        str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+                        str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
                         xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                        log_out_lst.Add(str_error)
                     End If
                     If l_time_zone = 3 And prev_l_time_zone <> 2 Then
                         str_error = " >>>> Error with time zone change. now 3, was " + prev_l_time_zone.ToString()
-                        str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+                        str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
                         xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                        log_out_lst.Add(str_error)
                     End If
                 End If
 
@@ -370,11 +378,6 @@ Module Module1
                     xlWorksheet.Cells(out_line_cnt - 1, 20) = quality_activity_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 21) = zero_acitivty_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 22) = max_acitivty_in_a_row
-
-
-
-
-
 
                     If max_acitivty_in_a_row >= 4 Or zero_acitivty_smpl >= 4 Then       ' 2 Apr 2020 Added
                         many_zeros_cnt += 1
