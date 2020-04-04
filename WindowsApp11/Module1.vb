@@ -256,7 +256,8 @@ Module Module1
         Dim time_zone_change As Boolean = False ' indicates moving from pre->act->post
 
         ' 2 Apr 2020 bug fix below 
-        Dim pet_name_smpl As String = "xxx777"
+        Dim pet_name_smpl As String = "xxxxx"
+        Dim pet_name_ID_smpl As String = "77777"
         Dim pract_time_smpl As DateTime
         Dim many_zeros_cnt As Integer = 0
 
@@ -341,36 +342,37 @@ Module Module1
                         Dim msg_str As String
                         Dim t_str As String
 
-                        ' for debug
-                        If many_zeros_cnt = 67 Then
-                            Dim xxx0 As Integer = 17
-                        End If
 
-                        If out_line_cnt = 3453 Then
-                            Dim xxx1 As Integer = 20
-                        End If
 
                         ' msg_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
                         msg_str = many_zeros_cnt.ToString().PadRight(3)
 
-                        t_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
-                        msg_str += t_str.PadRight(34)
+                        't_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
+                        'msg_str += t_str.PadRight(34)
+                        msg_str += "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString().PadRight(2)
 
-                        t_str = "Tot Num of zeros is: " + zero_acitivty_smpl.ToString()
-                        msg_str += t_str.PadRight(25)
+                        't_str = "Tot Num of zeros is: " + zero_acitivty_smpl.ToString()
+                        'msg_str += t_str.PadRight(25)
+                        msg_str += "Tot Num of zeros is: " + zero_acitivty_smpl.ToString().PadRight(2)
 
                         'msg_str += ". Dog: " + l.pet_name
                         ' msg_str += ". Dog: " + pet_name_smpl   ' 2 April 2020
-                        t_str = " Dog: " + pet_name_smpl   ' 2 April 2020
-                        msg_str += t_str.PadRight(15)       ' 3 April Bug was missing +=
 
-                        'msg_str += ". Time: " + line.pract_time
-                        t_str = " Time: " + pract_time_smpl.ToString() ' 3 April 2020 added tostring()
-                        msg_str += t_str.PadRight(29)
+                        msg_str += " pet ID: " + pet_name_ID_smpl.PadRight(5) ' 4 April 2020 added
 
-                        msg_str += " Line in output excel file: "
-                        t_str = (out_line_cnt - 1).ToString()   ' this data is relevant for previous line !!
-                        msg_str += t_str.PadLeft(5)
+                        't_str = " Dog: " + pet_name_smpl   ' 2 April 2020
+                        'msg_str += t_str.PadRight(15)       ' 3 April Bug was missing +=
+                        msg_str += " Dog: " + pet_name_smpl.PadRight(6)
+
+                        't_str = " Time: " + pract_time_smpl.ToString() ' 3 April 2020 added tostring()
+                        'msg_str += t_str.PadRight(29)
+                        msg_str += " Time: " + pract_time_smpl.ToString().PadRight(23)
+
+                        'msg_str += " Line in output excel file: "
+                        't_str = (out_line_cnt - 1).ToString()   ' this data is relevant for previous line !!
+                        'msg_str += t_str.PadLeft(5)
+                        msg_str += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+
 
                         log_out_lst.Add(msg_str)
                     End If
@@ -383,12 +385,15 @@ Module Module1
                     zero_acitivty_in_a_row_cnt = 0
                     max_acitivty_in_a_row = 0
 
-                    ' 2 April 2020 bug fix: log file should keep prev line info
-                    pet_name_smpl = l.pet_name
-                    pract_time_smpl = line.pract_time
+
 
                 End If
 
+                ' 2 April 2020 bug fix: log file should keep prev line info
+                ' 4 April 2020 moved outside the loop. That was stupid!
+                pet_name_smpl = l.pet_name
+                pract_time_smpl = line.pract_time
+                pet_name_ID_smpl = l.pet_ID
 
 
 
