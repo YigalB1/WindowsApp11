@@ -175,7 +175,7 @@ Module Module1
                 'activity_score_flag = False  ' **** once per file, should remain true
 
             End If
-
+            Application.DoEvents()
         Loop While (line_data_type <> "")
 
         ' finished reading the linces of the CSV
@@ -186,6 +186,7 @@ Module Module1
         CSV_Excel.Quit()
         CSV_Excel = Nothing
         'total_sessions.Add(curr_session)
+        Application.DoEvents()
 
 
         ' num_of_lines_TextBox.value = total_line_cnt.ToString()
@@ -339,8 +340,30 @@ Module Module1
                     l_time_zone = 3
                 End If
 
+
+                ' check if there was illegal move between time zones
+                Dim str_error As String = Nothing
+                If l_time_zone = 1 And prev_l_time_zone <> 3 Then
+                    str_error = " >>>> Error with time zone change. now 1, was " + prev_l_time_zone.ToString()
+                    str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+                    xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                End If
+                If l_time_zone = 2 And prev_l_time_zone <> 1 Then
+                    str_error = " >>>> Error with time zone change. now 2, was " + prev_l_time_zone.ToString()
+                    str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+                    xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                End If
+                If l_time_zone = 3 And prev_l_time_zone <> 2 Then
+                    str_error = " >>>> Error with time zone change. now 3, was " + prev_l_time_zone.ToString()
+                    str_error += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+                    xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                End If
+
+
+
+
                 If time_zone_change Then ' sample the counters of activity quality and zeros
-                    Dim str_error As String = Nothing
+
                     quality_activity_smpl = quality_activity_cnt
                     zero_acitivty_smpl = zero_acitivty_cnt
 
@@ -348,19 +371,7 @@ Module Module1
                     xlWorksheet.Cells(out_line_cnt - 1, 21) = zero_acitivty_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 22) = max_acitivty_in_a_row
 
-                    ' check if there was illegal move between time zones
-                    If l_time_zone = 1 And prev_l_time_zone <> 3 Then
-                        str_error = "Error with time zone change. now 1, was " + prev_l_time_zone.ToString()
-                        xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
-                    End If
-                    If l_time_zone = 2 And prev_l_time_zone <> 1 Then
-                        str_error = "Error with time zone change. now 2, was " + prev_l_time_zone.ToString()
-                        xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
-                    End If
-                    If l_time_zone = 3 And prev_l_time_zone <> 2 Then
-                        str_error = "Error with time zone change. now 3, was " + prev_l_time_zone.ToString()
-                        xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
-                    End If
+
 
 
 
@@ -368,52 +379,21 @@ Module Module1
                     If max_acitivty_in_a_row >= 4 Or zero_acitivty_smpl >= 4 Then       ' 2 Apr 2020 Added
                         many_zeros_cnt += 1
                         Dim msg_str As String
-                        'Dim t_str As String
-
-                        ' msg_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
                         msg_str = many_zeros_cnt.ToString().PadRight(4)
-
-                        't_str = "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString()
-                        'msg_str += t_str.PadRight(34)
                         msg_str += "Num of consecutive zeros is: " + max_acitivty_in_a_row.ToString().PadRight(2)
-
-                        't_str = "Tot Num of zeros is: " + zero_acitivty_smpl.ToString()
-                        'msg_str += t_str.PadRight(25)
                         msg_str += " Tot Num of zeros is: " + zero_acitivty_smpl.ToString().PadRight(2)
-
-                        'msg_str += ". Dog: " + l.pet_name
-                        ' msg_str += ". Dog: " + pet_name_smpl   ' 2 April 2020
-
                         msg_str += " pet ID: " + pet_name_ID_smpl.PadRight(5) ' 4 April 2020 added
-
-                        't_str = " Dog: " + pet_name_smpl   ' 2 April 2020
-                        'msg_str += t_str.PadRight(15)       ' 3 April Bug was missing +=
                         msg_str += " Dog: " + pet_name_smpl.PadRight(6)
-
-                        't_str = " Time: " + pract_time_smpl.ToString() ' 3 April 2020 added tostring()
-                        'msg_str += t_str.PadRight(29)
                         msg_str += " Time: " + pract_time_smpl.ToString().PadRight(23)
-
-                        'msg_str += " Line in output excel file: "
-                        't_str = (out_line_cnt - 1).ToString()   ' this data is relevant for previous line !!
-                        'msg_str += t_str.PadLeft(5)
                         msg_str += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
-                        msg_str += " " + str_error
-
-
+                        'msg_str += " " + str_error
                         log_out_lst.Add(msg_str)
                     End If
-
-
                     time_zone_change = False
                     quality_activity_cnt = 0
                     zero_acitivty_cnt = 0
-
                     zero_acitivty_in_a_row_cnt = 0
                     max_acitivty_in_a_row = 0
-
-
-
                 End If
 
                 ' 2 April 2020 bug fix: log file should keep prev line info
@@ -421,8 +401,6 @@ Module Module1
                 pet_name_smpl = l.pet_name
                 pract_time_smpl = line.pract_time
                 pet_name_ID_smpl = l.pet_ID
-
-
 
                 xlWorksheet.Cells(out_line_cnt, 1) = l.pet_ID
                 xlWorksheet.Cells(out_line_cnt, 2) = l.pet_age
@@ -452,14 +430,11 @@ Module Module1
                         Debug.WriteLine("Error in case of timeZone, num is: " + l_time_zone.ToString())
                 End Select
 
-
-
                 xlWorksheet.Cells(out_line_cnt, 9) = l1.ToString("HH:mm")
                 xlWorksheet.Cells(out_line_cnt, 10) = l2.ToString("HH:mm")
                 'xlWorksheet.Cells(out_line_cnt, 11) = l.pract_time 21 Oct 2019, nove to 24h clock
                 xlWorksheet.Cells(out_line_cnt, 11) = Format(line.pract_time, "HH:mm")
                 'xlWorksheet.Cells(out_line_cnt, 12) = line.activity
-
 
                 If line.activity_flag Then
                     xlWorksheet.Cells(out_line_cnt, 12) = line.activity
@@ -554,6 +529,8 @@ Module Module1
         xlWorksheet.SaveAs(_out_file)
         xlWorkbook.Close()
         xlApp.Quit()
+        Application.DoEvents()
+
         ' ****************************************************************************
         ' now open the 2nd output excel - this time for sleep score and activity score
         ' ****************************************************************************
@@ -584,6 +561,7 @@ Module Module1
         xlWorksheet1.SaveAs(_sleep_out_file)
         xlWorkbook1.Close()
         xlApp1.Quit()
+        Application.DoEvents()
 
         Return log_out_lst
     End Function ' of Create_results_new
