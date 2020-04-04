@@ -298,44 +298,72 @@ Module Module1
 
 
 
-            Dim line_cnt As Integer = 0 ' need for debug 
+            'Dim line_cnt As Integer = 0 ' need for debug 
+            Dim l_time_zone As Integer = 777 ' 4 April 2020 moved before the Loop
+            Dim prev_l_time_zone As Integer = 777  ' 4 April 2020
+
 
             For Each line In l.List_of_dog_data
-                line_cnt += 1
+                'line_cnt += 1
 
+                ' skip when time not within pre-actual-post zones
                 If line.pract_time < l_start_pre_time Then
                     Continue For
                 End If
                 If line.pract_time > l_end_post_time Then
                     Continue For
                 End If
-                Dim l_time_zone As Integer
+                ' Dim l_time_zone As Integer                '4 April 2020 moved from here to before loop
+
+                ' --------------------------------------
+                ' if here, we are within pre-actual-post
 
                 If line.pract_time < l_start Then
                     If l_time_zone = 3 Then
                         time_zone_change = True
                     End If
+                    prev_l_time_zone = l_time_zone
                     l_time_zone = 1
 
                 ElseIf line.pract_time <= l_end Then
                     If l_time_zone = 1 Then
                         time_zone_change = True
                     End If
+                    prev_l_time_zone = l_time_zone
                     l_time_zone = 2
                 Else
                     If l_time_zone = 2 Then
                         time_zone_change = True
                     End If
+                    prev_l_time_zone = l_time_zone
                     l_time_zone = 3
                 End If
 
                 If time_zone_change Then ' sample the counters of activity quality and zeros
+                    Dim str_error As String = Nothing
                     quality_activity_smpl = quality_activity_cnt
                     zero_acitivty_smpl = zero_acitivty_cnt
 
                     xlWorksheet.Cells(out_line_cnt - 1, 20) = quality_activity_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 21) = zero_acitivty_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 22) = max_acitivty_in_a_row
+
+                    ' check if there was illegal move between time zones
+                    If l_time_zone = 1 And prev_l_time_zone <> 3 Then
+                        str_error = "Error with time zone change. now 1, was " + prev_l_time_zone.ToString()
+                        xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                    End If
+                    If l_time_zone = 2 And prev_l_time_zone <> 1 Then
+                        str_error = "Error with time zone change. now 2, was " + prev_l_time_zone.ToString()
+                        xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                    End If
+                    If l_time_zone = 3 And prev_l_time_zone <> 2 Then
+                        str_error = "Error with time zone change. now 3, was " + prev_l_time_zone.ToString()
+                        xlWorksheet.Cells(out_line_cnt - 1, 22) = str_error
+                    End If
+
+
+
 
                     If max_acitivty_in_a_row >= 4 Or zero_acitivty_smpl >= 4 Then       ' 2 Apr 2020 Added
                         many_zeros_cnt += 1
@@ -370,6 +398,7 @@ Module Module1
                         't_str = (out_line_cnt - 1).ToString()   ' this data is relevant for previous line !!
                         'msg_str += t_str.PadLeft(5)
                         msg_str += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
+                        msg_str += str_error
 
 
                         log_out_lst.Add(msg_str)
