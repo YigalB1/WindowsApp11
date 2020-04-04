@@ -379,7 +379,7 @@ Module Module1
 
                         't_str = "Tot Num of zeros is: " + zero_acitivty_smpl.ToString()
                         'msg_str += t_str.PadRight(25)
-                        msg_str += "Tot Num of zeros is: " + zero_acitivty_smpl.ToString().PadRight(2)
+                        msg_str += " Tot Num of zeros is: " + zero_acitivty_smpl.ToString().PadRight(2)
 
                         'msg_str += ". Dog: " + l.pet_name
                         ' msg_str += ". Dog: " + pet_name_smpl   ' 2 April 2020
@@ -398,7 +398,7 @@ Module Module1
                         't_str = (out_line_cnt - 1).ToString()   ' this data is relevant for previous line !!
                         'msg_str += t_str.PadLeft(5)
                         msg_str += " Line in output excel file: " + (out_line_cnt - 1).ToString().PadLeft(5)
-                        msg_str += str_error
+                        msg_str += " " + str_error
 
 
                         log_out_lst.Add(msg_str)

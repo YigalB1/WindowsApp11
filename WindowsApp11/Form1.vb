@@ -4,7 +4,7 @@
 ' 3 April 2020 formatting log file, adding tot number of zeros (in addiiton to consequtive)
 ' 3 April 2020 add ZIP file, currently only with log (from dedicated directory)
 ' 3 April 2020 fix adding more & more files to FinalResults dir' removing zip as for now
-' 4 April log format
+' 4 April log format xxx
 
 
 'Add a reference To Microsoft Excel Object Library. To Do this, follow these steps
