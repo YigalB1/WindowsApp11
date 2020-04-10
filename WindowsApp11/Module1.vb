@@ -349,6 +349,28 @@ Module Module1
                 ' check if there was illegal move between time zones
                 Dim str_error As String = Nothing
 
+
+                ' check if we are in same time zone, but different dog  10 April 2020
+                Dim cond1 As Boolean = l_time_zone = prev_l_time_zone And pet_name_ID_smpl <> l.pet_ID
+                Dim cond2 As Boolean = pet_name_ID_smpl <> l.pet_ID And prev_l_time_zone <> 3 And l_time_zone <> 1
+
+                If cond1 Then
+                    str_error = " +++++++ Error: dog change, same time zone"
+                    str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
+                    str_error += " Prev dog: " + pet_name_ID_smpl + " current dog: " + l.pet_ID
+                End If
+
+
+                If cond2 Then
+                    str_error = " <<<<<>>>> Error: dog change, same time zone"
+                    str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
+                    str_error += " Prev dog: " + pet_name_ID_smpl + " current dog: " + l.pet_ID
+                End If
+
+
+
+
+
                 ' skup line 2 (always "different" and all cases when we are still in same time zone, step after step
                 If out_line_cnt <> 2 And l_time_zone <> prev_l_time_zone And prev_l_time_zone <> 777 Then
                     If l_time_zone = 1 And prev_l_time_zone <> 3 Then
