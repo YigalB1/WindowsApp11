@@ -351,22 +351,36 @@ Module Module1
 
 
                 ' check if we are in same time zone, but different dog  10 April 2020
-                Dim cond1 As Boolean = l_time_zone = prev_l_time_zone And pet_name_ID_smpl <> l.pet_ID
-                Dim cond2 As Boolean = pet_name_ID_smpl <> l.pet_ID And prev_l_time_zone <> 3 And l_time_zone <> 1
+                '                Dim cond1 As Boolean = l_time_zone = prev_l_time_zone And pet_name_ID_smpl <> l.pet_ID
+                '                 Dim cond2 As Boolean = pet_name_ID_smpl <> l.pet_ID And prev_l_time_zone <> 3 And l_time_zone <> 1
 
-                If cond1 Then
-                    str_error = " +++++++ Error: dog change, same time zone"
+                If pet_name_ID_smpl <> l.pet_ID And l_time_zone = prev_l_time_zone Then
+                    str_error = " +++++++ Error: dog change, same time zone,"
                     str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
                     str_error += " Prev dog: " + pet_name_ID_smpl + " current dog: " + l.pet_ID
+                    xlWorksheet.Cells(out_line_cnt, 23) = str_error
+                    log_out_lst.Add(str_error)
                 End If
 
+                ' new set of checks, should cover the above and more. Keep in source to validate.
+                If pet_name_ID_smpl <> l.pet_ID Then
+                    If prev_l_time_zone <> 3 Then
+                        str_error = " xxxxxxx Error: dog changed, last time zone is not 3,"
+                        str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
+                        str_error += " Prev dog: " + pet_name_ID_smpl + " current dog: " + l.pet_ID
+                        xlWorksheet.Cells(out_line_cnt, 24) = str_error
+                        log_out_lst.Add(str_error)
+                    End If
 
-                If cond2 Then
-                    str_error = " <<<<<>>>> Error: dog change, same time zone"
-                    str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
-                    str_error += " Prev dog: " + pet_name_ID_smpl + " current dog: " + l.pet_ID
+                    If l_time_zone <> 1 Then
+                        str_error = " xxxxxxx Error: dog changed, new time zone is not 1,"
+                        str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
+                        str_error += " Prev dog: " + pet_name_ID_smpl + " current dog: " + l.pet_ID
+                        xlWorksheet.Cells(out_line_cnt, 24) = str_error
+                        log_out_lst.Add(str_error)
+                    End If
+
                 End If
-
 
 
 
