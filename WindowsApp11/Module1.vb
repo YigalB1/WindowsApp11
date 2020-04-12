@@ -355,7 +355,7 @@ Module Module1
                 '                 Dim cond2 As Boolean = pet_name_ID_smpl <> l.pet_ID And prev_l_time_zone <> 3 And l_time_zone <> 1
 
                 If pet_name_ID_smpl <> l.pet_ID And l_time_zone = prev_l_time_zone Then
-                    str_error = " +++++++ Error: dog change, same time zone,"
+                    str_error = " --- Error 1: dog change, same time zone,"
                     str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
                     str_error += " Prev dog: " + pet_name_ID_smpl + " current dog: " + l.pet_ID
                     xlWorksheet.Cells(out_line_cnt, 23) = str_error
@@ -363,9 +363,10 @@ Module Module1
                 End If
 
                 ' new set of checks, should cover the above and more. Keep in source to validate.
-                If pet_name_ID_smpl <> l.pet_ID Then
+                ' dog changed, but not with first line  (no dog before that)
+                If pet_name_ID_smpl <> l.pet_ID And out_line_cnt <> 2 Then
                     If prev_l_time_zone <> 3 Then
-                        str_error = " xxxxxxx Error: dog changed, last time zone is not 3,"
+                        str_error = " --- Error2: dog changed, last time zone is not 3,"
                         str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
                         str_error += " Prev dog: " + pet_name_ID_smpl + " current dog: " + l.pet_ID
                         xlWorksheet.Cells(out_line_cnt, 24) = str_error
@@ -373,7 +374,7 @@ Module Module1
                     End If
 
                     If l_time_zone <> 1 Then
-                        str_error = " xxxxxxx Error: dog changed, new time zone is not 1,"
+                        str_error = " --- Error 3: dog changed, new time zone is not 1,"
                         str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
                         str_error += " Prev dog: " + pet_name_ID_smpl + " current dog: " + l.pet_ID
                         xlWorksheet.Cells(out_line_cnt, 24) = str_error
