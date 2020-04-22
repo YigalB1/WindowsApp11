@@ -1298,9 +1298,10 @@ Public Class Form1
         Do While csv_fname <> ""
             f_cnt += 1
             CSV_files_headers.Add(CSV_header_tmp.CSV_header_read(_dir + csv_fname))
-            Console.WriteLine(" finished reading CSV file header: " + f_cnt.ToString() + ") " + csv_fname)
+            'Console.WriteLine(" finished reading CSV file header: " + f_cnt.ToString() + ") " + csv_fname)
             Print_to_log_file(" finished reading CSV file header: " + f_cnt.ToString() + ") " + csv_fname)
             csv_fname = Dir()
+            Application.DoEvents()
         Loop ' go and read next CSV file
         ' *** now alll headers of CSV files are inside CSV_files_headers
         ' ** now let's see if there is  match for every entry in the practice file

@@ -45,7 +45,7 @@
         csv_Excel.Workbooks.Close()
         csv_Excel.Quit()
         csv_Excel = Nothing
-
+        Application.DoEvents() ' 12 April 2020
         Return (cur_csv_header)
     End Function
 

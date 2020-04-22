@@ -235,6 +235,9 @@ Module Module1
         xlWorksheet.Cells(1, 20) = "Total Activity count"
         xlWorksheet.Cells(1, 21) = "Zeros count"
         xlWorksheet.Cells(1, 22) = "max zeros is a row"
+        xlWorksheet.Cells(1, 23) = "Num of Zeros in training"    ' 22 April 2020
+        xlWorksheet.Cells("A1:A30").Style.WrapText = True    ' 22 April 2020
+
 
         Dim out_line_cnt As Integer = 2
 
@@ -255,6 +258,9 @@ Module Module1
         Dim zero_acitivty_in_a_row_cnt As Integer = 0
         Dim max_acitivty_in_a_row = 0
         Dim time_zone_change As Boolean = False ' indicates moving from pre->act->post
+        Dim zeros_in_zone_1 As Integer = 0  ' 22 April 2020
+        Dim zeros_in_zone_2 As Integer = 0  ' 22 April 2020
+        Dim zeros_in_zone_3 As Integer = 0  ' 22 April 2020
 
         ' 2 Apr 2020 bug fix below 
         Dim pet_name_smpl As String = "xxxxx"
@@ -325,6 +331,7 @@ Module Module1
                 ' --------------------------------------
                 ' if here, we are within pre-actual-post
 
+                ' check if time is before start, but last time zone was 3, so there wa a change
                 If line.pract_time < l_start Then
                     If l_time_zone = 3 Then
                         time_zone_change = True
@@ -332,6 +339,8 @@ Module Module1
                     prev_l_time_zone = l_time_zone
                     l_time_zone = 1
 
+                    ' if time is after start, but before end of practice, so  we are in time zone 2 now.
+                    ' if previously we were at time zone 1, there was a change
                 ElseIf line.pract_time <= l_end Then
                     If l_time_zone = 1 Then
                         time_zone_change = True
@@ -386,27 +395,27 @@ Module Module1
 
 
 
-                ' skup line 2 (always "different" and all cases when we are still in same time zone, step after step
+                ' skip line 2 (always "different" and all cases when we are still in same time zone, step after step
                 If out_line_cnt <> 2 And l_time_zone <> prev_l_time_zone And prev_l_time_zone <> 777 Then
                     If l_time_zone = 1 And prev_l_time_zone <> 3 Then
                         tz_error_cnt += 1
                         str_error = tz_error_cnt.ToString().PadLeft(3) + " >>>> Error with time zone change. now 1, was " + prev_l_time_zone.ToString()
                         str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
-                        xlWorksheet.Cells(out_line_cnt, 22) = str_error
+                        xlWorksheet.Cells(out_line_cnt, 25) = str_error
                         log_out_lst.Add(str_error)
                     End If
                     If l_time_zone = 2 And prev_l_time_zone <> 1 Then
                         tz_error_cnt += 1
                         str_error = tz_error_cnt.ToString().PadLeft(3) + " >>>> Error with time zone change. now 2, was " + prev_l_time_zone.ToString()
                         str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
-                        xlWorksheet.Cells(out_line_cnt, 22) = str_error
+                        xlWorksheet.Cells(out_line_cnt, 25) = str_error
                         log_out_lst.Add(str_error)
                     End If
                     If l_time_zone = 3 And prev_l_time_zone <> 2 Then
                         tz_error_cnt += 1
                         str_error = tz_error_cnt.ToString().PadLeft(3) + " >>>> Error with time zone change. now 3, was " + prev_l_time_zone.ToString()
                         str_error += " Line in output excel file: " + (out_line_cnt).ToString().PadLeft(5)
-                        xlWorksheet.Cells(out_line_cnt, 22) = str_error
+                        xlWorksheet.Cells(out_line_cnt, 25) = str_error
                         log_out_lst.Add(str_error)
                     End If
                 End If
@@ -416,9 +425,46 @@ Module Module1
                     quality_activity_smpl = quality_activity_cnt
                     zero_acitivty_smpl = zero_acitivty_cnt
 
+
+                    Dim str_zeros_error As String = Nothing
+
                     xlWorksheet.Cells(out_line_cnt - 1, 20) = quality_activity_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 21) = zero_acitivty_smpl
                     xlWorksheet.Cells(out_line_cnt - 1, 22) = max_acitivty_in_a_row
+
+
+                    ' 22 Apr 2020
+                    If prev_l_time_zone = 2 And zero_acitivty_smpl > 0 Then
+                        str_zeros_error = "^^^ one or more zeros in time zone 2, line: " + (out_line_cnt - 1).ToString()
+                        log_out_lst.Add(str_zeros_error)
+                    End If
+
+
+
+
+                    ' 22 Apr 2020 the lines below were added to see how many zeros totally in a practice, all time zones
+                    If prev_l_time_zone = 1 Then
+                        zeros_in_zone_1 = zero_acitivty_smpl
+                    End If
+                    If prev_l_time_zone = 2 Then
+                        zeros_in_zone_2 = zero_acitivty_smpl
+                    End If
+                    If prev_l_time_zone = 3 Then
+                        zeros_in_zone_3 = zero_acitivty_smpl
+                        xlWorksheet.Cells(out_line_cnt - 1, 23) = zeros_in_zone_1 + zeros_in_zone_2 + zeros_in_zone_3       ' 22 Apr 2020 
+
+                        If prev_l_time_zone = 3 Then
+                            str_zeros_error = "^^^ one or more zeros in time zone 2, line: " + (out_line_cnt - 1).ToString()
+                            log_out_lst.Add(str_zeros_error)
+                        End If
+
+
+                        zeros_in_zone_1 = 0 ' 22 Apr 2020
+                        zeros_in_zone_2 = 0 ' 22 Apr 2020
+                        zeros_in_zone_3 = 0 ' 22 Apr 2020
+                    End If
+
+
 
                     If max_acitivty_in_a_row >= 4 Or zero_acitivty_smpl >= 4 Then       ' 2 Apr 2020 Added
                         many_zeros_cnt += 1
