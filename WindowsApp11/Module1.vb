@@ -457,14 +457,20 @@ Module Module1
                     End If
                     If prev_l_time_zone = 2 Then
                         zeros_in_zone_2 = zero_acitivty_smpl
+                        If zeros_in_zone_2 > 0 Then
+                            str_zeros_error = "^^^ one or more zeros in time zone 2, line: " + (out_line_cnt - 1).ToString()
+                            log_out_lst.Add(str_zeros_error)
+                        End If
+
+
                     End If
                     If prev_l_time_zone = 3 Then
                         zeros_in_zone_3 = zero_acitivty_smpl
                         Dim total_zeros_in_zones As Integer = zeros_in_zone_1 + zeros_in_zone_2 + zeros_in_zone_3
                         xlWorksheet.Cells(out_line_cnt - 1, 23) = total_zeros_in_zones       ' 22 Apr 2020 
 
-                        If total_zeros_in_zones > 0 Then
-                            str_zeros_error = "^^^ one or more zeros in time zone 2, line: " + (out_line_cnt - 1).ToString()
+                        If total_zeros_in_zones > 4 Then
+                            str_zeros_error = "^^^^^ 4 or more Zeros in trainin g (all time zones), line: " + (out_line_cnt - 1).ToString()
                             log_out_lst.Add(str_zeros_error)
                         End If
 
