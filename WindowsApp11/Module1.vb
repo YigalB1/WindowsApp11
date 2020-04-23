@@ -237,6 +237,15 @@ Module Module1
         xlWorksheet.Cells(1, 22) = "max zeros is a row"
         xlWorksheet.Cells(1, 23) = "Num of Zeros in training"    ' 22 April 2020
         'xlWorksheet.Cells("A1:A30").Style.WrapText = True    ' 22 April 2020
+        'xlWorksheet.Range((1, 1), (1, 23)).WrapText = True
+        ' Range(Cells(2, i), Cells(2, i)).WrapText = True
+
+        'xlWorksheet.Rows("2:2").Select
+        'xlWorksheet.FreezePanes = True
+        'xlWorksheet.Range(xlWorksheet.Cells(1, 1), xlWorksheet.Cells(1, 25)).WrapText = True
+
+
+        'xlWorksheet.Range("A1:A25").WrapText = True
 
 
         Dim out_line_cnt As Integer = 2
@@ -451,9 +460,10 @@ Module Module1
                     End If
                     If prev_l_time_zone = 3 Then
                         zeros_in_zone_3 = zero_acitivty_smpl
-                        xlWorksheet.Cells(out_line_cnt - 1, 23) = zeros_in_zone_1 + zeros_in_zone_2 + zeros_in_zone_3       ' 22 Apr 2020 
+                        Dim total_zeros_in_zones As Integer = zeros_in_zone_1 + zeros_in_zone_2 + zeros_in_zone_3
+                        xlWorksheet.Cells(out_line_cnt - 1, 23) = total_zeros_in_zones       ' 22 Apr 2020 
 
-                        If prev_l_time_zone = 3 Then
+                        If total_zeros_in_zones > 0 Then
                             str_zeros_error = "^^^ one or more zeros in time zone 2, line: " + (out_line_cnt - 1).ToString()
                             log_out_lst.Add(str_zeros_error)
                         End If
