@@ -236,6 +236,17 @@ Module Module1
         xlWorksheet.Cells(1, 21) = "Zeros count"
         xlWorksheet.Cells(1, 22) = "max zeros is a row"
         xlWorksheet.Cells(1, 23) = "Num of Zeros in training"    ' 22 April 2020
+        'xlWorksheet.Range.Cells(1, 23).WrapText = True
+
+        Dim cellA1 As Microsoft.Office.Interop.Excel.Range = xlWorksheet.Cells.Range("A1:X1")
+        cellA1.WrapText = True
+        cellA1.Borders.Color = Color.Black
+        cellA1.Font.Color = Color.Blue
+        cellA1.Font.Bold = True
+        'cellA1.Font.Background = Color.Yellow
+
+
+
         'xlWorksheet.Cells("A1:A30").Style.WrapText = True    ' 22 April 2020
         'xlWorksheet.Range((1, 1), (1, 23)).WrapText = True
         ' Range(Cells(2, i), Cells(2, i)).WrapText = True
@@ -243,6 +254,15 @@ Module Module1
         'xlWorksheet.Rows("2:2").Select
         'xlWorksheet.FreezePanes = True
         'xlWorksheet.Range(xlWorksheet.Cells(1, 1), xlWorksheet.Cells(1, 25)).WrapText = True
+
+
+        'xlWorksheet.Range("A1", "A25").Select()
+        'xlWorksheet.ActiveWindow.FreezePanes = True
+        'xlWorksheet.Range(xlWorksheet.Cells(1, 1), xlWorksheet.Cells(1, 25)).WrapText = True
+
+
+
+
 
 
         'xlWorksheet.Range("A1:A25").WrapText = True
@@ -470,7 +490,7 @@ Module Module1
                         xlWorksheet.Cells(out_line_cnt - 1, 23) = total_zeros_in_zones       ' 22 Apr 2020 
 
                         If total_zeros_in_zones > 4 Then
-                            str_zeros_error = "^^^^^ 4 or more Zeros in trainin g (all time zones), line: " + (out_line_cnt - 1).ToString()
+                            str_zeros_error = "^^^^^ 4 or more Zeros in training (all time zones), line: " + (out_line_cnt - 1).ToString()
                             log_out_lst.Add(str_zeros_error)
                         End If
 
