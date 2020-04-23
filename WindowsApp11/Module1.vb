@@ -236,7 +236,7 @@ Module Module1
         xlWorksheet.Cells(1, 21) = "Zeros count"
         xlWorksheet.Cells(1, 22) = "max zeros is a row"
         xlWorksheet.Cells(1, 23) = "Num of Zeros in training"    ' 22 April 2020
-        xlWorksheet.Cells("A1:A30").Style.WrapText = True    ' 22 April 2020
+        'xlWorksheet.Cells("A1:A30").Style.WrapText = True    ' 22 April 2020
 
 
         Dim out_line_cnt As Integer = 2
