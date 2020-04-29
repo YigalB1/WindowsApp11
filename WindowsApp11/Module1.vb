@@ -26,6 +26,12 @@ Module Module1
         curr_session.practice_type = _pract_type
         curr_session.Practice_num = _pract_num
 
+        ' 29 April
+        curr_session.pet_gender = CSV_Excel.Cells(2, 4).text.Replace("Gender: ", "").Replace(" ", "")
+        curr_session.pet_breed = CSV_Excel.Cells(2, 6).text.Replace("Breed: ", "").Replace(" ", "")
+
+
+
         Dim csv_start_date As DateTime
         Dim s1 As String = CSV_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
         Dim t_bool As Boolean = Date.TryParseExact(s1, "MM/dd/yyyy",
@@ -218,25 +224,25 @@ Module Module1
         xlWorksheet.Cells(1, 1) = "Dog"
         xlWorksheet.Cells(1, 2) = "Age"
         xlWorksheet.Cells(1, 3) = "Session Date"
-        xlWorksheet.Cells(1, 4) = "Session in day"
-        xlWorksheet.Cells(1, 5) = "Practice"
-        xlWorksheet.Cells(1, 6) = "Predictability"
-        xlWorksheet.Cells(1, 7) = "Video num"
-        xlWorksheet.Cells(1, 8) = "Time Zone"
-        xlWorksheet.Cells(1, 9) = "Start"
-        xlWorksheet.Cells(1, 10) = "End"
-        xlWorksheet.Cells(1, 11) = "Reading Time"
-        xlWorksheet.Cells(1, 12) = "Activity"
-        xlWorksheet.Cells(1, 13) = "Pulse"
-        xlWorksheet.Cells(1, 14) = "Respiration"
-        xlWorksheet.Cells(1, 15) = "HRV"
-        xlWorksheet.Cells(1, 16) = "Sleep score"
-        xlWorksheet.Cells(1, 17) = "Activity Score"
+        xlWorksheet.Cells(1, 4) = "Sex" ' April 29 (D)
+        xlWorksheet.Cells(1, 5) = "Breed"   ' April 29 (E)
+        xlWorksheet.Cells(1, 6) = "Practice" ' April 29 (F)
+        ' xlWorksheet.Cells(1, 7) = "" ' April 29 (G)
+        xlWorksheet.Cells(1, 7) = "Time Zone"
+        xlWorksheet.Cells(1, 8) = "Start"
+        xlWorksheet.Cells(1, 9) = "End"
+        xlWorksheet.Cells(1, 10) = "Reading Time"
+        xlWorksheet.Cells(1, 11) = "Activity"
+        xlWorksheet.Cells(1, 12) = "Pulse"
+        xlWorksheet.Cells(1, 13) = "Respiration"
+        xlWorksheet.Cells(1, 14) = "HRV"
+        xlWorksheet.Cells(1, 15) = "Sleep score"
+        xlWorksheet.Cells(1, 16) = "Activity Score"
         xlWorksheet.Cells(1, 20) = "Total Activity count"
         xlWorksheet.Cells(1, 21) = "Zeros count"
         xlWorksheet.Cells(1, 22) = "max zeros is a row"
         xlWorksheet.Cells(1, 23) = "Num of Zeros in training"    ' 22 April 2020
-        'xlWorksheet.Range.Cells(1, 23).WrapText = True
+
 
         Dim cellA1 As Microsoft.Office.Interop.Excel.Range = xlWorksheet.Cells.Range("A1:X1")
         cellA1.WrapText = True
@@ -245,27 +251,6 @@ Module Module1
         cellA1.Font.Bold = True
         'cellA1.Font.Background = Color.Yellow
 
-
-
-        'xlWorksheet.Cells("A1:A30").Style.WrapText = True    ' 22 April 2020
-        'xlWorksheet.Range((1, 1), (1, 23)).WrapText = True
-        ' Range(Cells(2, i), Cells(2, i)).WrapText = True
-
-        'xlWorksheet.Rows("2:2").Select
-        'xlWorksheet.FreezePanes = True
-        'xlWorksheet.Range(xlWorksheet.Cells(1, 1), xlWorksheet.Cells(1, 25)).WrapText = True
-
-
-        'xlWorksheet.Range("A1", "A25").Select()
-        'xlWorksheet.ActiveWindow.FreezePanes = True
-        'xlWorksheet.Range(xlWorksheet.Cells(1, 1), xlWorksheet.Cells(1, 25)).WrapText = True
-
-
-
-
-
-
-        'xlWorksheet.Range("A1:A25").WrapText = True
 
 
         Dim out_line_cnt As Integer = 2
@@ -303,12 +288,17 @@ Module Module1
         Dim prev_l_time_zone As Integer = 777  ' 4 April 2020
         Dim tz_error_cnt As Integer = 0
 
+        Dim age_of_weeks_list As New List(Of Integer) 'April 29 to collect for log file
+
+
 
         For Each l In _tot_sessions
 
             ' 29 March 2020 bug fix: should be zeroed only when changing time zoned
             '   not when new dog or training starts
             ' max_acitivty_in_a_row = 0
+
+            age_of_weeks_list.Add(l.pet_age)
 
 
             zero_acitivty_in_a_row_cnt = 0
@@ -531,12 +521,12 @@ Module Module1
                 xlWorksheet.Cells(out_line_cnt, 1) = l.pet_ID
                 xlWorksheet.Cells(out_line_cnt, 2) = l.pet_age
                 xlWorksheet.Cells(out_line_cnt, 3) = l.session_start_time
-                'xlWorksheet.Cells(out_line_cnt, 4) = 
-                ' xlWorksheet.Cells(out_line_cnt, 5) = l.practice_type
-                xlWorksheet.Cells(out_line_cnt, 5) = l.Practice_num
+                xlWorksheet.Cells(out_line_cnt, 4) = l.pet_gender ' April 29
+                xlWorksheet.Cells(out_line_cnt, 5) = l.pet_breed ' April 29
+                xlWorksheet.Cells(out_line_cnt, 6) = l.Practice_num ' April 29 changed column only
                 'xlWorksheet.Cells(out_line_cnt, 6) = sessions.sessionsList(c).predictability.ToString()
                 'xlWorksheet.Cells(out_line_cnt, 7) = sessions.sessionsList(c).videoNum
-                xlWorksheet.Cells(out_line_cnt, 8) = l_time_zone
+                xlWorksheet.Cells(out_line_cnt, 7) = l_time_zone
 
                 ' mark start time of each timezone (pre/act/post)
                 Dim l1, l2 As DateTime
@@ -556,14 +546,14 @@ Module Module1
                         Debug.WriteLine("Error in case of timeZone, num is: " + l_time_zone.ToString())
                 End Select
 
-                xlWorksheet.Cells(out_line_cnt, 9) = l1.ToString("HH:mm")
-                xlWorksheet.Cells(out_line_cnt, 10) = l2.ToString("HH:mm")
+                xlWorksheet.Cells(out_line_cnt, 8) = l1.ToString("HH:mm")
+                xlWorksheet.Cells(out_line_cnt, 9) = l2.ToString("HH:mm")
                 'xlWorksheet.Cells(out_line_cnt, 11) = l.pract_time 21 Oct 2019, nove to 24h clock
-                xlWorksheet.Cells(out_line_cnt, 11) = Format(line.pract_time, "HH:mm")
+                xlWorksheet.Cells(out_line_cnt, 10) = Format(line.pract_time, "HH:mm")
                 'xlWorksheet.Cells(out_line_cnt, 12) = line.activity
 
                 If line.activity_flag Then
-                    xlWorksheet.Cells(out_line_cnt, 12) = line.activity
+                    xlWorksheet.Cells(out_line_cnt, 11) = line.activity
 
                     quality_activity_cnt += 1
 
@@ -586,23 +576,23 @@ Module Module1
                 End If
 
                 If line.pulse_flag Then
-                    xlWorksheet.Cells(out_line_cnt, 13) = line.pulse
+                    xlWorksheet.Cells(out_line_cnt, 12) = line.pulse
                 End If
 
                 If line.resp_flag Then
-                    xlWorksheet.Cells(out_line_cnt, 14) = line.respiration
+                    xlWorksheet.Cells(out_line_cnt, 13) = line.respiration
                 End If
 
                 If line.vvti_flag Then
-                    xlWorksheet.Cells(out_line_cnt, 15) = line.vvti
+                    xlWorksheet.Cells(out_line_cnt, 14) = line.vvti
                 End If
 
                 If line.sleep_flag Then
-                    xlWorksheet.Cells(out_line_cnt, 16) = line.sleep
+                    xlWorksheet.Cells(out_line_cnt, 15) = line.sleep
                 End If
 
                 If line.activity_score_flag Then
-                    xlWorksheet.Cells(out_line_cnt, 17) = line.activity_score
+                    xlWorksheet.Cells(out_line_cnt, 16) = line.activity_score
                 End If
 
                 ' 1 march 2020 print activity quality results
@@ -651,6 +641,38 @@ Module Module1
 
 
         Next ' of for each sessions
+
+
+        log_out_lst.Add("List of ages, un sorted as for now")
+        For Each l_age As Integer In age_of_weeks_list
+            log_out_lst.Add(l_age.ToString())
+        Next
+        log_out_lst.Add("List of ages, sorting")
+        age_of_weeks_list.Sort()
+        For Each l_age As Integer In age_of_weeks_list
+            log_out_lst.Add(l_age.ToString())
+        Next
+
+        Dim last_item As Integer = age_of_weeks_list.First
+        Dim last_count As Integer = 0
+
+
+        For Each l_age As Integer In age_of_weeks_list
+            If l_age = last_item Then
+                last_count += 1
+            Else
+                log_out_lst.Add("Age of: " + last_item.ToString() + " occured " + last_count.ToString() + " times")
+                last_item = l_age
+                last_count = 1
+            End If
+
+        Next
+        ' add the last one
+        log_out_lst.Add("Age of: " + last_item.ToString() + " occured " + last_count.ToString() + " times")
+
+
+
+
 
         xlWorksheet.SaveAs(_out_file)
         xlWorkbook.Close()

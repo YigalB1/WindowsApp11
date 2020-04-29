@@ -348,7 +348,7 @@ Class Session_CSV_file
     Public session_end_time As DateTime
     Public pet_name As String
     Public pet_ID As String
-    Public pet_gender As Char
+    Public pet_gender As String ' April 29 2020
     Public pet_species As String
     Public pet_breed As String
     Public pet_owner As String

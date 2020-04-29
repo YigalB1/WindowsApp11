@@ -624,6 +624,7 @@ Public Class Form1
             counter = counter + 1
             row_cnt = row_cnt + 1
             stmp = MyExcel.Cells(row_cnt, col_cnt).text ' get next dog's name
+            Application.DoEvents()
         Loop Until counter > MAX_NUM_OF_PRACTICES Or stmp = "END"
 
         MyExcel.Workbooks.Close()
@@ -649,10 +650,11 @@ Public Class Form1
     End Sub
 
     Private Sub RdSessionFiles_Click(sender As Object, e As EventArgs) Handles RdSessionFiles.Click
-        Read_session_files()
+        ' Read_session_files()
     End Sub
 
     Private Sub Read_session_files()
+
         If Stage_Read_Practice_Table = False Then
             MessageBox.Show("Must read practice file BEFORE reading sessions list")
             Exit Sub
@@ -663,14 +665,17 @@ Public Class Form1
             Exit Sub
         End If
 
-        Read_CSV_Session_files(in_files_dir)
+        ' April 28
+        ' Read_CSV_Session_files(in_files_dir)   **** no need??
+
+
     End Sub
 
     Private Sub TxtBoxHeader_TextChanged(sender As Object, e As EventArgs)
     End Sub
 
     '  ***** reading CSV session files ********************
-    Public Sub Read_CSV_Session_files(_dir As String)
+    Public Sub Read_CSV_Session_files_old_not_to_be_used(_dir As String)
         Dim pract_Excel As New Microsoft.Office.Interop.Excel.Application
         Dim dog_session As New DogSession
 
@@ -707,7 +712,27 @@ Public Class Form1
             curr_session.pet_name = pet_name
             pet_id = pract_Excel.Cells(2, 2).text.Replace("Pet id: ", "").Replace(" ", "")
             curr_session.pet_ID = pet_id
-            Print_to_log_file("Pet name & ID: " + pet_name + " / " + pet_id)
+
+
+
+
+            ' April 29, 2020 Add pet_breed and sex
+            Dim pet_breed As String
+            pet_breed = pract_Excel.Cells(2, 6).text.Replace("Breed: ", "").Replace(" ", "")
+            curr_session.pet_breed = pet_breed
+
+            Dim pet_gender As String
+            pet_gender = pract_Excel.Cells(2, 4).text.Replace("Gender: ", "").Replace(" ", "")
+            curr_session.pet_gender = pet_gender
+
+
+            Print_to_log_file("Pet name, ID, Breed, Sex: " + pet_name + " / " + pet_id + " / " + pet_breed + " / " + pet_gender)
+
+
+
+
+
+
 
             ' get the start date & end date of this session file
             Dim s1 As String = pract_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
@@ -755,7 +780,7 @@ Public Class Form1
             Dim activity_score_cnt = 0
 
             'Dim line_data As New Session_CSV_file.dog_data
-            Dim prev_line_data As New Session_CSV_file.dog_data
+            Dim prev_line_data As New Session_CSV_file.Dog_data
             'Dim line_data As New Session_CSV_file.dog_data
 
 
@@ -923,6 +948,7 @@ Public Class Form1
             Application.DoEvents()
             Console.WriteLine(" finished file number " + file_count.ToString())
             Console.WriteLine("Pet name & ID: {0} {1} ", dog_session.pet_name, dog_session.pet_ID)
+            Application.DoEvents()
         Loop ' go and read next CSV file
 
         Print_to_log_file("Total lines read      : " + total_lines_of_csv.ToString())
