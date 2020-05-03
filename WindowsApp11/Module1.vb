@@ -1,5 +1,6 @@
 ﻿Imports Microsoft.Office.Interop
 
+
 Module Module1
 
 
@@ -7,7 +8,7 @@ Module Module1
     Public Function Read_CSV_file(_fname As String, _dog_age As Integer, _pract_type As String,
                                   _pract_num As Integer, _pract_date As Date, _activity_start As Date,
                                   _activity_end As Date, _pre_time As Integer,
-                                  _post_time As Integer, ByRef _line_counter As Integer) As Session_CSV_file
+                                  _post_time As Integer, ByRef _line_counter As Integer, _breed_list As List(Of BreedClass)) As Session_CSV_file
         Dim CSV_Excel As New Microsoft.Office.Interop.Excel.Application
         Dim curr_session As New Session_CSV_file ' includes all data read from this excel
 
@@ -28,175 +29,209 @@ Module Module1
 
         ' 29 April
         curr_session.pet_gender = CSV_Excel.Cells(2, 4).text.Replace("Gender: ", "").Replace(" ", "")
-        curr_session.pet_breed = CSV_Excel.Cells(2, 6).text.Replace("Breed: ", "").Replace(" ", "")
+
+
+
+        ' 3 May 2020 convert breed to short, as stated in practice list
+        Dim pet_breed As String = CSV_Excel.Cells(2, 6).text.Replace("Breed: ", "").Replace(" ", "")
+
+
+
+        Dim breed_exists As Boolean = False
+        Dim breed_found As String = "blabla"
+        For Each t_breed In _breed_list
+            Dim tmp_breed As String = t_breed.BreedName.Replace("Breed: ", "").Replace(" ", "")
+
+            If tmp_breed = pet_breed Then
+                breed_exists = True
+                breed_found = t_breed.BreedShort
+            End If
+        Next
+
+        If breed_exists = False Then
+            Dim err_msg As String = "ERROR: breed not found in table. Breed name: "
+            err_msg += pet_breed
+            Form1.Print_to_log_file(err_msg)
+        End If
+
+
+
+
+
+        curr_session.pet_breed = breed_found
+
+
+
+
+        'curr_session.pet_breed = CSV_Excel.Cells(2, 6).text.Replace("Breed: ", "").Replace(" ", "")
 
 
 
         Dim csv_start_date As DateTime
-        Dim s1 As String = CSV_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
-        Dim t_bool As Boolean = Date.TryParseExact(s1, "MM/dd/yyyy",
+            Dim s1 As String = CSV_Excel.Cells(1, 1).text.Replace("From:", "").Replace(" ", "")
+            Dim t_bool As Boolean = Date.TryParseExact(s1, "MM/dd/yyyy",
                                Globalization.CultureInfo.InvariantCulture,
                                Globalization.DateTimeStyles.None, csv_start_date)
 
 
-        ' curr_session.session_start_time = csv_start_date ' 6 March 2020: use parameter inside because training can be on 2 days
-        curr_session.session_start_time = _pract_date ' Oct 23, 2019
-        If (t_bool = False) Then
-            MessageBox.Show("Error E1 while checking CSV file date")
-            Console.WriteLine("Error E1 while checking CSV file date")
-        End If
+            ' curr_session.session_start_time = csv_start_date ' 6 March 2020: use parameter inside because training can be on 2 days
+            curr_session.session_start_time = _pract_date ' Oct 23, 2019
+            If (t_bool = False) Then
+                MessageBox.Show("Error E1 while checking CSV file date")
+                Console.WriteLine("Error E1 while checking CSV file date")
+            End If
 
-        ' ** finished reading CSV header
-        ' start reading data lines, line after line
-        Dim line_Cnt As Integer = 3 ' first line to read is 4, incremented soon
-        ' Dim total_line_cnt As Integer = 0 ' counts the total number of lines over all files
-        Dim line_data_type As String
-        Dim line_date As DateTime = Nothing
-        Dim nxt_line_date As DateTime = Nothing ' to check if next cycle has same time as current
+            ' ** finished reading CSV header
+            ' start reading data lines, line after line
+            Dim line_Cnt As Integer = 3 ' first line to read is 4, incremented soon
+            ' Dim total_line_cnt As Integer = 0 ' counts the total number of lines over all files
+            Dim line_data_type As String
+            Dim line_date As DateTime = Nothing
+            Dim nxt_line_date As DateTime = Nothing ' to check if next cycle has same time as current
 
-        Dim activity_tmp As Double
-        Dim activity_flag As Boolean = False
-        Dim acti_cnt As Integer = 0
+            Dim activity_tmp As Double
+            Dim activity_flag As Boolean = False
+            Dim acti_cnt As Integer = 0
 
-        Dim pulse_tmp As Integer
-        Dim pulse_flag As Boolean = False
-        Dim pulse_cnt As Integer = 0
-        Dim resp_tmp As Integer
-        Dim resp_flag As Boolean = False
-        Dim resp_cnt As Integer
-        Dim vvti_tmp As Double
-        Dim vvti_flag As Boolean = False
-        Dim vvti_cnt As Integer
+            Dim pulse_tmp As Integer
+            Dim pulse_flag As Boolean = False
+            Dim pulse_cnt As Integer = 0
+            Dim resp_tmp As Integer
+            Dim resp_flag As Boolean = False
+            Dim resp_cnt As Integer
+            Dim vvti_tmp As Double
+            Dim vvti_flag As Boolean = False
+            Dim vvti_cnt As Integer
 
-        Dim sleep_score_tmp As Double
-        Dim sleep_score_flag As Boolean = False
-        Dim sleep_score_cnt = 0
-        Dim activity_score_tmp As Integer
-        Dim activity_score_flag As Boolean = False
-        Dim activity_score_cnt = 0
+            Dim sleep_score_tmp As Double
+            Dim sleep_score_flag As Boolean = False
+            Dim sleep_score_cnt = 0
+            Dim activity_score_tmp As Integer
+            Dim activity_score_flag As Boolean = False
+            Dim activity_score_cnt = 0
 
-        'Dim tmp_value As Boolean = False  ' to indicate there was a value
+            'Dim tmp_value As Boolean = False  ' to indicate there was a value
 
-        Do  ' assume line 3 has always data
-            line_Cnt += 1
-            'total_line_cnt += 1
-            '_line_counter = (total_line_cnt - 3).ToString()
-            line_data_type = CSV_Excel.Cells(line_Cnt, 1).Text
-            line_date = CSV_Excel.Cells(line_Cnt, 2).value
+            Do  ' assume line 3 has always data
+                line_Cnt += 1
+                'total_line_cnt += 1
+                '_line_counter = (total_line_cnt - 3).ToString()
+                line_data_type = CSV_Excel.Cells(line_Cnt, 1).Text
+                line_date = CSV_Excel.Cells(line_Cnt, 2).value
 
-            Select Case line_data_type
+                Select Case line_data_type
                     'Case "Position"
                     '    posi_cnt += 1
                     '    pos_tmp = pract_Excel.Cells(line_Cnt, 5).text
                     '    pos_dur_tmp = pract_Excel.Cells(line_Cnt, 6).value
                     '    'line_data.position = pract_Excel.Cells(line_Cnt, 5).text
                     '    'line_data.position_duration = pract_Excel.Cells(line_Cnt, 6).value
-                Case "Activity"
-                    acti_cnt += 1
-                    'line_data.activity = pract_Excel.Cells(line_Cnt, 7).value
-                    activity_tmp = CSV_Excel.Cells(line_Cnt, 7).value
-                    activity_flag = True
+                    Case "Activity"
+                        acti_cnt += 1
+                        'line_data.activity = pract_Excel.Cells(line_Cnt, 7).value
+                        activity_tmp = CSV_Excel.Cells(line_Cnt, 7).value
+                        activity_flag = True
                     'tmp_value = True
-                Case "Pulse"
-                    pulse_cnt += 1
-                    'line_data.pulse = pract_Excel.Cells(line_Cnt, 9).value
-                    pulse_tmp = CSV_Excel.Cells(line_Cnt, 9).value
-                    pulse_flag = True
+                    Case "Pulse"
+                        pulse_cnt += 1
+                        'line_data.pulse = pract_Excel.Cells(line_Cnt, 9).value
+                        pulse_tmp = CSV_Excel.Cells(line_Cnt, 9).value
+                        pulse_flag = True
                     'tmp_value = True
-                Case "Respiration"
-                    resp_cnt += 1
-                    'line_data.respiration = pract_Excel.Cells(line_Cnt, 10).value
-                    resp_tmp = CSV_Excel.Cells(line_Cnt, 10).value
-                    resp_flag = True
+                    Case "Respiration"
+                        resp_cnt += 1
+                        'line_data.respiration = pract_Excel.Cells(line_Cnt, 10).value
+                        resp_tmp = CSV_Excel.Cells(line_Cnt, 10).value
+                        resp_flag = True
                     'tmp_value = True
-                Case "VVTI"
-                    vvti_cnt += 1
-                    'line_data.vvti = pract_Excel.Cells(line_Cnt, 11).value
-                    vvti_tmp = CSV_Excel.Cells(line_Cnt, 11).value
-                    vvti_flag = True
+                    Case "VVTI"
+                        vvti_cnt += 1
+                        'line_data.vvti = pract_Excel.Cells(line_Cnt, 11).value
+                        vvti_tmp = CSV_Excel.Cells(line_Cnt, 11).value
+                        vvti_flag = True
                     'tmp_value = True
-                Case "Sleep"
-                    sleep_score_cnt += 1
-                    sleep_score_tmp = CSV_Excel.Cells(line_Cnt, 14).value
-                    sleep_score_flag = True
+                    Case "Sleep"
+                        sleep_score_cnt += 1
+                        sleep_score_tmp = CSV_Excel.Cells(line_Cnt, 14).value
+                        sleep_score_flag = True
                     'tmp_value = True
-                Case "Activity Score"
-                    activity_score_cnt += 1
-                    activity_score_tmp = CSV_Excel.Cells(line_Cnt, 15).value
-                    activity_score_flag = True
+                    Case "Activity Score"
+                        activity_score_cnt += 1
+                        activity_score_tmp = CSV_Excel.Cells(line_Cnt, 15).value
+                        activity_score_flag = True
                     'tmp_value = True
-                Case "Fever Indication"
+                    Case "Fever Indication"
                         ' do nothing
-                Case "Position"
+                    Case "Position"
                         ' do nothing
-                Case "Position Score"
-                    ' do nothing
-                Case Else
-                    ' If it is null, we reached end of file
-                    If line_data_type <> "" Then
-                        Console.WriteLine("Wrong place in case of data type in CSV lines, line: " + line_Cnt.ToString())
-                    End If
+                    Case "Position Score"
+                        ' do nothing
+                    Case Else
+                        ' If it is null, we reached end of file
+                        If line_data_type <> "" Then
+                            Console.WriteLine("Wrong place in case of data type in CSV lines, line: " + line_Cnt.ToString())
+                        End If
 
-            End Select
+                End Select
 
-            If Not (activity_flag Or pulse_flag Or resp_flag Or vvti_flag Or activity_score_tmp) Then
-                Continue Do
-            End If
+                If Not (activity_flag Or pulse_flag Or resp_flag Or vvti_flag Or activity_score_tmp) Then
+                    Continue Do
+                End If
 
-            nxt_line_date = CSV_Excel.Cells(line_Cnt + 1, 2).value
+                nxt_line_date = CSV_Excel.Cells(line_Cnt + 1, 2).value
 
 
-            ' **** try combing lines that differ in less than 10 seconds
-            Dim seconds As Long = DateDiff(DateInterval.Second, line_date, nxt_line_date)
-            'Console.WriteLine("delta in seconds: " + seconds.ToString())
+                ' **** try combing lines that differ in less than 10 seconds
+                Dim seconds As Long = DateDiff(DateInterval.Second, line_date, nxt_line_date)
+                'Console.WriteLine("delta in seconds: " + seconds.ToString())
 
-            If seconds > 10 Then
+                If seconds > 10 Then
 
-                'End If
+                    'End If
 
-                'If line_date.AddSeconds(-line_date.Second) <> nxt_line_date.AddSeconds(-nxt_line_date.Second
-                '       ) Then
-                Dim line_data As New Session_CSV_file.Dog_data
-                line_data.pract_time = line_date
-                line_data.activity = activity_tmp
-                line_data.activity_flag = activity_flag
-                line_data.pulse = pulse_tmp
-                line_data.pulse_flag = pulse_flag
-                line_data.respiration = resp_tmp
-                line_data.resp_flag = resp_flag
-                line_data.vvti = vvti_tmp
-                line_data.vvti_flag = vvti_flag
-                line_data.sleep = sleep_score_tmp
-                line_data.sleep_flag = sleep_score_flag
-                line_data.activity_score = activity_score_tmp
-                line_data.activity_score_flag = activity_score_flag
+                    'If line_date.AddSeconds(-line_date.Second) <> nxt_line_date.AddSeconds(-nxt_line_date.Second
+                    '       ) Then
+                    Dim line_data As New Session_CSV_file.Dog_data
+                    line_data.pract_time = line_date
+                    line_data.activity = activity_tmp
+                    line_data.activity_flag = activity_flag
+                    line_data.pulse = pulse_tmp
+                    line_data.pulse_flag = pulse_flag
+                    line_data.respiration = resp_tmp
+                    line_data.resp_flag = resp_flag
+                    line_data.vvti = vvti_tmp
+                    line_data.vvti_flag = vvti_flag
+                    line_data.sleep = sleep_score_tmp
+                    line_data.sleep_flag = sleep_score_flag
+                    line_data.activity_score = activity_score_tmp
+                    line_data.activity_score_flag = activity_score_flag
 
-                curr_session.List_of_dog_data.Add(line_data)
+                    curr_session.List_of_dog_data.Add(line_data)
 
-                activity_flag = False
-                pulse_flag = False
-                resp_flag = False
-                vvti_flag = False
-                'sleep_score_flag = False '****once per file, should remain true
-                'activity_score_flag = False  ' **** once per file, should remain true
+                    activity_flag = False
+                    pulse_flag = False
+                    resp_flag = False
+                    vvti_flag = False
+                    'sleep_score_flag = False '****once per file, should remain true
+                    'activity_score_flag = False  ' **** once per file, should remain true
 
-            End If
+                End If
+                Application.DoEvents()
+            Loop While (line_data_type <> "")
+
+            ' finished reading the linces of the CSV
+            Console.WriteLine("Num of lines read: " + (line_Cnt - 3).ToString)
+            _line_counter = line_Cnt - 3
+
+            CSV_Excel.Workbooks.Close()
+            CSV_Excel.Quit()
+            CSV_Excel = Nothing
+            'total_sessions.Add(curr_session)
             Application.DoEvents()
-        Loop While (line_data_type <> "")
-
-        ' finished reading the linces of the CSV
-        Console.WriteLine("Num of lines read: " + (line_Cnt - 3).ToString)
-        _line_counter = line_Cnt - 3
-
-        CSV_Excel.Workbooks.Close()
-        CSV_Excel.Quit()
-        CSV_Excel = Nothing
-        'total_sessions.Add(curr_session)
-        Application.DoEvents()
 
 
-        ' num_of_lines_TextBox.value = total_line_cnt.ToString()
-        Return curr_session
+            ' num_of_lines_TextBox.value = total_line_cnt.ToString()
+            Return curr_session
     End Function
 
 
@@ -518,10 +553,28 @@ Module Module1
                 pract_time_smpl = line.pract_time
                 pet_name_ID_smpl = l.pet_ID
 
+                ' May 2nd 2020: make shortcuts for breed and sex
+                Dim temp_sex As String = "???"
+                If l.pet_gender = "IntactFemale" Then
+                    temp_sex = "F"
+                ElseIf l.pet_gender = "IntactMale" Then
+                    temp_sex = "M"
+                Else
+                    MessageBox.Show("*** Error with dog's sex. Dog name: " + l.pet_name + " sex: " + l.pet_gender)
+                    log_out_lst.Add("*** Error with dog's sex. Dog name: " + l.pet_name + " sex: " + l.pet_gender)
+                End If
+
+
+
+
+
+
                 xlWorksheet.Cells(out_line_cnt, 1) = l.pet_ID
                 xlWorksheet.Cells(out_line_cnt, 2) = l.pet_age
                 xlWorksheet.Cells(out_line_cnt, 3) = l.session_start_time
-                xlWorksheet.Cells(out_line_cnt, 4) = l.pet_gender ' April 29
+                ' xlWorksheet.Cells(out_line_cnt, 4) = l.pet_gender ' April 29
+                xlWorksheet.Cells(out_line_cnt, 4) = temp_sex ' May 2nd
+
                 xlWorksheet.Cells(out_line_cnt, 5) = l.pet_breed ' April 29
                 xlWorksheet.Cells(out_line_cnt, 6) = l.Practice_num ' April 29 changed column only
                 'xlWorksheet.Cells(out_line_cnt, 6) = sessions.sessionsList(c).predictability.ToString()
@@ -671,6 +724,9 @@ Module Module1
         log_out_lst.Add("Age of: " + last_item.ToString() + " occured " + last_count.ToString() + " times")
 
 
+        ' 3 May 2020
+        xlWorksheet.Range("A:X").VerticalAlignment = Excel.Constants.xlCenter
+        xlWorksheet.Range("A:X").HorizontalAlignment = Excel.Constants.xlCenter
 
 
 

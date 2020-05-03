@@ -71,6 +71,10 @@ Public Class Form1
     Dim sessions As New List_of_Sessions
     Dim total_sessions As New List(Of Session_CSV_file) ' will include all CSV files content
 
+    ' 3 May 2020
+    Public BreedList As New List(Of BreedClass)
+
+
     ' 13 Nov 2019 adding new stracture of CSV files fast scan (just header, no lines)
     Dim CSV_files_headers As New List(Of CSV_file_header)
 
@@ -496,9 +500,62 @@ Public Class Form1
         sessions.Print_sessions_list(course_dir) ' into sessions pract name, pract type, start time, end time, video num )
         Application.DoEvents()
 
+        ' 3 May 2020 read breeds 
+        Read_breed()
+        Application.DoEvents()
+
+
+
         RdPracticeFile.BackColor = Color.Green
         Stage_Read_Practice_Table = True
     End Sub ' of RdPracticeFile
+
+
+
+
+    Private Sub Read_breed()
+        ' Reading dogs from practice file
+        ' *******************************
+        ' Dim DogsList As New DogsListClass   ' *** the Class way
+        Dim counter As Integer = 0
+        Dim row_cnt As Integer = 2
+        Dim col_cnt As Integer = 17
+        'Dim stmp As String
+
+        Dim MyExcel As New Microsoft.Office.Interop.Excel.Application
+        'MyExcel.Workbooks.Open(Me.TxtBoxPracticeFile.Text)
+        MyExcel.Workbooks.Open(practice_file)
+
+        counter = 0
+        Do
+            If counter < MAX_NUM_OF_DOGS And MyExcel.Cells(row_cnt, col_cnt).text <> "END" Then
+                Dim tbreed As New BreedClass
+                tbreed.SetBreedName(MyExcel.Cells(row_cnt, col_cnt).text)
+                tbreed.SetBreedShort(MyExcel.Cells(row_cnt, col_cnt + 1).text)
+
+                BreedList.Add(tbreed)
+                'stmp = CStr(MyExcel.ActiveCell.Row) + " " + CStr(MyExcel.ActiveCell.Column)
+                counter = counter + 1
+                row_cnt = row_cnt + 1
+                '           MyExcel.ActiveCell.Offset(1, 0).Activate() ' move to col 2
+
+            Else
+                Exit Do
+            End If
+        Loop
+
+        'DogsList.Print_dogs_list() ' create text file with list of dogs
+
+        MyExcel.Workbooks.Close()
+        MyExcel = Nothing
+        Application.DoEvents()
+
+    End Sub ' of Read_breed 
+
+
+
+
+
 
     Private Sub Read_Dog_List()
         ' Reading dogs from practice file
@@ -653,23 +710,7 @@ Public Class Form1
         ' Read_session_files()
     End Sub
 
-    Private Sub Read_session_files()
 
-        If Stage_Read_Practice_Table = False Then
-            MessageBox.Show("Must read practice file BEFORE reading sessions list")
-            Exit Sub
-        End If
-
-        ' if we want a quick run for analysis without the long CSV files read
-        If skip_CSV_RadioButton.Checked Then
-            Exit Sub
-        End If
-
-        ' April 28
-        ' Read_CSV_Session_files(in_files_dir)   **** no need??
-
-
-    End Sub
 
     Private Sub TxtBoxHeader_TextChanged(sender As Object, e As EventArgs)
     End Sub
@@ -719,7 +760,19 @@ Public Class Form1
             ' April 29, 2020 Add pet_breed and sex
             Dim pet_breed As String
             pet_breed = pract_Excel.Cells(2, 6).text.Replace("Breed: ", "").Replace(" ", "")
-            curr_session.pet_breed = pet_breed
+
+            ' 3 May 2020 convert breed to short, as stated in practice list
+            Dim breed_exists As Boolean = False
+            Dim breed_found As String = "blabla"
+            For Each t_breed In BreedList
+                If t_breed.BreedName = pet_breed Then
+                    breed_exists = True
+                    breed_found = t_breed.BreedShort
+                End If
+            Next
+
+
+            curr_session.pet_breed = breed_found
 
             Dim pet_gender As String
             pet_gender = pract_Excel.Cells(2, 4).text.Replace("Gender: ", "").Replace(" ", "")
@@ -1183,7 +1236,7 @@ Public Class Form1
             Dim CSV_start_time As DateTime = Now
             total_sessions.Add(Read_CSV_file(s.csv_fname, s.dog_age, s.practiceType, s.practiceNum,
                                              s.practiceDate, s.startTime, s.endTime,
-                                             TxtPreTime.Value, TxtPostTime.Value, current_lines_cnt))
+                                             TxtPreTime.Value, TxtPostTime.Value, current_lines_cnt, BreedList))
             Dim CSV_end_time As DateTime = Now
             Dim last_CSV_run_time As TimeSpan = CSV_end_time - CSV_start_time
             CSV_run_time_textBox.Text = Int(last_CSV_run_time.TotalSeconds).ToString() + " seconds"

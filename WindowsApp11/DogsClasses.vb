@@ -48,6 +48,26 @@ Public Class DogClass
 
 End Class ' of DogClass
 
+
+
+' 3 May 2020
+Public Class BreedClass
+    Public BreedName As String
+    Public BreedShort As String
+
+    Public Sub SetBreedName(ByVal _breedName As String)
+        BreedName = _breedName
+    End Sub
+    Public Sub SetBreedShort(ByVal _breedShort As String)
+        BreedShort = _breedShort
+    End Sub
+
+End Class ' of DogClass
+
+
+
+
+
 Public Class DogsListClass
     Public dogs_List As New List(Of DogClass)
 
