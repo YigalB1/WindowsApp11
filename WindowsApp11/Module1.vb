@@ -734,6 +734,9 @@ Module Module1
 
 
         log_out_lst.Add("---> print the age groups nymbers")
+        log_out_lst.Add("Younger age: " + age_of_weeks_list.First().ToString())
+        log_out_lst.Add("Older   age: " + age_of_weeks_list.Last().ToString())
+
         log_out_lst.Add("Group 1 starts: " + age_group1_start.ToString() + " count: " + age_group1_count.ToString())
         log_out_lst.Add("Group 2 starts: " + age_group2_start.ToString() + " count: " + age_group2_count.ToString())
         log_out_lst.Add("Group 3 starts: " + age_group3_start.ToString() + " count: " + age_group3_count.ToString())
