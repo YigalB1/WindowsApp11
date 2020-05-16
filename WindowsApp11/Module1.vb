@@ -753,7 +753,7 @@ Module Module1
 
 
 
-        Dim tmp_out_str As String = "";
+        Dim tmp_out_str As String = ""
         ' printing the sortred group
         For Each l_age As Integer In age_of_weeks_list
             tmp_out_str = tmp_out_str + l_age.ToString() + ","
