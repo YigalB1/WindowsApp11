@@ -706,7 +706,7 @@ Module Module1
         'log_out_lst.Add("List of ages, sorting")
 
         age_of_weeks_list.Sort()
-        Dim num_of_ages = log_out_lst.Last() - log_out_lst.First() + 1
+        Dim num_of_ages = age_of_weeks_list.Last() - age_of_weeks_list.First() + 1
         Dim ages_groups_num As Integer = 4
         Dim age_group_len As Integer = Int(Len(age_of_weeks_list) / ages_groups_num)
         Dim age_group1_start As Integer = age_of_weeks_list(0)
