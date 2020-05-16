@@ -706,9 +706,16 @@ Module Module1
         'log_out_lst.Add("List of ages, sorting")
 
         age_of_weeks_list.Sort()
-        Dim num_of_ages = age_of_weeks_list.Last() - age_of_weeks_list.First() + 1
+
+        log_out_lst.Add("list count: " + age_of_weeks_list.Count().ToString())
+
+        Dim ages_range = age_of_weeks_list.Last() - age_of_weeks_list.First() + 1
         Dim ages_groups_num As Integer = 4
-        Dim age_group_len As Integer = Int(Len(age_of_weeks_list) / ages_groups_num)
+        Dim age_group_len As Integer = Int(ages_range / ages_groups_num)
+        log_out_lst.Add("Younger age      (in weeks): " + age_of_weeks_list.First().ToString())
+        log_out_lst.Add("Older age        (in weeks): " + age_of_weeks_list.Last().ToString())
+        log_out_lst.Add("Ages range       (in weeks): " + ages_range.ToString())
+        log_out_lst.Add("Age group length (in weeks): " + age_group_len.ToString())
         Dim age_group1_start As Integer = age_of_weeks_list(0)
         Dim age_group2_start As Integer = age_of_weeks_list(0 + age_group_len)
         Dim age_group3_start As Integer = age_of_weeks_list(0 + age_group_len * 2)
