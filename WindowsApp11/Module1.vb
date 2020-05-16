@@ -696,12 +696,55 @@ Module Module1
         Next ' of for each sessions
 
 
-        log_out_lst.Add("List of ages, un sorted as for now")
-        For Each l_age As Integer In age_of_weeks_list
-            log_out_lst.Add(l_age.ToString())
-        Next
-        log_out_lst.Add("List of ages, sorting")
+
+        ' 16 May 2020 handling group of ages
+
+        'log_out_lst.Add("List of ages, un sorted as for now")
+        'For Each l_age As Integer In age_of_weeks_list
+        ' log_out_lst.Add(l_age.ToString())
+        ' Next
+        'log_out_lst.Add("List of ages, sorting")
+
         age_of_weeks_list.Sort()
+        Dim num_of_ages = log_out_lst.Last() - log_out_lst.First() + 1
+        Dim ages_groups_num As Integer = 4
+        Dim age_group_len As Integer = Int(Len(age_of_weeks_list) / ages_groups_num)
+        Dim age_group1_start As Integer = age_of_weeks_list(0)
+        Dim age_group2_start As Integer = age_of_weeks_list(0 + age_group_len)
+        Dim age_group3_start As Integer = age_of_weeks_list(0 + age_group_len * 2)
+        Dim age_group4_start As Integer = age_of_weeks_list(0 + age_group_len * 3)
+
+        Dim age_group1_count As Integer = 0
+        Dim age_group2_count As Integer = 0
+        Dim age_group3_count As Integer = 0
+        Dim age_group4_count As Integer = 0
+
+
+        For Each age As Integer In age_of_weeks_list
+            If age > age_group4_start Then
+                age_group4_count += 1
+            ElseIf age > age_group3_start Then
+                age_group3_count += 1
+            ElseIf age > age_group2_start Then
+                age_group2_count += 1
+            ElseIf age > age_group1_start Then
+                age_group1_count += 1
+            End If
+        Next
+
+
+        log_out_lst.Add("---> print the age groups nymbers")
+        log_out_lst.Add("Group 1 starts: " + age_group1_start.ToString() + " count: " + age_group1_count.ToString())
+        log_out_lst.Add("Group 2 starts: " + age_group2_start.ToString() + " count: " + age_group2_count.ToString())
+        log_out_lst.Add("Group 3 starts: " + age_group3_start.ToString() + " count: " + age_group3_count.ToString())
+        log_out_lst.Add("Group 4 starts: " + age_group4_start.ToString() + " count: " + age_group4_count.ToString())
+
+
+
+
+
+
+        ' printing the sortred group
         For Each l_age As Integer In age_of_weeks_list
             log_out_lst.Add(l_age.ToString())
         Next
@@ -722,6 +765,10 @@ Module Module1
         Next
         ' add the last one
         log_out_lst.Add("Age of: " + last_item.ToString() + " occured " + last_count.ToString() + " times")
+
+
+
+
 
 
         ' 3 May 2020
