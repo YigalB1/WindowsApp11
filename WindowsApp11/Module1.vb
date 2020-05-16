@@ -717,9 +717,9 @@ Module Module1
         log_out_lst.Add("Ages range       (in weeks): " + ages_range.ToString())
         log_out_lst.Add("Age group length (in weeks): " + age_group_len.ToString())
         Dim age_group1_start As Integer = age_of_weeks_list(0)
-        Dim age_group2_start As Integer = age_of_weeks_list(0 + age_group_len)
-        Dim age_group3_start As Integer = age_of_weeks_list(0 + age_group_len * 2)
-        Dim age_group4_start As Integer = age_of_weeks_list(0 + age_group_len * 3)
+        Dim age_group2_start As Integer = age_of_weeks_list(0) + age_group_len
+        Dim age_group3_start As Integer = age_of_weeks_list(0) + age_group_len * 2
+        Dim age_group4_start As Integer = age_of_weeks_list(0) + age_group_len * 3
 
         Dim age_group1_count As Integer = 0
         Dim age_group2_count As Integer = 0
