@@ -753,11 +753,12 @@ Module Module1
 
 
 
-
+        Dim tmp_out_str As String = "";
         ' printing the sortred group
         For Each l_age As Integer In age_of_weeks_list
-            log_out_lst.Add(l_age.ToString())
+            tmp_out_str = tmp_out_str + l_age.ToString() + ","
         Next
+        log_out_lst.Add(tmp_out_str)
 
         Dim last_item As Integer = age_of_weeks_list.First
         Dim last_count As Integer = 0
